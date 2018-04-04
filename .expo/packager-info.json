@@ -1,8 +1,8 @@
 {
-  "expoServerPort": null,
+  "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 9511,
+  "packagerPid": 10754,
   "expoServerNgrokUrl": "https://3x-9fv.chrisclamlam.parkingbuddy.exp.direct",
   "packagerNgrokUrl": "https://packager.3x-9fv.chrisclamlam.parkingbuddy.exp.direct",
-  "ngrokPid": 9525
+  "ngrokPid": 10770
 }
