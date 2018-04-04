@@ -22,7 +22,6 @@ const AppStackNavigator = StackNavigator({
 class StackScreen extends React.Component {
   render() {
     return (
-  
       <AppStackNavigator />
     );
   }

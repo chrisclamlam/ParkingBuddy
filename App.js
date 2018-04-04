@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
-import StackScreen from './StackScreen.js'
+import StackScreen from './Components/StackScreen.js'
 
 export default class App extends React.Component {
   render() {
