@@ -14,11 +14,10 @@ public class AdbTestRunner {
 	         System.out.println(failure.toString());
 	    }
 		
-		System.out.println(result.wasSuccessful());
+		System.out.println("Successful: " + result.wasSuccessful());
 	}
 	
 	public void initDB() {
 		
 	}
-
 }

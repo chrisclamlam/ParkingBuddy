@@ -8,10 +8,6 @@ import database.User;
 import static org.junit.Assert.assertEquals;
 
 /*TODO
- * User getUserById(int)
- * boolean exists(String)
- * boolean loginUser(String username, byte[] passhash)
- * boolean registerUser(User u)
  * ArrayList<User> searchUsersByUsername(String username)
  * ArrayList<User> searchUsersByName(String name)
  * ArrayList<User> getUserFriends(String username)
@@ -32,5 +28,42 @@ public class AppDatabaseTest {
 		// Asserting
 		assertEquals(u.getUsername(), "a");
 		assertEquals(u.getEmail(), "a@u.com");
+	}
+	
+	@Test
+	public void testExists() {
+		// This line may change, because our schemas and credentials are probably different
+		AppDatabase db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
+		assertEquals(db.exists("a"), true);
+		assertEquals(db.exists("z"), false);
+	}
+	
+    @Test
+	public void testLoginuser() {
+    	AppDatabase db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
+		User goodUser = new User(-1, "test", "fname", "lname", "test@test.com", "yeee".getBytes());
+		// Add a new user and login
+		assertEquals(db.registerUser(goodUser), true);
+		assertEquals(db.loginUser("test", "yeee".getBytes()), true);
+		// delete the user and make sure it worked
+		db.delete("test");
+		assertEquals(db.exists("test"), false);
+	}
+	
+	@Test
+	public void testRegisterUser(){
+		// This line may change, because our schemas and credentials are probably different
+		AppDatabase db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
+		User goodUser = new User(-1, "test", "fname", "lname", "test@test.com", "yeee".getBytes());
+		User badUser = new User(-1, "a", "fname", "lname", "test@test.com", "yeee".getBytes());
+		
+		// Try to register a good and bad user
+		assertEquals(db.registerUser(goodUser), true);
+		assertEquals(db.registerUser(badUser), false);
+		
+		// Delete a user and make sure they don't exist
+		db.delete("test");
+		assertEquals(db.exists("test"), false);
+		
 	}
 }

@@ -38,14 +38,23 @@ public class AppDatabase {
 		}
 	}
 	
+	public void delete(String username) {
+		try {
+			st.executeUpdate("DELETE FROM Users WHERE username =  '" + username + "'");
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		}
+	}
+	
 	public boolean exists(String username) {
 		// Check if the username exists
 		ResultSet rs = null;
 		try {
 			rs = st.executeQuery("SELECT COUNT(1) FROM Users WHERE username = '" + username + "'");
-			if(rs == null || !rs.next()) { // empty check
+			if(rs == null || !rs.next() || rs.getBoolean(1) == false) { // empty check
 				return false;
 			}
+			
 			return true;
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
