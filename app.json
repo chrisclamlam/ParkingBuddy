@@ -1,8 +1,0 @@
-{
-  "expo": {
-    "sdkVersion": "25.0.0",
-    "splash": {
-      "image": "./images/splash.png"
-    }
-  }
-}
