@@ -38,30 +38,6 @@ public class AppDatabase {
 		}
 	}
 	
-	public void delete(String username) {
-		try {
-			st.executeUpdate("DELETE FROM Users WHERE username =  '" + username + "'");
-		} catch (SQLException sqle) {
-			System.out.println(sqle.getMessage());
-		}
-	}
-	
-	public boolean exists(String username) {
-		// Check if the username exists
-		ResultSet rs = null;
-		try {
-			rs = st.executeQuery("SELECT COUNT(1) FROM Users WHERE username = '" + username + "'");
-			if(rs == null || !rs.next() || rs.getBoolean(1) == false) { // empty check
-				return false;
-			}
-			
-			return true;
-		} catch (SQLException sqle) {
-			System.out.println(sqle.getMessage());
-			return false;
-		}
-	}
-	
 	private User createUser(ResultSet rs) {
 		int uid;
 		String username, fname, lname, email;
@@ -82,21 +58,83 @@ public class AppDatabase {
 		}
 	}
 	
-	public User getUserById(int id) {
-		ResultSet rs;
+	private ParkingSpot createParkingSpot(ResultSet rs) {
+		// Variables needed for ParkingSpot constructor
+		int id, remoteid, spotType;
+		String label;
+		double latitude, longitude;
+		// Parse the ResultSet
 		try {
-			rs = st.executeQuery("SELECT * FROM users WHERE id = '" + id + "'");
+			id = rs.getInt(1);
+			remoteid = rs.getInt(2);
+			label = rs.getString(3);
+			longitude = rs.getDouble(4);
+			latitude = rs.getDouble(5);
+			spotType = rs.getInt(6);
+			return new ParkingSpot(id, remoteid, label, spotType, longitude, latitude);
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			return null;
+		}
+	}
+	
+	private int getUserId(String username) {
+		try {
+			ResultSet rs = st.executeQuery("SELECT id FROM users WHERE username = '" + username + "'");
+			if(rs == null || !rs.next()) { // empty check
+				return -1;
+			}
+			return rs.getInt(1);
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			return -1;
+		}
+	}
+	
+	private User getUserFromQuery(String query) {
+		try {
+			ResultSet rs = st.executeQuery(query);
 			if(rs == null || !rs.next()) { // empty check
 				return null;
 			}
-
 			// Get data to instantiate class
 			return createUser(rs);
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return null;
 		}
-	}	
+	}
+	
+	public User getUserById(int id) {
+		return getUserFromQuery("SELECT * FROM users WHERE id = '" + id + "'");
+	}
+	
+	public User getUserByUsername(String username) {
+		return getUserFromQuery("SELECT * FROM users WHERE username = '" + username + "'");
+	}
+	
+	public void delete(String username) {
+		try {
+			st.executeUpdate("DELETE FROM Users WHERE username =  '" + username + "'");
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		}
+	}
+	
+	public boolean exists(String username) {
+		// Check if the username exists
+		ResultSet rs = null;
+		try {
+			rs = st.executeQuery("SELECT COUNT(1) FROM Users WHERE username = '" + username + "'");
+			if(rs == null || !rs.next() || rs.getBoolean(1) == false) { // empty check
+				return false;
+			}
+			return true;
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			return false;
+		}
+	}
 	
 	public boolean loginUser(String username, byte[] passhash) {
 		// Check password
@@ -126,18 +164,15 @@ public class AppDatabase {
 	// Query the database for the result set
 	// iterate through the set and create an array of users
 	// if the size of the list is 0, return null
-	public ArrayList<User> getUserFriends(String username){
-		
-		// Query the database for the result set
+	private ArrayList<User> getUsersFromQuery(String query){
 		ResultSet rs;
 		ArrayList<User> users = new ArrayList<User>();
 		try {
 			// Execute the Query
-			rs = st.executeQuery("SELECT FROM Users WHERE username = '" + username + "'");
+			rs = st.executeQuery(query);
 			if(rs == null || !rs.next()) {
 				return null;
-			}
-			
+			}	
 			// Parse and iterate over rs
 			while(rs.next()) {
 				User u = createUser(rs);
@@ -146,7 +181,6 @@ public class AppDatabase {
 					users.add(u);
 				}
 			}
-			
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 		}
@@ -157,24 +191,63 @@ public class AppDatabase {
 		return users;
 	}
 	
+	public ArrayList<User> getUserFriends(String username){	
+		// Query the database for the result set
+		int id = getUserId(username);
+		if(id == -1) return null;
+		return getUsersFromQuery("SELECT * FROM FriendsList WHERE firstid = '" + id + "' OR secondid = '" + id + "'");
+	}
+	
 	public ArrayList<User> searchUsersByName(String name){
-		return null;
+		// Query the database for the result set
+		return getUsersFromQuery("SELECT * FROM Users WHERE fname LIKE '" + name + "%' OR lname LIKE '" + name + "'");
 	}
 	
 	public ArrayList<User> searchUsersByUsername(String username){
-		return null;
+		return getUsersFromQuery("SELECT * FROM USERS WHERE username = '" + username + "'");
 	}
 	
 	public ArrayList<User> searchUsersByEmail(String email){
-		return null;
+		return getUsersFromQuery("SELECT * FROM USERS WHERE email = '" + email + "'");
+	}
+	
+	private ArrayList<ParkingSpot> getParkingSpotsFromQuery(String query){
+		ResultSet rs;
+		ArrayList<ParkingSpot> spots = new ArrayList<ParkingSpot>();
+		try {
+			// Execute the Query
+			rs = st.executeQuery(query);
+			if(rs == null || !rs.next()) {
+				return null;
+			}	
+			// Parse and iterate over rs
+			while(rs.next()) {
+				ParkingSpot ps = createParkingSpot(rs);
+				// Add User to list
+				if(ps != null) {
+					spots.add(ps);
+				}
+			}
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		}
+		// if the size of the list is 0, return null
+		if(spots.size() == 0) {
+			return null;
+		}
+		return spots;
 	}
 	
 	public ArrayList<ParkingSpot> getUserSpots(String username){
-		return null;
+		return getParkingSpotsFromQuery("SELECT * FROM FavoritesList WHERE firstid = '" + getUserId(username) + "'");
 	}
 	
 	public ParkingSpot getSpotById(int id) {
-		return null;
+		ArrayList<ParkingSpot> ps = getParkingSpotsFromQuery("SELECT * FROM ParkingSpots WHERE id = '" + id + "'");
+		if(ps == null) {
+			return null;
+		}
+		return ps.get(0);
 	}
 	
 	public ArrayList<Comment> getSpotComments(int id){

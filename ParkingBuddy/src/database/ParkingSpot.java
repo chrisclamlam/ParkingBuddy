@@ -4,13 +4,13 @@ public class ParkingSpot {
 	
 	private int id;
 	private int remoteId;
+	private int spotType;
 	private String label;
-	private String spotType;
 	private double latitude;
 	private double longitude;
 	
 	
-	public ParkingSpot(int id, int remoteId, String label, String spotType, double latitude, double longitude) {
+	public ParkingSpot(int id, int remoteId, String label, int spotType,  double longitude, double latitude) {
 		this.id = id;
 		this.remoteId = remoteId;
 		this.label = label;
@@ -35,7 +35,7 @@ public class ParkingSpot {
 	}
 
 
-	public String getSpotType() {
+	public int getSpotType() {
 		return spotType;
 	}
 

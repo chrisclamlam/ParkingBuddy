@@ -94,6 +94,6 @@ public class LosAngelesDatabase {
 		}
 		// Return the spot
 		// Use the id param to check PB's DB to get the local ID
-		return new ParkingSpot(-1, 1, map.get("SENSOR_UNIQUE_ID"), "meter", Double.parseDouble(map.get("GPSX")), Double.parseDouble(map.get("GPSY")));
+		return new ParkingSpot(-1, 1, map.get("SENSOR_UNIQUE_ID"), 3, Double.parseDouble(map.get("GPSY")), Double.parseDouble(map.get("GPSX")));
 	}
 }

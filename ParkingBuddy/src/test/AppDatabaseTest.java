@@ -8,6 +8,7 @@ import database.User;
 import static org.junit.Assert.assertEquals;
 
 /*TODO
+ * User getUserByUsername(String username) 
  * ArrayList<User> searchUsersByUsername(String username)
  * ArrayList<User> searchUsersByName(String name)
  * ArrayList<User> getUserFriends(String username)
@@ -64,6 +65,5 @@ public class AppDatabaseTest {
 		// Delete a user and make sure they don't exist
 		db.delete("test");
 		assertEquals(db.exists("test"), false);
-		
 	}
 }
