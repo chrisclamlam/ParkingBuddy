@@ -7,12 +7,12 @@ npm: https://www.npmjs.com/get-npm <br>
 react-native: https://facebook.github.io/react-native/docs/getting-started.html <br>
 Your preferred simulator software (Expo, GenyMotion, XCode, etc.)
 
-Backend
-Eclipse Oxygen: http://www.eclipse.org/downloads/eclipse-packages/
-JDK 8: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-Apache 9.0: https://tomcat.apache.org/download-90.cgi
-gson jar file: https://repo1.maven.org/maven2/com/google/code/gson/gson/2.6.2/
-jdbc file: http://www-scf.usc.edu/~csci201/lectures/Lecture16/mysql-connector-java-5.1.46.jar
+Backend <br>
+Eclipse Oxygen: http://www.eclipse.org/downloads/eclipse-packages/ <br>
+JDK 8: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html <br>
+Apache 9.0: https://tomcat.apache.org/download-90.cgi <br>
+gson jar file: https://repo1.maven.org/maven2/com/google/code/gson/gson/2.6.2/ <br>
+jdbc file: http://www-scf.usc.edu/~csci201/lectures/Lecture16/mysql-connector-java-5.1.46.jar <br>
 
 
 To run the front end:
