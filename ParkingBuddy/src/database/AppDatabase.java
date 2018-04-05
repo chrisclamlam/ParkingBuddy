@@ -76,11 +76,11 @@ public class AppDatabase {
 	public User getUserById(int id) {
 		ResultSet rs;
 		try {
-			rs = st.executeQuery("SELECT DISTINCT FROM Users WHERE id =  '" + id + "'");
+			rs = st.executeQuery("SELECT * FROM users WHERE id = '" + id + "'");
 			if(rs == null || !rs.next()) { // empty check
 				return null;
 			}
-			rs.beforeFirst();
+
 			// Get data to instantiate class
 			return createUser(rs);
 		} catch (SQLException sqle) {
@@ -128,7 +128,6 @@ public class AppDatabase {
 			if(rs == null || !rs.next()) {
 				return null;
 			}
-			rs.beforeFirst();
 			
 			// Parse and iterate over rs
 			while(rs.next()) {

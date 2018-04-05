@@ -1,10 +1,11 @@
 package test;
 
-import java.util.ArrayList;
+import org.junit.Test;
 
-import database.Comment;
-import database.ParkingSpot;
+import database.AppDatabase;
 import database.User;
+
+import static org.junit.Assert.assertEquals;
 
 /*TODO
  * User getUserById(int)
@@ -22,7 +23,14 @@ import database.User;
 
 public class AppDatabaseTest {
 	
-	public static void main(String[] args) {
+	@Test
+	public void testGetUserById() {
+		// This line may change, because our schemas and credentials are probably different
+		AppDatabase db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
+		User u = db.getUserById(1);
 		
+		// Asserting
+		assertEquals(u.getUsername(), "a");
+		assertEquals(u.getEmail(), "a@u.com");
 	}
 }
