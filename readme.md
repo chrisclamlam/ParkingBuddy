@@ -3,8 +3,8 @@ Parking Buddy!
 Requirements
 
 Frontend
-npm: https://www.npmjs.com/get-npm
-react-native: https://facebook.github.io/react-native/docs/getting-started.html
+npm: https://www.npmjs.com/get-npm <br>
+react-native: https://facebook.github.io/react-native/docs/getting-started.html <br>
 Your preferred simulator software (Expo, GenyMotion, XCode, etc.)
 
 Backend
