@@ -37,7 +37,7 @@ public class AppDatabase {
 		}
 	}
 	
-	private boolean exists(String username) {
+	public boolean exists(String username) {
 		// Check if the username exists
 		ResultSet rs = null;
 		try {

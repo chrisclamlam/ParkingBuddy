@@ -12,6 +12,7 @@ public class LADBTest {
 	
 	public void run() {
 		ParkingSpot spot = ladb.getSpotById(1);
+		System.out.println(spot.getLabel());
 	}
 	
 	public static void main(String[] args) {

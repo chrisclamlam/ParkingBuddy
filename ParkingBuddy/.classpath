@@ -15,5 +15,6 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="C:/Users/bcheck/Downloads/mysql-connector-java-5.1.46.jar"/>
 	<classpathentry kind="lib" path="C:/Users/bcheck/Downloads/jsoup-1.11.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/bcheck/Downloads/gson-2.8.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
