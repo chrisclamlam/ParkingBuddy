@@ -10,7 +10,7 @@ public class User {
 	private String email;
 	private byte[] passhash;
 	
-	// Constructor sets everything
+	// Constructors set everything
 	public User(int id, String username, String fname, String lname, String email, byte[] passhash) {
 		this.id = id;
 		this.username = username;

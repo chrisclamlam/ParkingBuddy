@@ -23,6 +23,7 @@ public class AppDatabase {
 	}
 	
 	private boolean insertUser(User u) {
+		if(u == null) return false;
 		try {
 			st.executeUpdate("INSERT INTO Users (username, fname, lname, email, passhash) VALUES ("
 					+ "'" + u.getUsername() + "',"
@@ -42,7 +43,7 @@ public class AppDatabase {
 		ResultSet rs = null;
 		try {
 			rs = st.executeQuery("SELECT COUNT(1) FROM Users WHERE username = '" + username + "'");
-			if(rs == null || rs.getFetchSize() == 0) { // empty check
+			if(rs == null || !rs.next()) { // empty check
 				return false;
 			}
 			return true;
@@ -52,16 +53,12 @@ public class AppDatabase {
 		}
 	}
 	
-	public User getUserById(int id) {
-		ResultSet rs;
+	private User createUser(ResultSet rs) {
 		int uid;
 		String username, fname, lname, email;
 		byte[] passhash;
+		
 		try {
-			rs = st.executeQuery("SELECT DISTINCT FROM Users WHERE id =  '" + id + "'");
-			if(rs == null) { // empty check
-				return null;
-			}
 			// Get data to instantiate class
 			uid = rs.getInt(1);
 			username = rs.getString(2);
@@ -72,8 +69,24 @@ public class AppDatabase {
 			return new User(uid, username, fname, lname, email, passhash);
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
+			return null;
 		}
-		return null;
+	}
+	
+	public User getUserById(int id) {
+		ResultSet rs;
+		try {
+			rs = st.executeQuery("SELECT DISTINCT FROM Users WHERE id =  '" + id + "'");
+			if(rs == null || !rs.next()) { // empty check
+				return null;
+			}
+			rs.beforeFirst();
+			// Get data to instantiate class
+			return createUser(rs);
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			return null;
+		}
 	}	
 	
 	public boolean loginUser(String username, byte[] passhash) {
@@ -81,17 +94,18 @@ public class AppDatabase {
 		try {
 			ResultSet rs = st.executeQuery("SELECT COUNT(1) FROM Users WHERE username = '" + username 
 			+ "' AND passhash = '" + passhash + "'");
-			if(rs == null || rs.getFetchSize() == 0) {
+			if(rs == null || !rs.next()) {
 				return false;
 			}
+			return true;
 		} catch (SQLException sqle) {
 			return false;
 		}
-		return true;
 	}
 	
 	
 	public boolean registerUser(User u) {
+		if(u == null) return false;
 		// If user exists, return false
 		if(exists(u.getUsername())) {
 			return false;
@@ -100,8 +114,39 @@ public class AppDatabase {
 		return insertUser(u);
 	}
 	
+	// Query the database for the result set
+	// iterate through the set and create an array of users
+	// if the size of the list is 0, return null
 	public ArrayList<User> getUserFriends(String username){
-		return null;
+		
+		// Query the database for the result set
+		ResultSet rs;
+		ArrayList<User> users = new ArrayList<User>();
+		try {
+			// Execute the Query
+			rs = st.executeQuery("SELECT FROM Users WHERE username = '" + username + "'");
+			if(rs == null || !rs.next()) {
+				return null;
+			}
+			rs.beforeFirst();
+			
+			// Parse and iterate over rs
+			while(rs.next()) {
+				User u = createUser(rs);
+				// Add User to list
+				if(u != null) {
+					users.add(u);
+				}
+			}
+			
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		}
+		// if the size of the list is 0, return null
+		if(users.size() == 0) {
+			return null;
+		}
+		return users;
 	}
 	
 	public ArrayList<User> searchUsersByName(String name){
@@ -127,6 +172,4 @@ public class AppDatabase {
 	public ArrayList<Comment> getSpotComments(int id){
 		return null;
 	}
-	
-	
 }

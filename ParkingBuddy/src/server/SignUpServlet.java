@@ -38,14 +38,10 @@ public class SignUpServlet extends HttpServlet {
 		String lname = request.getParameter("lname");
 		String email = request.getParameter("email");
 		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		if(!database.exists(username))
+		User newUser = new User( username, fname, lname, email, password);
+		if(!database.registerUser(newUser))
 		{
-			User newUser = new User( username, fname, lname, email, password);
-			database.registerUser(newUser);
-		}
-		else
-		{
-			//cannot create account
+			// Cannot create account
 		}
 	}
 
