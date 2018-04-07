@@ -9,13 +9,13 @@ public class ParkingSpot {
 	private double latitude;
 	private double longitude;
 	
-	/*
+	/* SpotTypes
 	 * 1 - Meter
 	 * 2 - Street
 	 * 3 - Structure
 	 */
 	
-	public ParkingSpot(int id, int remoteId, String label, int spotType,  double longitude, double latitude) {
+	public ParkingSpot(int id, int remoteId, String label, int spotType,  double latitude, double longitude) {
 		this.id = id;
 		this.remoteId = remoteId;
 		this.label = label;

@@ -137,6 +137,10 @@ public class AppDatabase {
 		}
 	}
 	
+	public boolean addSpot(ParkingSpot ps) {
+		return insertSpot(ps);
+	}
+	
 	public User getUserById(int id) {
 		return getUserFromQuery("SELECT * FROM users WHERE id = '" + id + "'");
 	}
