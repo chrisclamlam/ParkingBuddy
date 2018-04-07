@@ -58,22 +58,6 @@ public class AppDatabase {
 		}
 	}
 	
-	private Comment createComment(ResultSet rs) {
-		int id, uid, sid, rtg;
-		String input;
-		try {
-			id = rs.getInt(1);
-			uid = rs.getInt(2);
-			sid = rs.getInt(3);
-			rtg = rs.getInt(4);
-			input = rs.getString(5);
-			return new Comment(id, uid, sid, rtg, input);
-		} catch (SQLException sqle) {
-			System.out.println(sqle.getMessage());
-			return null;
-		}
-	}
-	
 	private ParkingSpot createParkingSpot(ResultSet rs) {
 		// Variables needed for ParkingSpot constructor
 		int id, remoteid, spotType;
@@ -120,7 +104,7 @@ public class AppDatabase {
 			return null;
 		}
 	}
-	
+
 	public User getUserById(int id) {
 		return getUserFromQuery("SELECT * FROM users WHERE id = '" + id + "'");
 	}
@@ -207,33 +191,25 @@ public class AppDatabase {
 		return users;
 	}
 	
-	private ArrayList<Comment> getCommentsFromQuery(String query) {
-		ResultSet rs;
-		ArrayList<Comment> comments = new ArrayList<Comment>();
-		try {
-			// Execute the Query
-			rs = st.executeQuery(query);
-			if(rs == null || !rs.next()) {
-				return null;
-			}	
-			// Parse and iterate over rs
-			while(rs.next()) {
-				Comment c = createComment(rs);
-				// Add User to list
-				if(c != null) {
-					comments.add(c);
-				}
-			}
-		} catch (SQLException sqle) {
-			System.out.println(sqle.getMessage());
-		}
-		// if the size of the list is 0, return null
-		if(comments.size() == 0) {
-			return null;
-		}
-		return comments;
+	public ArrayList<User> getUserFriends(String username){	
+		// Query the database for the result set
+		int id = getUserId(username);
+		if(id == -1) return null;
+		return getUsersFromQuery("SELECT * FROM FriendsList WHERE firstid = '" + id + "' OR secondid = '" + id + "'");
 	}
 	
+	public ArrayList<User> searchUsersByName(String name){
+		// Query the database for the result set
+		return getUsersFromQuery("SELECT * FROM Users WHERE fname LIKE '" + name + "%' OR lname LIKE '" + name + "'");
+	}
+	
+	public ArrayList<User> searchUsersByUsername(String username){
+		return getUsersFromQuery("SELECT * FROM USERS WHERE username = '" + username + "'");
+	}
+	
+	public ArrayList<User> searchUsersByEmail(String email){
+		return getUsersFromQuery("SELECT * FROM USERS WHERE email = '" + email + "'");
+	}
 	
 	private ArrayList<ParkingSpot> getParkingSpotsFromQuery(String query){
 		ResultSet rs;
@@ -262,26 +238,6 @@ public class AppDatabase {
 		return spots;
 	}
 	
-	public ArrayList<User> getUserFriends(String username){	
-		// Query the database for the result set
-		int id = getUserId(username);
-		if(id == -1) return null;
-		return getUsersFromQuery("SELECT * FROM FriendsList WHERE firstid = '" + id + "' OR secondid = '" + id + "'");
-	}
-	
-	public ArrayList<User> searchUsersByName(String name){
-		// Query the database for the result set
-		return getUsersFromQuery("SELECT * FROM Users WHERE fname LIKE '" + name + "%' OR lname LIKE '" + name + "'");
-	}
-	
-	public ArrayList<User> searchUsersByUsername(String username){
-		return getUsersFromQuery("SELECT * FROM USERS WHERE username = '" + username + "'");
-	}
-	
-	public ArrayList<User> searchUsersByEmail(String email){
-		return getUsersFromQuery("SELECT * FROM USERS WHERE email = '" + email + "'");
-	}
-	
 	public ArrayList<ParkingSpot> getUserSpots(String username){
 		return getParkingSpotsFromQuery("SELECT * FROM FavoritesList WHERE firstid = '" + getUserId(username) + "'");
 	}
@@ -295,6 +251,31 @@ public class AppDatabase {
 	}
 	
 	public ArrayList<Comment> getSpotComments(int id){
-		return getCommentsFromQuery("SELECT * FROM COMMENTS WHERE id = '" + id + "'");
+		return null;
+	}
+	
+	public void addSpotComments(int spotid, int userid, int rating, String comments)
+	{
+		
+	}
+	public int getSpotByName(String name)
+	{
+		return -1;
+	}
+	public int getUserIdByUsername(String username)
+	{
+		return -1;
+	}
+	public void addFriends(String username, String friendsusername)
+	{
+		
+	}
+	public boolean existsParking(String parkingname)
+	{
+		return false;
+	}
+	public void addFavoriteParking(String username, String parkingname)
+	{
+		
 	}
 }

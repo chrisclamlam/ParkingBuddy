@@ -39,9 +39,10 @@ public class SearchUsersServlet extends HttpServlet {
 			//if there is a user with this username return the list of users
 			MakeJson json = new MakeJson();
 			out.write(json.makeJsonString(myResults));
-		
+			response.setStatus(200);
 		}
-		response.sendRedirect(pageToForward);
+		response.setStatus(400);
+//		response.sendRedirect(pageToForward);
 	}
 
 
