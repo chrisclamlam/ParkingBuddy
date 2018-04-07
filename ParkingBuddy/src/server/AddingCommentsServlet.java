@@ -1,6 +1,8 @@
 package server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,19 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import database.AppDatabase;
-import database.User;
+import database.Comment;
+import database.ParkingSpot;
 
 /**
- * Servlet implementation class CreateAccountServlet
+ * Servlet implementation class AddingCommentsServlet
  */
-@WebServlet("/CreateAccountServlet")
-public class SignUpServlet extends HttpServlet {
+@WebServlet("/AddingCommentsServlet")
+public class AddingCommentsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SignUpServlet() {
+    public AddingCommentsServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -28,22 +31,28 @@ public class SignUpServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		
+	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		String usercomment = request.getParameter("usercomment");
 		String username = request.getParameter("username");
-		byte[] password = null;
-				//(byte[])request.getParameter("password");
-		String fname = request.getParameter("fname");
-		String lname = request.getParameter("lname");
-		String email = request.getParameter("email");
+		String parkingspotname = request.getParameter("parkingname");
+		String rating = request.getParameter("rating");
 		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		User newUser = new User( username, fname, lname, email, password);
-		if(!database.registerUser(newUser))
+		int parkingid =  database.getSpotByName(parkingspotname);
+		int userid = database.getUserIdByUsername(username);
+		if(database.getSpotByName(parkingspotname) != -1)//if parking name exists
 		{
+			
+			database.addSpotComments(parkingid, userid, Integer.parseInt(rating), usercomment);
 			response.setStatus(200);
 		}
 		response.setStatus(400);
+		
 	}
 
 }

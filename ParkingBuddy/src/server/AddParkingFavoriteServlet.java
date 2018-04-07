@@ -1,8 +1,6 @@
 package server;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,16 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 import database.AppDatabase;
 
 /**
- * Servlet implementation class SearchValidateServlet
+ * Servlet implementation class AddParkingFavoriteServlet
  */
-@WebServlet("/SearchValidateServlet")
-public class SearchValidateServlet extends HttpServlet {
+@WebServlet("/AddParkingFavoriteServlet")
+public class AddParkingFavoriteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SearchValidateServlet() {
+    public AddParkingFavoriteServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,27 +28,22 @@ public class SearchValidateServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String searchValue = request.getParameter("searchingParking");
-		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		PrintWriter out = response.getWriter();
-		
-		
-		///not finished yet
-		
-		
-//		ArrayList<User> myResults = database.searchUsersByUsername(searchValue);
-//		if(myResults!= null)  
-//		{
-//			//if there is a user with this username return the list of users
-//			MakeJson json = new MakeJson();
-//			out.write(json.makeJsonString(myResults));
-//		}
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		String parkingname = request.getParameter("parkingname");
+		String username = request.getParameter("username");
+		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
+		
+		if(database.exists(parkingname) && database.existsParking(parkingname))
+		{
+			database.addFriends(username, parkingname );
+			response.setStatus(200);
+		}
+		
+		response.setStatus(400);
 	}
 
 }

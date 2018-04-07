@@ -10,34 +10,32 @@ import javax.servlet.http.HttpServletResponse;
 import database.AppDatabase;
 
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class AddingFriendsServlet
  */
-@WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/AddingFriendsServlet")
+public class AddingFriendsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
- 
-    public LoginServlet() {
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AddingFriendsServlet() {
         super();
-     
+        // TODO Auto-generated constructor stub
     }
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		String friendsusername = request.getParameter("friendsusername");
 		String username = request.getParameter("username");
-		byte[] password = null;
-		//(byte[])request.getParameter("password");
+		String rating = request.getParameter("rating");
 		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		if(database.loginUser(username, password))
+		int userid = database.getUserIdByUsername(username);
+		if(database.exists(friendsusername) && database.exists(username))
 		{
+			database.addFriends(username, friendsusername);
 			response.setStatus(200);
 		}
-		else
-		{
-			response.setStatus(400);
-		}
 		
-		
-		
+		response.setStatus(400);
 	}
 
 }

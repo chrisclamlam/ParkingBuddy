@@ -11,6 +11,23 @@ export default class LogInScreen extends React.Component {
       inputPassword: ''
     }
   }
+
+  async onPressLogIn() {
+    
+
+
+
+    this.props.navigation.push('HomeScreen')
+  }
+
+  onPressSignUp() {
+    this.props.navigation.push('SignUpScreen')
+  }
+
+
+
+
+
   render() {
     return (
       <View style={styles.container}>
@@ -31,11 +48,12 @@ export default class LogInScreen extends React.Component {
           style={{ height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 10, padding: 10, width: '80%' }}
           onChangeText={(text) => this.setState({ inputPassword: text })}
           placeholder='Password'
+          secureTextEntry
         />
 
         {/* LOGIN/REGISTER/CONTINUE AS GUEST BUTTONS */}
-        <Button onPress={() => this.props.navigation.push('HomeScreen')} title="LogIn" />
-        <Button onPress={() => this.props.navigation.push('SignUpScreen')} title="Register" />
+        <Button title="LogIn" onPress={() => this.onPressLogIn()} />
+        <Button onPress={() => this.onPressSignUp()} title="Register" />
         <Button onPress={() => this.props.navigation.push('HomeScreen')} title="Continue as guest" />
 
 
