@@ -21,6 +21,22 @@ import static org.junit.Assert.assertEquals;
 public class AppDatabaseTest {
 	
 	@Test
+	public void initDatabase() {
+		// Initialize the Database with variables for testing
+		AppDatabase db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
+		
+		// Add users
+		for(int i = 0; i < 10; i++) {
+			db.registerUser(new User("test" + i, "fname" + i, "lname" + i, "test" + i + "@test.com", ("yeee" + i).getBytes()));
+		}
+		// Add spots
+		
+		// Add comments
+		// Add Favorites
+		// Add friends
+	}
+	
+	@Test
 	public void testGetUserById() {
 		// This line may change, because our schemas and credentials are probably different
 		AppDatabase db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");

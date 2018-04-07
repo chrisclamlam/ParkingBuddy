@@ -8,7 +8,7 @@ public class Comment {
 	private String comment;
 	
 	
-	public Comment(int uid, int sid, double rtg, String comm) {
+	public Comment(int id, int uid, int sid, int rtg, String comm) {
 		userId = uid;
 		spotId = sid;
 		rating = rtg;
