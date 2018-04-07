@@ -38,6 +38,22 @@ public class AppDatabase {
 		}
 	}
 	
+	private boolean insertSpot(ParkingSpot ps) {
+		if(ps == null) return false;
+		try {
+			st.executeUpdate("INSERT INTO ParkingSpots (remoteid, label, longitude, latitude, spotType) VALUES("
+					+ "'" + ps.getRemoteId() + "',"
+					+ "'" + ps.getLabel() + "',"
+					+ "'" + ps.getLongitude() + "'," 
+					+ "'" + ps.getLatitude() + "'," 
+					+ "'" + 1 + "'");
+			return true;
+		} catch (SQLException sqle) {
+			System.out.print(sqle.getMessage());
+			return false;
+		}
+	}
+	
 	private User createUser(ResultSet rs) {
 		int uid;
 		String username, fname, lname, email;
