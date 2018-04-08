@@ -16,7 +16,7 @@ public class AppDatabase {
 	
 	private Connection getConnection() {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName(driver);
 			return DriverManager.getConnection(host); //("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
@@ -40,12 +40,22 @@ public class AppDatabase {
 			if(rs != null) {
 				rs.close();
 			}
+			
+		}
+		catch (SQLException se) {}
+		try {
 			if(st != null) {
 				st.close();
 			}
+			
+		}
+		catch (SQLException se) {}
+		
+		try {
 			if(conn != null) {
 				conn.close();
 			}
+			
 		}
 		catch (SQLException se) {}
 	}

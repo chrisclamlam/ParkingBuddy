@@ -35,16 +35,10 @@ public class SignUp extends HttpServlet {
 		String fname = request.getParameter("fname");
 		String lname = request.getParameter("lname");
 		String email = request.getParameter("email");
-		String line = "";
-		String res = "";
-		while((line = request.getReader().readLine()) != null) {
-			res += line;
-		}
-		System.out.println(res);
 		
 		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
 		User newUser = new User( username, fname, lname, email, password);
-		if(!database.registerUser(newUser))
+		if(database.registerUser(newUser))
 		{
 			response.setStatus(200);
 			return;

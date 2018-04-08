@@ -18,9 +18,12 @@ public class ServletTest {
 	@Test
 	public void testRegisterUser() {
 		
-		String host = "http://localhost:8080/ParkingBuddy/CreateAccountServlet";
+		String host = "http://localhost:8080/ParkingBuddy/SignUp";
 		AppDatabase adb = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
 		try {
+			// Delete the test user
+			adb.delete("username");
+			assertEquals(adb.exists("username"), false);
 			// Connect to the host
 			URL url = new URL(host);
 			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
