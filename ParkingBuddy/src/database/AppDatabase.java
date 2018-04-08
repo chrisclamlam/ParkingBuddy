@@ -7,24 +7,60 @@ public class AppDatabase {
 	
 	// The only variables needed are the connection and statement
 	// Everything else will be passed to methods
-	private Connection conn;
-	private Statement st;
+	private String host;
+	private String driver = "com.mysql.jdbc.Driver";
 	
 	public AppDatabase(String hostname) {
+		host = hostname;
+	}
+	
+	private Connection getConnection() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(hostname); //("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-			st = conn.createStatement();
+			return DriverManager.getConnection(host); //("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println(cnfe.getMessage());
 		}
+		return null;
+	}
+	
+	private Statement getStatement(Connection conn) {
+		try {
+			return conn.createStatement();
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			return null;
+		}
+	}
+	
+	private void close(Connection conn, Statement st, ResultSet rs) {
+		try {
+			if(rs != null) {
+				rs.close();
+			}
+			if(st != null) {
+				st.close();
+			}
+			if(conn != null) {
+				conn.close();
+			}
+		}
+		catch (SQLException se) {}
 	}
 	
 	private boolean insertUser(User u) {
 		if(u == null) return false;
+		Connection conn = getConnection();
+		if(conn == null) return false;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return false;
+		}
 		try {
+			st = conn.createStatement();
 			st.executeUpdate("INSERT INTO Users (username, fname, lname, email, passhash) VALUES ("
 					+ "'" + u.getUsername() + "',"
 					+ "'" + u.getFname() + "',"
@@ -35,11 +71,20 @@ public class AppDatabase {
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return false;
+		} finally {
+			close(conn, st, null);
 		}
 	}
 	
 	private boolean insertSpot(ParkingSpot ps) {
 		if(ps == null) return false;
+		Connection conn = getConnection();
+		if(conn == null) return false;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return false;
+		}
 		try {
 			st.executeUpdate("INSERT INTO ParkingSpots (remoteid, label, longitude, latitude, spotType) VALUES("
 					+ "'" + ps.getRemoteId() + "',"
@@ -51,6 +96,8 @@ public class AppDatabase {
 		} catch (SQLException sqle) {
 			System.out.print(sqle.getMessage());
 			return false;
+		} finally {
+			close(conn, st, null);
 		}
 	}
 	
@@ -95,8 +142,17 @@ public class AppDatabase {
 	}
 	
 	private int getUserId(String username) {
+
+		Connection conn = getConnection();
+		if(conn == null) return -1;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return -1;
+		}
+		ResultSet rs = null;
 		try {
-			ResultSet rs = st.executeQuery("SELECT id FROM users WHERE username = '" + username + "'");
+			rs = st.executeQuery("SELECT id FROM users WHERE username = '" + username + "'");
 			if(rs == null || !rs.next()) { // empty check
 				return -1;
 			}
@@ -104,12 +160,23 @@ public class AppDatabase {
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return -1;
+		} finally {
+			close(conn, st, rs);
 		}
 	}
 	
 	private User getUserFromQuery(String query) {
+		
+		Connection conn = getConnection();
+		if(conn == null) return null;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return null;
+		}
+		ResultSet rs = null;
 		try {
-			ResultSet rs = st.executeQuery(query);
+			rs = st.executeQuery(query);
 			if(rs == null || !rs.next()) { // empty check
 				return null;
 			}
@@ -118,6 +185,8 @@ public class AppDatabase {
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return null;
+		} finally {
+			close(conn, st, rs);
 		}
 	}
 	
@@ -134,15 +203,31 @@ public class AppDatabase {
 	}
 	
 	public void delete(String username) {
+		Connection conn = getConnection();
+		if(conn == null) return;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return;
+		}
 		try {
 			st.executeUpdate("DELETE FROM Users WHERE username =  '" + username + "'");
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
+		} finally {
+			close(conn, st, null);
 		}
 	}
 	
 	public boolean exists(String username) {
 		// Check if the username exists
+		Connection conn = getConnection();
+		if(conn == null) return false;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return false;
+		}
 		ResultSet rs = null;
 		try {
 			rs = st.executeQuery("SELECT COUNT(1) FROM Users WHERE username = '" + username + "'");
@@ -153,13 +238,23 @@ public class AppDatabase {
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return false;
+		} finally {
+			close(conn, st, rs);
 		}
 	}
 	
 	public boolean loginUser(String username, byte[] passhash) {
 		// Check password
+		Connection conn = getConnection();
+		if(conn == null) return false;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return false;
+		}
+		ResultSet rs = null;
 		try {
-			ResultSet rs = st.executeQuery("SELECT COUNT(1) FROM Users WHERE username = '" + username 
+			rs = st.executeQuery("SELECT COUNT(1) FROM Users WHERE username = '" + username 
 			+ "' AND passhash = '" + passhash + "'");
 			if(rs == null || !rs.next()) {
 				return false;
@@ -167,6 +262,8 @@ public class AppDatabase {
 			return true;
 		} catch (SQLException sqle) {
 			return false;
+		} finally {
+			close(conn, st, rs);
 		}
 	}
 	
@@ -185,7 +282,14 @@ public class AppDatabase {
 	// iterate through the set and create an array of users
 	// if the size of the list is 0, return null
 	private ArrayList<User> getUsersFromQuery(String query){
-		ResultSet rs;
+		Connection conn = getConnection();
+		if(conn == null) return null;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return null;
+		}
+		ResultSet rs = null;;
 		ArrayList<User> users = new ArrayList<User>();
 		try {
 			// Execute the Query
@@ -203,6 +307,8 @@ public class AppDatabase {
 			}
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
+		} finally {
+			close(conn, st, rs);
 		}
 		// if the size of the list is 0, return null
 		if(users.size() == 0) {
@@ -232,7 +338,14 @@ public class AppDatabase {
 	}
 	
 	private ArrayList<ParkingSpot> getParkingSpotsFromQuery(String query){
-		ResultSet rs;
+		Connection conn = getConnection();
+		if(conn == null) return null;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return null;
+		}
+		ResultSet rs = null;
 		ArrayList<ParkingSpot> spots = new ArrayList<ParkingSpot>();
 		try {
 			// Execute the Query
@@ -250,6 +363,8 @@ public class AppDatabase {
 			}
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
+		} finally {
+			close(conn, st, rs);
 		}
 		// if the size of the list is 0, return null
 		if(spots.size() == 0) {
@@ -277,6 +392,13 @@ public class AppDatabase {
 	public boolean addSpotComments(int spotid, int userid, int rating, String comments)
 	{
 		if(spotid == -1 || userid == -1) return false;
+		Connection conn = getConnection();
+		if(conn == null) return false;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return false;
+		}
 		try {
 			
 			st.executeUpdate("INSERT INTO Comment(id, uid, sid, rtg, comm) VALUES ("
@@ -288,12 +410,21 @@ public class AppDatabase {
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return false;
+		} finally {
+			close(conn, st, null);
 		}
 	}
 	
 	public boolean addFriends(String username, String friendsusername)
 	{
 		if(username == null || friendsusername == null) return false;
+		Connection conn = getConnection();
+		if(conn == null) return false;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return false;
+		}
 		try {
 			int firstid =  getUserByUsername(username).getId();
 			int secondid =  getUserByUsername(friendsusername).getId(); 
@@ -304,10 +435,19 @@ public class AppDatabase {
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return false;
+		} finally {
+			close(conn, st, null);
 		}
 	}
 	public boolean existsParking(String parkingname)
 	{
+		Connection conn = getConnection();
+		if(conn == null) return false;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return false;
+		}
 		ResultSet rs = null;
 		try {
 			rs = st.executeQuery("SELECT COUNT(1) FROM ParkingSpots WHERE label = '" + parkingname + "'");
@@ -318,6 +458,8 @@ public class AppDatabase {
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return false;
+		} finally {
+			close(conn, st, rs);
 		}
 	
 	}
@@ -332,6 +474,13 @@ public class AppDatabase {
 	public boolean addFavoriteParking(String username, String parkingname)
 	{
 		if(username == null || parkingname == null) return false;
+		Connection conn = getConnection();
+		if(conn == null) return false;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return false;
+		}
 		try {
 			int firstid =  getUserByUsername(username).getId();
 			ParkingSpot spot = getSpotByName(parkingname); 
@@ -342,6 +491,8 @@ public class AppDatabase {
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return false;
+		} finally {
+			close(conn, st, null);
 		}
 	}
 }
