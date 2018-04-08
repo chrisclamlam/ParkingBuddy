@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="C:/Users/bcheck/Downloads/gson-2.8.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/bcheck/Downloads/junit-4.10.jar"/>
 	<classpathentry kind="lib" path="C:/Users/bcheck/Downloads/jose4j-0.6.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/bcheck/Downloads/commons-codec-1.6.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

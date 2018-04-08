@@ -82,6 +82,7 @@ public class AppDatabase {
 			System.out.println(sqle.getMessage());
 			return false;
 		} finally {
+			System.out.println("Closing insert connection");
 			close(conn, st, null);
 		}
 	}
@@ -249,6 +250,7 @@ public class AppDatabase {
 			System.out.println(sqle.getMessage());
 			return false;
 		} finally {
+			System.out.println("Closing exists connection");
 			close(conn, st, rs);
 		}
 	}
