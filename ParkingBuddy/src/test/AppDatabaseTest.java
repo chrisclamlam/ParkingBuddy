@@ -1,20 +1,10 @@
 package test;
 
 import org.junit.Test;
-
-import com.google.gson.Gson;
-
 import database.AppDatabase;
-import database.ParkingSpot;
 import database.User;
-import interpreter.Feature;
-import interpreter.GISSpots;
 
 import static org.junit.Assert.assertEquals;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
 
 /*TODO
  * User getUserByUsername(String username) 

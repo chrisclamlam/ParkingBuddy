@@ -46,7 +46,7 @@ public class AppDatabase {
 					+ "'" + ps.getLabel() + "',"
 					+ "'" + ps.getLongitude() + "'," 
 					+ "'" + ps.getLatitude() + "'," 
-					+ "'" + 1 + "'");
+					+ "'" + 1 + "')");
 			return true;
 		} catch (SQLException sqle) {
 			System.out.print(sqle.getMessage());
@@ -270,10 +270,10 @@ public class AppDatabase {
 		return ps.get(0);
 	}
 	
-	public ArrayList<Comment> getSpotComments(int id){
+	public ArrayList<Comment> getSpotComments(int id) {
 		return null;
 	}
-	
+
 	public boolean addSpotComments(int spotid, int userid, int rating, String comments)
 	{
 		if(spoid == -1 || userid == -1) return false;
