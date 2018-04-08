@@ -12,14 +12,14 @@ import database.AppDatabase;
 /**
  * Servlet implementation class AddParkingFavoriteServlet
  */
-@WebServlet("/AddParkingFavoriteServlet")
-public class AddParkingFavoriteServlet extends HttpServlet {
+@WebServlet("/AddingFavoriteParking")
+public class AddingFavoriteParking extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddParkingFavoriteServlet() {
+    public AddingFavoriteParking() {
         super();
         // TODO Auto-generated constructor stub
     }

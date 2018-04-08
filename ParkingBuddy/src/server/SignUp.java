@@ -13,14 +13,14 @@ import database.User;
 /**
  * Servlet implementation class CreateAccountServlet
  */
-@WebServlet("/CreateAccountServlet")
-public class SignUpServlet extends HttpServlet {
+@WebServlet("/SignUp")
+public class SignUp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SignUpServlet() {
+    public SignUp() {
         super();
         // TODO Auto-generated constructor stub
     }
