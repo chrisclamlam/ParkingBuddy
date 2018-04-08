@@ -15,7 +15,7 @@ import database.AppDatabase;
  * Servlet implementation class SearchValidateServlet
  */
 @WebServlet("/SearchValidate")
-public class SearchValidateextends HttpServlet {
+public class SearchValidate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
