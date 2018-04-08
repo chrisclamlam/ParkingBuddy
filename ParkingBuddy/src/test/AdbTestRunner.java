@@ -22,13 +22,13 @@ public class AdbTestRunner {
 		
 		initDB();
 		
-		Result result = JUnitCore.runClasses(AppDatabaseTest.class);
+		/*Result result = JUnitCore.runClasses(AppDatabaseTest.class);
 		
 		for (Failure failure : result.getFailures()) {
 	         System.out.println(failure.toString());
 	    }
 		
-		System.out.println("Successful: " + result.wasSuccessful());
+		System.out.println("Successful: " + result.wasSuccessful());*/
 	}
 	
 	public static void initDB() {
@@ -39,6 +39,7 @@ public class AdbTestRunner {
 		for(int i = 0; i < 10; i++) {
 			db.registerUser(new User("test" + i, "fname" + i, "lname" + i, "test" + i + "@test.com", ("yeee" + i).getBytes()));
 		}
+
 		// Add spots
 		Gson gson = new Gson();
 		FileReader fr;

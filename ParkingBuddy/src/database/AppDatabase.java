@@ -46,7 +46,7 @@ public class AppDatabase {
 					+ "'" + ps.getLabel() + "',"
 					+ "'" + ps.getLongitude() + "'," 
 					+ "'" + ps.getLatitude() + "'," 
-					+ "'" + 1 + "'");
+					+ "'" + 1 + "')");
 			return true;
 		} catch (SQLException sqle) {
 			System.out.print(sqle.getMessage());
@@ -270,32 +270,26 @@ public class AppDatabase {
 		return ps.get(0);
 	}
 	
-	public ArrayList<Comment> getSpotComments(int id){
+	public ArrayList<Comment> getSpotComments(int id) {
 		return null;
 	}
 	
-	public void addSpotComments(int spotid, int userid, int rating, String comments)
-	{
+	public void addSpotComments(int spotid, int userid, int rating, String comments) {
 		
 	}
-	public int getSpotByName(String name)
-	{
+	public int getSpotByName(String name) {
 		return -1;
 	}
-	public int getUserIdByUsername(String username)
-	{
+	public int getUserIdByUsername(String username) {
 		return -1;
 	}
-	public void addFriends(String username, String friendsusername)
-	{
+	public void addFriends(String username, String friendsusername) {
 		
 	}
-	public boolean existsParking(String parkingname)
-	{
+	public boolean existsParking(String parkingname) {
 		return false;
 	}
-	public void addFavoriteParking(String username, String parkingname)
-	{
+	public void addFavoriteParking(String username, String parkingname) {
 		
 	}
 }

@@ -29,6 +29,7 @@ public class LoginServlet extends HttpServlet {
 		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
 		if(database.loginUser(username, password))
 		{
+			
 			response.setStatus(200);
 		}
 		else
