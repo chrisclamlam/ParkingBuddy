@@ -8,19 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import database.AppDatabase;
-import database.User;
 
 /**
- * Servlet implementation class CreateAccountServlet
+ * Servlet implementation class AddParkingFavoriteServlet
  */
-@WebServlet("/CreateAccountServlet")
-public class SignUpServlet extends HttpServlet {
+@WebServlet("/AddingFavoriteParking")
+public class AddingFavoriteParking extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SignUpServlet() {
+    public AddingFavoriteParking() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -28,27 +27,22 @@ public class SignUpServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String parkingname = request.getParameter("parkingname");
 		String username = request.getParameter("username");
-		byte[] password = request.getParameter("password").getBytes();
-		String fname = request.getParameter("fname");
-		String lname = request.getParameter("lname");
-		String email = request.getParameter("email");
-		String line = "";
-		String res = "";
-		while((line = request.getReader().readLine()) != null) {
-			res += line;
-		}
-		System.out.println(res);
-		
 		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		User newUser = new User( username, fname, lname, email, password);
-		if(!database.registerUser(newUser))
+		
+		if(database.exists(parkingname) && database.existsParking(parkingname))
 		{
+			database.addFriends(username, parkingname );
 			response.setStatus(200);
-			return;
 		}
+		
 		response.setStatus(400);
 	}
 

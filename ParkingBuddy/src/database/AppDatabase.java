@@ -273,23 +273,94 @@ public class AppDatabase {
 	public ArrayList<Comment> getSpotComments(int id) {
 		return null;
 	}
+
+	public boolean addSpotComments(int spotid, int userid, int rating, String comments)
+	{
+		if(spoid == -1 || userid == -1) return false;
+		try {
+			
+			st.executeUpdate("INSERT INTO Comment(id, uid, sid, rtg, comm) VALUES ("
+					+ "'" + userid + "',"
+					+ "'" + spotid + "',"
+					+ "'" + rating + "',"
+					+ "'" + comments + "')" );
+			return true;
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			return false;
+		}
+	}
+	public int getSpotByName(String name) {//returns the id given the spot name
+		ArrayList<ParkingSpot> parkingspots = getParkingSpotsFromQuery("SELECT ParkingSpots WHERE label = '" + name + "' ");
+		if(parkingspots != null)
+		{
+			return parkingspots.get(0).getId();
+		}
+		
+		return -1;
+	}
 	
-	public void addSpotComments(int spotid, int userid, int rating, String comments) {
-		
-	}
-	public int getSpotByName(String name) {
+	public int getUserIdByUsername(String username)
+	{
+		ArrayList<User> users = getUserFromQuery("SELECT * FROM users WHERE username = '" + username + "'");
+		if(users != null)
+		{
+			return users.get(0).getUsername();
+		}
 		return -1;
 	}
-	public int getUserIdByUsername(String username) {
-		return -1;
+	
+	public boolean addFriends(String username, String friendsusername)
+	{
+		if(username == null || friendsusername == null) return false;
+		try {
+			int firstid =  getUserByUsername(username) ;
+			int secondid =  getUserByUsername(friendsusername); 
+			st.executeUpdate("INSERT INTO FriendsList(firstid, secondid) VALUES ("
+					+ "'" + firstid + "',"
+					+ "'" + secondid + "')" );
+			return true;
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			return false;
+		}
 	}
-	public void addFriends(String username, String friendsusername) {
-		
+	public boolean existsParking(String parkingname)
+	{
+		ResultSet rs = null;
+		try {
+			rs = st.executeQuery("SELECT COUNT(1) FROM ParkingSpots WHERE label = '" + parkingname + "'");
+			if(rs == null || !rs.next() || rs.getBoolean(1) == false) { // empty check
+				return false;
+			}
+			return true;
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			return false;
+		}
+	
 	}
-	public boolean existsParking(String parkingname) {
-		return false;
+	public ParkingSpot getSpotByName(String parkingname) {
+		ArrayList<ParkingSpot> ps = getParkingSpotsFromQuery("SELECT * FROM ParkingSpots WHERE label = '" + parkingname + "'");
+		if(ps == null) {
+			return null;
+		}
+		return ps.get(0);
 	}
-	public void addFavoriteParking(String username, String parkingname) {
-		
+	
+	public void addFavoriteParking(String username, String parkingname)
+	{
+		if(username == null || parkingname == null) return false;
+		try {
+			int firstid =  getUserByUsername(username) ;
+			ParkingSpot spot = getSpotByName(parkingname); 
+			st.executeUpdate("INSERT INTO FavoritesList (userid, parkingspots) VALUES ("
+					+ "'" + firstid + "',"
+					+ "'" + spot + "')" );
+			return true;
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			return false;
+		}
 	}
 }

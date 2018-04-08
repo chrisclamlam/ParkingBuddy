@@ -12,11 +12,11 @@ import database.AppDatabase;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/Login")
+public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
  
-    public LoginServlet() {
+    public Login() {
         super();
      
     }
