@@ -44,9 +44,9 @@ public class AddingComments extends HttpServlet {
 		String parkingspotname = request.getParameter("parkingname");
 		String rating = request.getParameter("rating");
 		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		int parkingid =  database.getSpotByName(parkingspotname);
-		int userid = database.getUserIdByUsername(username);
-		if(database.getSpotByName(parkingspotname) != -1)//if parking name exists
+		int parkingid =  database.getSpotByName(parkingspotname).getId();
+		int userid = database.getUserByUsername(username).getId();
+		if(database.getSpotByName(parkingspotname).getId() != -1)//if parking name exists
 		{
 			
 			database.addSpotComments(parkingid, userid, Integer.parseInt(rating), usercomment);

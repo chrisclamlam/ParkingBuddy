@@ -276,7 +276,7 @@ public class AppDatabase {
 
 	public boolean addSpotComments(int spotid, int userid, int rating, String comments)
 	{
-		if(spoid == -1 || userid == -1) return false;
+		if(spotid == -1 || userid == -1) return false;
 		try {
 			
 			st.executeUpdate("INSERT INTO Comment(id, uid, sid, rtg, comm) VALUES ("
@@ -290,32 +290,13 @@ public class AppDatabase {
 			return false;
 		}
 	}
-	public int getSpotByName(String name) {//returns the id given the spot name
-		ArrayList<ParkingSpot> parkingspots = getParkingSpotsFromQuery("SELECT ParkingSpots WHERE label = '" + name + "' ");
-		if(parkingspots != null)
-		{
-			return parkingspots.get(0).getId();
-		}
-		
-		return -1;
-	}
-	
-	public int getUserIdByUsername(String username)
-	{
-		ArrayList<User> users = getUserFromQuery("SELECT * FROM users WHERE username = '" + username + "'");
-		if(users != null)
-		{
-			return users.get(0).getUsername();
-		}
-		return -1;
-	}
 	
 	public boolean addFriends(String username, String friendsusername)
 	{
 		if(username == null || friendsusername == null) return false;
 		try {
-			int firstid =  getUserByUsername(username) ;
-			int secondid =  getUserByUsername(friendsusername); 
+			int firstid =  getUserByUsername(username).getId();
+			int secondid =  getUserByUsername(friendsusername).getId(); 
 			st.executeUpdate("INSERT INTO FriendsList(firstid, secondid) VALUES ("
 					+ "'" + firstid + "',"
 					+ "'" + secondid + "')" );
@@ -348,11 +329,11 @@ public class AppDatabase {
 		return ps.get(0);
 	}
 	
-	public void addFavoriteParking(String username, String parkingname)
+	public boolean addFavoriteParking(String username, String parkingname)
 	{
 		if(username == null || parkingname == null) return false;
 		try {
-			int firstid =  getUserByUsername(username) ;
+			int firstid =  getUserByUsername(username).getId();
 			ParkingSpot spot = getSpotByName(parkingname); 
 			st.executeUpdate("INSERT INTO FavoritesList (userid, parkingspots) VALUES ("
 					+ "'" + firstid + "',"

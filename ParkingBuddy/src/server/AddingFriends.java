@@ -28,7 +28,7 @@ public class AddingFriends extends HttpServlet {
 		String username = request.getParameter("username");
 		String rating = request.getParameter("rating");
 		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		int userid = database.getUserIdByUsername(username);
+		int userid = database.getUserByUsername(username).getId(); 
 		if(database.exists(friendsusername) && database.exists(username))
 		{
 			database.addFriends(username, friendsusername);
