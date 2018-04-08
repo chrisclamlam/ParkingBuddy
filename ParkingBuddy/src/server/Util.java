@@ -1,5 +1,7 @@
 package server;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -8,6 +10,19 @@ import org.jose4j.jwk.RsaJwkGenerator;
 import org.jose4j.lang.JoseException;
 
 public class Util {
+	
+	private byte[] priKey;
+	private byte[] pubKey;
+	
+	public Util() {
+		try {
+			FileReader fr = new FileReader("priKey.txt");
+			
+		} catch (FileNotFoundException fnfe) {
+			System.out.println(fnfe.getMessage());
+		}
+		
+	}
 	
 	public static void genKeys() {
 		
@@ -33,8 +48,10 @@ public class Util {
 		}
 	}
 	
+	
+	
 	public static void main(String[] args) {
-		genKeys();
+		
 	}
 
 }

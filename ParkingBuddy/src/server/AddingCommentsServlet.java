@@ -38,6 +38,7 @@ public class AddingCommentsServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("Add comment endpoint hit");
 		String usercomment = request.getParameter("usercomment");
 		String username = request.getParameter("username");
 		String parkingspotname = request.getParameter("parkingname");
