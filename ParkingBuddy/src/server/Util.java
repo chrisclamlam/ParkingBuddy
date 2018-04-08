@@ -1,100 +1,136 @@
-/*This code is copied from: https://stackoverflow.com/questions/11787571/how-to-read-pem-file-to-get-private-and-public-key
- */
-
 package server;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-import javax.crypto.Cipher;
+import org.jose4j.jwa.AlgorithmConstraints;
+import org.jose4j.jwa.AlgorithmConstraints.ConstraintType;
+import org.jose4j.jwk.RsaJsonWebKey;
+import org.jose4j.jwk.RsaJwkGenerator;
+import org.jose4j.jws.AlgorithmIdentifiers;
+import org.jose4j.jws.JsonWebSignature;
+import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.consumer.InvalidJwtException;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
+import org.jose4j.lang.JoseException;
 
-import org.apache.commons.codec.binary.Base64;
+import database.User;
 
 public class Util {
-
-	private static String getKey(String filename) throws IOException {
-	    // Read key from file
-	    String strKeyPEM = "";
-	    BufferedReader br = new BufferedReader(new FileReader(filename));
-	    String line;
-	    while ((line = br.readLine()) != null) {
-	        strKeyPEM += line + "\n";
-	    }
-	    br.close();
-	    return strKeyPEM;
-	}
-	public static RSAPrivateKey getPrivateKey(String filename) throws IOException, GeneralSecurityException {
-	    String privateKeyPEM = getKey(filename);
-	    return getPrivateKeyFromString(privateKeyPEM);
-	}
 	
-	public static RSAPrivateKey getPrivateKeyFromString(String key) throws IOException, GeneralSecurityException {
-	    String privateKeyPEM = key;
-	    privateKeyPEM = privateKeyPEM.replace("-----BEGIN PRIVATE KEY-----\n", "");
-	    privateKeyPEM = privateKeyPEM.replace("-----END PRIVATE KEY-----", "");
-	    byte[] encoded = Base64.decodeBase64(privateKeyPEM);
-	    KeyFactory kf = KeyFactory.getInstance("RSA");
-	    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
-	    RSAPrivateKey privKey = (RSAPrivateKey) kf.generatePrivate(keySpec);
-	    return privKey;
-	}
+	private static RsaJsonWebKey key = readKeyFromFile("key.txt");
 	
-	
-	public static RSAPublicKey getPublicKey(String filename) throws IOException, GeneralSecurityException {
-	    String publicKeyPEM = getKey(filename);
-	    return getPublicKeyFromString(publicKeyPEM);
-	}
-	
-	public static RSAPublicKey getPublicKeyFromString(String key) throws IOException, GeneralSecurityException {
-	    String publicKeyPEM = key;
-	    publicKeyPEM = publicKeyPEM.replace("-----BEGIN PUBLIC KEY-----\n", "");
-	    publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
-	    byte[] encoded = Base64.decodeBase64(publicKeyPEM);
-	    KeyFactory kf = KeyFactory.getInstance("RSA");
-	    RSAPublicKey pubKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(encoded));
-	    return pubKey;
+	public static String generateToken(User u) {
+		// Generate the key
+		RsaJsonWebKey key = Util.generateKey();
+		key.setKeyId("k1");
+		
+		// Set data claims
+		JwtClaims claims = new JwtClaims();
+		claims.setIssuer("ParkingBuddy");
+		claims.setAudience("user");
+		claims.setClaim("username", u.getUsername());
+		claims.setClaim("fname", u.getFname());
+		claims.setClaim("lname", u.getLname());
+		claims.setClaim("email", u.getEmail());
+		claims.setClaim("passhash", u.getPasshash());
+		claims.setExpirationTimeMinutesInTheFuture(30);
+		claims.setSubject("auth");
+		
+		// Set the signature
+		JsonWebSignature jws = new JsonWebSignature();
+		jws.setPayload(claims.toJson());
+		
+		// Encrypt and return
+		jws.setKey(key.getPrivateKey());
+		jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
+		try {
+			return jws.getCompactSerialization();
+		} catch (JoseException je) {
+			System.out.println(je.getMessage());
+			return null;
+		}
 	}
 	
-	public static String sign(PrivateKey privateKey, String message) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnsupportedEncodingException {
-	    Signature sign = Signature.getInstance("SHA1withRSA");
-	    sign.initSign(privateKey);
-	    sign.update(message.getBytes("UTF-8"));
-	    return new String(Base64.encodeBase64(sign.sign()), "UTF-8");
+	public static User readToken(String jwt) {
+		// Decrypt data
+		try {
+			JwtConsumer jwtConsumer = new JwtConsumerBuilder()
+	            .setRequireExpirationTime() // the JWT must have an expiration time
+	            .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
+	            .setRequireSubject() // the JWT must have a subject claim
+	            .setExpectedIssuer("ParkingBuddy") // whom the JWT needs to have been issued by
+	            .setExpectedAudience("user") // to whom the JWT is intended for
+	            .setVerificationKey(key.getKey()) // verify the signature with the public key
+	            .setJwsAlgorithmConstraints( // only allow the expected signature algorithm(s) in the given context
+	                    new AlgorithmConstraints(ConstraintType.WHITELIST, // which is only RS256 here
+	                            AlgorithmIdentifiers.RSA_USING_SHA256))
+	            .build(); // create the JwtConsumer instance
+			// Get data to instantiate user from claim
+			int id;
+			String username, email, fname, lname;
+			byte[] passhash;
+			// Get data from claim
+			JwtClaims res = jwtConsumer.processToClaims(jwt);
+			id = (int)res.getClaimValue("id");
+			username = (String)res.getClaimValue("username");
+			email = (String)res.getClaimValue("email");
+			fname = (String)res.getClaimValue("fname");
+			lname = (String)res.getClaimValue("lname");
+			passhash = ((String)res.getClaimValue("passhash")).getBytes();
+			// Initialize user and return it for operations
+			return new User(id, username, email, fname, lname, passhash);
+		} catch (InvalidJwtException ije) {
+			System.out.println(ije.getMessage());
+			return null;
+		}
 	}
 	
-	
-	public static boolean verify(PublicKey publicKey, String message, String signature) throws SignatureException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-	    Signature sign = Signature.getInstance("SHA1withRSA");
-	    sign.initVerify(publicKey);
-	    sign.update(message.getBytes("UTF-8"));
-	    return sign.verify(Base64.decodeBase64(signature.getBytes("UTF-8")));
+	public static void writeKeyToFile(RsaJsonWebKey key, String filename) {
+		try {
+			FileOutputStream fos = new FileOutputStream(filename);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(key);
+			oos.flush();
+			oos.close();
+			fos.close();
+		}
+		catch (IOException ioe){
+			System.out.println(ioe.getMessage());
+		}
 	}
 	
-	public static String encrypt(String rawText, PublicKey publicKey) throws IOException, GeneralSecurityException {
-	    Cipher cipher = Cipher.getInstance("RSA");
-	    cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-	    return Base64.encodeBase64String(cipher.doFinal(rawText.getBytes("UTF-8")));
+	public static RsaJsonWebKey readKeyFromFile(String filename) {
+		RsaJsonWebKey key = null;
+		try {
+			FileInputStream fis = new FileInputStream(filename);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			key = (RsaJsonWebKey) ois.readObject();
+			ois.close();
+			fis.close();
+			return key;
+		} catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
+		} catch (ClassNotFoundException cnfe) {
+			System.out.println(cnfe.getMessage());
+		}
+		return null;
 	}
 	
-	public static String decrypt(String cipherText, PrivateKey privateKey) throws IOException, GeneralSecurityException {
-	    Cipher cipher = Cipher.getInstance("RSA");
-	    cipher.init(Cipher.DECRYPT_MODE, privateKey);
-	    return new String(cipher.doFinal(Base64.decodeBase64(cipherText)), "UTF-8");
+	public static RsaJsonWebKey generateKey() {
+		try {
+			return RsaJwkGenerator.generateJwk(2048);
+		} catch (JoseException je) {
+			System.out.println(je.getMessage());
+			return null;
+		}
+	}
+	
+	public static void main(String[] args) {
+		writeKeyToFile(generateKey(), "key.txt");
 	}
 }
