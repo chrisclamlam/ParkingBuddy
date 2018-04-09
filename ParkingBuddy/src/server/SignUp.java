@@ -40,6 +40,9 @@ public class SignUp extends HttpServlet {
 		User newUser = new User( username, fname, lname, email, password);
 		if(database.registerUser(newUser))
 		{
+			// Generate a token and set the "Set-Cookie" header for the response
+			String token = Util.generateToken(newUser);
+			response.setHeader("Set-Cookie", token);
 			response.setStatus(200);
 			return;
 		}
