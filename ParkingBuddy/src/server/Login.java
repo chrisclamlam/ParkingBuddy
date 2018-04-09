@@ -19,7 +19,6 @@ public class Login extends HttpServlet {
  
     public Login() {
         super();
-     
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
