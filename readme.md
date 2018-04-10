@@ -32,3 +32,9 @@ To run the back end:
 6. Click "Browse" to the right of the root directory option
 7. Select the "ParkingBuddy" folder from the cloned repo
 8. Click "Finish" and you're done!
+
+
+To Do List:
+1. AddingCustomSpot servlet - decide to do GOOGLE API front-end or backend
+2. SearchSpot servlet - is put on hold until we get google API
+3. Uber/Lyft servlet Comparisons - do after once basic functionalities are working
