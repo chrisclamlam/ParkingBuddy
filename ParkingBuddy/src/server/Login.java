@@ -29,8 +29,8 @@ public class Login extends HttpServlet {
 		if(database.loginUser(username, password))
 		{
 			User u = database.getUserByUsername(username);
-//			String token = Util.generateToken(u, getServletContext().getRealPath("key.txt"));
-//			response.setHeader("Set-Cookie", token);
+			String token = Util.generateToken(u, getServletContext().getRealPath("key.txt"));
+			response.setHeader("Set-Cookie", token);
 			response.setStatus(200);
 			return;
 		}

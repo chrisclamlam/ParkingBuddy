@@ -5,6 +5,21 @@
         <dependent-module archiveName="mysql-connector-java-5.1.46.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/C:/Users/bcheck/Downloads/mysql-connector-java-5.1.46.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="jose4j-0.6.3.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/C:/Users/bcheck/Downloads/jose4j-0.6.3.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="slf4j-api-1.6.6.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/C:/Users/bcheck/Downloads/slf4j-api-1.6.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="junit-4.10.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/C:/Users/bcheck/Downloads/junit-4.10.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jsoup-1.11.2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/C:/Users/bcheck/Downloads/jsoup-1.11.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-codec-1.6.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/C:/Users/bcheck/Downloads/commons-codec-1.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="ParkingBuddy"/>
         <property name="java-output-path" value="/ParkingBuddy/build/classes"/>
     </wb-module>

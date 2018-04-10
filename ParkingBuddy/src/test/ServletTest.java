@@ -37,7 +37,7 @@ public class ServletTest {
 			out.close();
 			// Test the response code
 			assertEquals(200, conn.getResponseCode());
-			// assertNotNull(conn.getHeaderField("Set-Cookie"));
+			assertNotNull(conn.getHeaderField("Set-Cookie"));
 			adb.delete("username");
 			assertEquals(adb.exists("username"), false);
 			return;
@@ -48,13 +48,10 @@ public class ServletTest {
 		assertEquals(true, false);
 	}
 	
-/*	@Test
+	@Test
 	public void testLoginUser() {
 		String host = "http://localhost:8080/ParkingBuddy/Login";
 		AppDatabase adb = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		try {
-			
-		}
 		
-	}*/
+	}
 }
