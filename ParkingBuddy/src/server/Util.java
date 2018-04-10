@@ -22,7 +22,11 @@ import database.User;
 
 public class Util {
 	
-	private static RsaJsonWebKey key = null;
+	private static RsaJsonWebKey key;
+	
+	public Util(String keyFile) {
+		key = readKeyFromFile(keyFile);
+	}
 	
 	public static String generateToken(User u, String filename) {
 		// Generate the key

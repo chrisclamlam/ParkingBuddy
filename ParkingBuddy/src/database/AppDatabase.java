@@ -453,9 +453,9 @@ public class AppDatabase {
 		return getCommentsFromQuery("SELECT * FROM Comments WHERE spotid = '" + id + "'");
 	}
 
-	public boolean addSpotComments(int spotid, int userid, int rating, String comments)
+	public boolean addSpotComments(Comment c)
 	{
-		if(spotid == -1 || userid == -1) return false;
+		if(c.getSpotId() == -1 || c.getUserId() == -1) return false;
 		Connection conn = getConnection();
 		if(conn == null) return false;
 		Statement st = getStatement(conn);
@@ -465,11 +465,11 @@ public class AppDatabase {
 		}
 		try {
 			
-			st.executeUpdate("INSERT INTO Comment(id, uid, sid, rtg, comm) VALUES ("
-					+ "'" + userid + "',"
-					+ "'" + spotid + "',"
-					+ "'" + rating + "',"
-					+ "'" + comments + "')" );
+			st.executeUpdate("INSERT INTO Comment(userid, spotid, rating, input) VALUES ("
+					+ "'" + c.getUserId() + "',"
+					+ "'" + c.getSpotId() + "',"
+					+ "'" + c.getRating() + "',"
+					+ "'" + c.getComment() + "')" );
 			return true;
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());

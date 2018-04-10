@@ -2,13 +2,23 @@ package database;
 
 public class Comment {
 	
+	private int commentId;
 	private int userId;
 	private int spotId;
-	private double rating;
+	private int rating;
 	private String comment;
 	
+	public Comment(int cid, int uid, int sid, int rtg, String comm) {
+		commentId = cid;
+		userId = uid;
+		spotId = sid;
+		rating = rtg;
+		comment = comm;
+	}
 	
-	public Comment(int id, int uid, int sid, int rtg, String comm) {
+	
+	public Comment(int uid, int sid, int rtg, String comm) {
+		commentId = -1;
 		userId = uid;
 		spotId = sid;
 		rating = rtg;
@@ -26,7 +36,7 @@ public class Comment {
 	}
 
 
-	public double getRating() {
+	public int getRating() {
 		return rating;
 	}
 

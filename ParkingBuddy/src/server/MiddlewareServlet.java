@@ -13,7 +13,7 @@ public class MiddlewareServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	@SuppressWarnings("unused")
-	private User user;
+	protected User user;
 	
 	public MiddlewareServlet() {
 		super();
@@ -22,6 +22,7 @@ public class MiddlewareServlet extends HttpServlet {
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException  {
+		System.out.println("Middleware parsing token");
 		// Decrypt the token
 		String token = req.getParameter("Token");
 		// Set the variables
