@@ -36,5 +36,5 @@ To run the back end:
 
 To Do List:
 1. AddingCustomSpot servlet - decide to do GOOGLE API front-end or backend
-2. SearchSpot servlet - is put on hold until we get google API
+2. SearchSpot servlet - is put on hold until we get GOOGLE API
 3. Uber/Lyft servlet Comparisons - do after once basic functionalities are working
