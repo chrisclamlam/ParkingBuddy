@@ -53,5 +53,7 @@ public class ServletTest {
 		String host = "http://localhost:8080/ParkingBuddy/Login";
 		AppDatabase adb = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
 		
+		
+		
 	}
 }

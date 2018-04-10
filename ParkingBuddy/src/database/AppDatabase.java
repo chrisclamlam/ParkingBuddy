@@ -152,6 +152,22 @@ public class AppDatabase {
 		}
 	}
 	
+	private Comment createComment(ResultSet rs) {
+		int id, uid, sid, rating;
+		String comment;
+		try {
+			id = rs.getInt(1);
+			uid = rs.getInt(2);
+			sid = rs.getInt(3);
+			rating = rs.getInt(4);
+			comment = rs.getString(5);
+			return new Comment(id, uid, sid, rating, comment);
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+			return null;
+		}
+	}
+	
 	private int getUserId(String username) {
 
 		Connection conn = getConnection();
@@ -397,8 +413,44 @@ public class AppDatabase {
 		return ps.get(0);
 	}
 	
+	public ArrayList<Comment> getCommentsFromQuery(String query){
+		Connection conn = getConnection();
+		if(conn == null) return null;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return null;
+		}
+		ResultSet rs = null;
+		ArrayList<Comment> comments = new ArrayList<Comment>();
+		try {
+			// Execute the Query
+			rs = st.executeQuery(query);
+			if(rs == null || !rs.next()) {
+				return null;
+			}	
+			// Parse and iterate over rs
+			while(rs.next()) {
+				Comment comment = createComment(rs);
+				// Add User to list
+				if(comment != null) {
+					comments.add(comment);
+				}
+			}
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		} finally {
+			close(conn, st, rs);
+		}
+		// if the size of the list is 0, return null
+		if(comments.size() == 0) {
+			return null;
+		}
+		return comments;
+	}
+	
 	public ArrayList<Comment> getSpotComments(int id) {
-		return null;
+		return getCommentsFromQuery("SELECT * FROM Comments WHERE spotid = '" + id + "'");
 	}
 
 	public boolean addSpotComments(int spotid, int userid, int rating, String comments)
@@ -481,6 +533,16 @@ public class AppDatabase {
 			return null;
 		}
 		return ps.get(0);
+	}
+	
+	public ArrayList<ParkingSpot> searchSpotByLocation(double latitude, double longitude){
+		// Calculate the great circle distance between the destination (latitude and longitude vars) ^
+		// Check to see if the distance is within a quarter mile
+		// return good results
+		String query = "SELECT * FROM ParkingSpots WHERE "
+				+ "(3959 * ACOS( COS( RADIANS('" + latitude + "' ) ) * COS ( RADIANS (latitude) ) * COS ( RADIANS(latitude) - RADIANS('" + longitude + "') ) +  "
+				+ "SIN('" + longitude + "') * SIN(longitude))) < .25";
+		return getParkingSpotsFromQuery(query);
 	}
 	
 	public boolean addFavoriteParking(String username, String parkingname)
