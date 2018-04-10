@@ -22,11 +22,13 @@ import database.User;
 
 public class Util {
 	
-	private static RsaJsonWebKey key = readKeyFromFile("key.txt");
+	private static RsaJsonWebKey key = null;
 	
-	public static String generateToken(User u) {
+	public static String generateToken(User u, String filename) {
 		// Generate the key
+		System.out.println("Reading key from file");
 		RsaJsonWebKey key = Util.generateKey();
+		System.out.println("Read key from file");
 		key.setKeyId("k1");
 		
 		// Set data claims
@@ -49,6 +51,7 @@ public class Util {
 		jws.setKey(key.getPrivateKey());
 		jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
 		try {
+			System.out.println("Serializing JWT into string");
 			return jws.getCompactSerialization();
 		} catch (JoseException je) {
 			System.out.println(je.getMessage());
