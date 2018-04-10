@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.junit.Test;
@@ -51,9 +52,22 @@ public class ServletTest {
 	@Test
 	public void testLoginUser() {
 		String host = "http://localhost:8080/ParkingBuddy/Login";
-		AppDatabase adb = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		
-		
-		
+		try {
+			URL url = new URL(host);
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			conn.setRequestMethod("POST");
+			String body = "username=test0&passhash=" + "yeee".getBytes();
+			conn.setDoOutput(true);
+			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+			out.writeBytes(body);
+			out.flush();
+			out.close();
+			assertEquals(200, conn.getResponseCode());
+			assertNotNull(conn.getHeaderField("Set-Cookie"));
+		} catch (MalformedURLException mue) {
+			System.out.println(mue.getMessage());
+		} catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
+		}
 	}
 }
