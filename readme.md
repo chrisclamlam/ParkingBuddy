@@ -41,3 +41,4 @@ To Do List:
 4. Search/Point-in-a-polygon Database func and Server endpoint
 5. Token middleware handling
 6. Connection multithreading with ConnnectionCachePool or something like that
+7. Add ServletContextListener to startup global AppDatabase and Util instances
