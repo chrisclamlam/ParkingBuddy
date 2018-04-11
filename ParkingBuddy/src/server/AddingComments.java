@@ -44,7 +44,7 @@ public class AddingComments extends MiddlewareServlet {
 		// Send a request to the database to add a comment
 		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
 		Comment c  = new Comment(uid, sid, rating, comment);
-		if(database.addSpotComments(c)) {//if parking name exists{
+		if(database.addSpotComments(c)) {//if parking name exists
 			response.setStatus(200);
 			return;
 		}

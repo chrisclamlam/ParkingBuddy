@@ -18,32 +18,44 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
 
+import database.AppDatabase;
 import database.User;
 
 public class Util {
 	
 	private static RsaJsonWebKey key;
+	private static AppDatabase db;
 	
 	public Util(String keyFile) {
 		key = readKeyFromFile(keyFile);
+		db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
+	}
+	
+	public RsaJsonWebKey getKey() {
+		return key;
 	}
 	
 	public static String generateToken(User u, String filename) {
-		// Generate the key
-		System.out.println("Reading key from file");
-		RsaJsonWebKey key = Util.generateKey();
-		System.out.println("Read key from file");
+		// Generate the token
 		key.setKeyId("k1");
 		
 		// Set data claims
 		JwtClaims claims = new JwtClaims();
 		claims.setIssuer("ParkingBuddy");
 		claims.setAudience("user");
+		
+		// Make sure that the claim always generates all these fields:
+		/* id
+		 * username
+		 * fname
+		 * lname
+		 * email
+		 */
+		claims.setClaim("id", db.getUserByUsername(u.getUsername()).getId());
 		claims.setClaim("username", u.getUsername());
 		claims.setClaim("fname", u.getFname());
 		claims.setClaim("lname", u.getLname());
 		claims.setClaim("email", u.getEmail());
-		claims.setClaim("passhash", u.getPasshash());
 		claims.setExpirationTimeMinutesInTheFuture(30);
 		claims.setSubject("auth");
 		
@@ -63,7 +75,7 @@ public class Util {
 		}
 	}
 	
-	public static User readToken(String jwt) {
+	public User readToken(String jwt) {
 		// Decrypt data
 		try {
 			JwtConsumer jwtConsumer = new JwtConsumerBuilder()
@@ -78,19 +90,21 @@ public class Util {
 	                            AlgorithmIdentifiers.RSA_USING_SHA256))
 	            .build(); // create the JwtConsumer instance
 			// Get data to instantiate user from claim
+			System.out.println("successfully made consumer");
+			System.out.println("Token: " + jwt);
 			int id;
 			String username, email, fname, lname;
-			byte[] passhash;
 			// Get data from claim
 			JwtClaims res = jwtConsumer.processToClaims(jwt);
-			id = (int)res.getClaimValue("id");
+			System.out.println("Decrypting claims");
+			id = (int)(long)res.getClaimValue("id");
 			username = (String)res.getClaimValue("username");
 			email = (String)res.getClaimValue("email");
 			fname = (String)res.getClaimValue("fname");
 			lname = (String)res.getClaimValue("lname");
-			passhash = ((String)res.getClaimValue("passhash")).getBytes();
+			System.out.println("Finished decrypting claims");
 			// Initialize user and return it for operations
-			return new User(id, username, email, fname, lname, passhash);
+			return new User(id, username, email, fname, lname);
 		} catch (InvalidJwtException ije) {
 			System.out.println(ije.getMessage());
 			return null;
@@ -121,9 +135,9 @@ public class Util {
 			fis.close();
 			return key;
 		} catch (IOException ioe) {
-			System.out.println(ioe.getMessage());
+			System.out.println("Exception while reading key from file: " + ioe.getMessage());
 		} catch (ClassNotFoundException cnfe) {
-			System.out.println(cnfe.getMessage());
+			System.out.println("Exception while reading key from file: " + cnfe.getMessage());
 		}
 		return null;
 	}

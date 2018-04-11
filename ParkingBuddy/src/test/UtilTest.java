@@ -28,8 +28,7 @@ public class UtilTest {
 		if(sameKey == null) {
 			assertEquals(true, false);
 		}
-		assertEquals(key.getAlgorithm(), sameKey.getAlgorithm());
-		assertEquals(key.getKey(), sameKey.getKey());
+		assertEquals(key.getKeyType(), sameKey.getKeyType());
 	}
 	
 	@Test

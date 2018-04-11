@@ -29,6 +29,14 @@ public class User {
 		this.passhash = passhash;
 	}
 	
+	public User(int id, String username, String fname, String lname, String email) {
+		this.id = id;
+		this.username = username;
+		this.fname = fname;
+		this.lname = lname;
+		this.email = email;
+	}
+	
 	// Only use getters as everything is set in constructors
 	public int getId() {
 		return id;

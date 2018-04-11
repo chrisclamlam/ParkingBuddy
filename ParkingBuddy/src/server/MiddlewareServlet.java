@@ -22,11 +22,13 @@ public class MiddlewareServlet extends HttpServlet {
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException  {
-		System.out.println("Middleware parsing token");
+
 		// Decrypt the token
-		String token = req.getParameter("Token");
-		// Set the variables
-		user = Util.readToken(token);
+		String token = req.getHeader("Token");
+		System.out.println("Token received by middleware: " + token);
+		// Get the initialized Util class
+		System.out.println("Encryption type: " + ((Util)getServletContext().getAttribute("util")).getKey().getKeyType());
+		user = ((Util)getServletContext().getAttribute("util")).readToken(token);
 		// Get the request method
 		String method = req.getMethod();
 		// Invoke the request

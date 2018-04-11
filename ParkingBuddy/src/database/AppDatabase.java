@@ -465,7 +465,7 @@ public class AppDatabase {
 		}
 		try {
 			
-			st.executeUpdate("INSERT INTO Comment(userid, spotid, rating, input) VALUES ("
+			st.executeUpdate("INSERT INTO Comments(userid, spotid, rating, input) VALUES ("
 					+ "'" + c.getUserId() + "',"
 					+ "'" + c.getSpotId() + "',"
 					+ "'" + c.getRating() + "',"

@@ -96,6 +96,7 @@ public class ServletTest {
 			assertNotNull(conn.getHeaderField("Set-Cookie"));
 			// Store the token and use it for subsequent requests
 			String token = conn.getHeaderField("Set-Cookie");
+			System.out.println("Token from request: " + token);
 			// Make a subsequent request to the AddComment endpoint
 			url = new URL(addCommentEndpoint);
 			conn = (HttpURLConnection)url.openConnection();
