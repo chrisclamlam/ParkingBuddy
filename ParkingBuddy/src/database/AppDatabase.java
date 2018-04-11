@@ -1,29 +1,40 @@
 package database;
 
+import java.beans.PropertyVetoException;
 import java.sql.*;
 import java.util.ArrayList;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 public class AppDatabase {
 	
 	// The only variables needed are the connection and statement
 	// Everything else will be passed to methods
-	private String host;
-	private String driver = "com.mysql.jdbc.Driver";
+	private ComboPooledDataSource cpds;
 	
 	public AppDatabase(String hostname) {
-		host = hostname;
+		cpds = new ComboPooledDataSource();
+		try {
+			cpds.setDriverClass("com.mysql.jdbc.Driver");
+		} catch (PropertyVetoException pve) {
+			System.out.println(pve.getMessage());
+		}
+		cpds.setJdbcUrl(hostname);
+		cpds.setUser("root");
+		cpds.setPassword("OwrzTest");
+		cpds.setMinPoolSize(5);
+		cpds.setAcquireIncrement(5);
+		cpds.setMaxPoolSize(20);
+		cpds.setMaxStatements(180);
 	}
 	
 	private Connection getConnection() {
 		try {
-			Class.forName(driver);
-			return DriverManager.getConnection(host); //("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
+			return cpds.getConnection();
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println(cnfe.getMessage());
+			return null;
 		}
-		return null;
 	}
 	
 	private Statement getStatement(Connection conn) {

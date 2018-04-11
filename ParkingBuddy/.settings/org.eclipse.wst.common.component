@@ -20,6 +20,12 @@
         <dependent-module archiveName="commons-codec-1.6.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/C:/Users/bcheck/Downloads/commons-codec-1.6.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="c3p0-0.9.5.2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/C:/Users/bcheck/Downloads/c3p0-0.9.5.2.bin/c3p0-0.9.5.2/lib/c3p0-0.9.5.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mchange-commons-java-0.2.11.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/C:/Users/bcheck/Downloads/c3p0-0.9.5.2.bin/c3p0-0.9.5.2/lib/mchange-commons-java-0.2.11.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="ParkingBuddy"/>
         <property name="java-output-path" value="/ParkingBuddy/build/classes"/>
     </wb-module>

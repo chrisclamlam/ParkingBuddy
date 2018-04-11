@@ -2,7 +2,6 @@ package test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -20,15 +19,15 @@ public class AdbTestRunner {
 	
 	public static void main(String[] args) {
 		
-		initDB();
+//		initDB();
 		
-		/*Result result = JUnitCore.runClasses(AppDatabaseTest.class);
+		Result result = JUnitCore.runClasses(AppDatabaseTest.class);
 		
 		for (Failure failure : result.getFailures()) {
 	         System.out.println(failure.toString());
 	    }
 		
-		System.out.println("Successful: " + result.wasSuccessful());*/
+		System.out.println("Successful: " + result.wasSuccessful());
 	}
 	
 	public static void initDB() {
@@ -44,7 +43,6 @@ public class AdbTestRunner {
 		Gson gson = new Gson();
 		FileReader fr;
 		GISSpots laSpots = null;
-		ArrayList<ParkingSpot> ourSpots = null;
 		try {
 			fr = new FileReader("ParkingMeterSensors.json");
 			laSpots = gson.fromJson(fr, GISSpots.class);
