@@ -39,6 +39,3 @@ To Do List:
 2. SearchSpot servlet - is put on hold until we get GOOGLE API
 3. Uber/Lyft servlet Comparisons - do after once basic functionalities are working
 4. Search/Point-in-a-polygon Database func and Server endpoint
-5. Token middleware handling
-6. Connection multithreading with ConnnectionCachePool or something like that
-7. Add ServletContextListener to startup global AppDatabase and Util instances
