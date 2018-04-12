@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { MapView, Constants, Location, Permissions } from 'expo';
+import { SearchBar } from 'react-native-elements'
+
 
 
 export default class App extends React.Component {
@@ -38,8 +40,8 @@ export default class App extends React.Component {
       initregion: {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        latitudeDelta: 0.092,
-        longitudeDelta: 0.0221,
+        latitudeDelta: 0.072,
+        longitudeDelta: 0.0021,
       }
     });
   };
@@ -48,16 +50,18 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ marginTop: '10%', fontSize: 17, fontWeight: 'bold' }}> PARKING BUDDY </Text>
+          <Text style={{ marginTop: '10%', fontSize: 17, fontWeight: 'bold', color: '#f8971d' }}> Parking Buddy </Text>
         </View>
-        <TextInput
+        {/* <TextInput
           style={{
             height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 10, padding: 10, width: '100%',
             marginTop: 10, justifyContent: 'center', alignContent: 'center', overflow: 'hidden'
           }}
           onChangeText={(text) => this.setState({ inputUsername: text })}
           placeholder='Search'
-        />
+        /> */}
+
+
         <View style={{ flex: 1 }}>
           <MapView
             ref={component => this._MapView = component}
