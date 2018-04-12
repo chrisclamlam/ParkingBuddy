@@ -75,13 +75,14 @@ export default class SignUpScreen extends React.Component {
 
                 <View style={{ height: 80 }} />
                 <Button
-                    buttonStyle={{ borderRadius: 10, backgroundColor: 'rgb(76,217,100)', width: '100%' }}
+                    buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', width: '100%' }}
                     onPress={() => this.verifyInput(this)} title="Register" />
 
                 <Button
                     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
+                    textStyle= {{color: 'gray'}}
                     fontSize={15}
-                    color='rgb(0,122,255)'
+                    color='black'
                     onPress={() => this.props.navigation.pop()} title="Back to Login" />
 
 
@@ -136,7 +137,8 @@ const styles = StyleSheet.create({
         fontSize: 35,
         marginLeft: 10,
         marginBottom: 30,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: '#f8971d'
     },
     textFields: {
         borderRadius: 10,

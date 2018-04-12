@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
 import { MapView } from 'expo';
 import { FormLabel, FormInput, Button } from 'react-native-elements'
 
@@ -35,39 +35,40 @@ export default class LogInScreen extends React.Component {
       <View style={styles.container}>
 
         {/* TITLE */}
-        <View style={{ alignItems: 'center' }}>
-          <Text style={{ marginBottom: 40, fontSize: 30, fontWeight: 'bold' }}>Parking Buddy </Text>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          {/* <Text style={{ marginBottom: 40, fontSize: 30, fontWeight: 'bold' }}>Parking Buddy </Text> */}
+          <Image style={{ flex: 1, alignItems: 'center', aspectRatio: 0.5, resizeMode: 'contain' }} source={require('../images/logo.png')} />
         </View>
 
 
 
+        <FormLabel labelStyle={{ color: '#f8971d' }}>Username</FormLabel>
+        <FormInput
 
-        <FormLabel>Username</FormLabel>
-        <FormInput
-          inputStyle={{ color: 'black' }}
+          inputStyle={{ color: 'gray' }}
           onChangeText={(text) => (this.setState({ inputUsername: text }))} />
-        <FormLabel>Password</FormLabel>
+        <FormLabel labelStyle={{ color: '#f8971d' }}>Password</FormLabel>
         <FormInput
-          inputStyle={{ color: 'black' }}
+          inputStyle={{ color: 'gray' }}
           secureTextEntry onChangeText={(text) => (this.setState({ inputPassword: text }))} />
 
 
 
-        <View style={{ height: 80 }} />
+        <View style={{ height: 50 }} />
 
         {/* LOGIN/REGISTER/CONTINUE AS GUEST BUTTONS */}
         <Button
-          buttonStyle={{ borderRadius: 10, backgroundColor: 'rgb(76,217,100)', width: '100%' }}
+          buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', width: '100%' }}
           title=" LogIn "
           onPress={() => this.onPressLogIn()} />
         <View style={{ height: 10 }} />
         <Button
-          buttonStyle={{ borderRadius: 10, backgroundColor: 'rgb(0,122,255)', width: '100%' }}
-          onPress={() => this.onPressSignUp()} title="Register" />
+          buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent', width: '100%' }}
+          textStyle={{ color: 'gray', fontSize: 15, marginTop: -15 }} onPress={() => this.onPressSignUp()} title="Register" />
         <Button
           buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
           fontSize={15}
-          color='rgb(0,122,255)'
+          color='white'
           onPress={() => this.props.navigation.push('MapScreen')} title="Continue as guest" />
 
 
@@ -80,7 +81,7 @@ export default class LogInScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     // alignItems: 'center',
     justifyContent: 'center',
   },
