@@ -1,13 +1,54 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
-import { MapView } from 'expo';
+import { MapView, Constants, Location, Permissions } from 'expo';
+
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props)
+
+    let initregion = {
+      latitude: 34.052235,
+      longitude: -118.243685,
+      latitudeDelta: 0.692,
+      longitudeDelta: 0.0821,
+    }
+
+    this.state = {
+      initregion,
+    }
+
+  }
+
+  componentWillMount() {
+    this._getLocationAsync();
+  }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    console.log(location);
+    this.setState({
+      initregion: {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.092,
+        longitudeDelta: 0.0221,
+      }
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <View style={{justifyContent:'center', alignItems:'center'}}>
-          <Text style={{ marginTop: '10%', fontSize:17, fontWeight: 'bold' }}> PARKING BUDDY </Text>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ marginTop: '10%', fontSize: 17, fontWeight: 'bold' }}> PARKING BUDDY </Text>
         </View>
         <TextInput
           style={{
@@ -19,13 +60,12 @@ export default class App extends React.Component {
         />
         <View style={{ flex: 1 }}>
           <MapView
+            ref={component => this._MapView = component}
+
             style={{ flex: 1 }}
-            initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
+            initialRegion={this.state.initregion}
+            showsUserLocation={true}
+
           />
         </View>
       </View >

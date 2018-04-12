@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { MapView } from 'expo';
+import { FormLabel, FormInput, Button } from 'react-native-elements'
+
 
 export default class LogInScreen extends React.Component {
   constructor(props) {
@@ -13,11 +15,11 @@ export default class LogInScreen extends React.Component {
   }
 
   async onPressLogIn() {
-    
 
 
 
-    this.props.navigation.push('HomeScreen')
+
+    this.props.navigation.push('MapScreen')
   }
 
   onPressSignUp() {
@@ -33,29 +35,40 @@ export default class LogInScreen extends React.Component {
       <View style={styles.container}>
 
         {/* TITLE */}
-        <Text style={{ marginBottom: 40, fontSize: 20, fontWeight: 'bold' }}> WELCOME TO PARKING BUDDY </Text>
+        <View style={{ alignItems: 'center' }}>
+          <Text style={{ marginBottom: 40, fontSize: 20, fontWeight: 'bold' }}> WELCOME TO PARKING BUDDY </Text>
+        </View>
 
-        {/* USERNAME/PASSWORD FORMS */}
-        <TextInput
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 10, padding: 10, width: '80%' }}
-          onChangeText={(text) => this.setState({ inputUsername: text })}
-          placeholder='Username'
-        />
 
-        {/* BLANK SPACE */}
-        <View style={{ height: 20 }} />
-        <TextInput
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 10, padding: 10, width: '80%' }}
-          onChangeText={(text) => this.setState({ inputPassword: text })}
-          placeholder='Password'
-          secureTextEntry
-        />
+
+
+        <FormLabel>Username</FormLabel>
+        <FormInput
+          inputStyle={{ color: 'black' }}
+          onChangeText={(text) => (this.setState({ inputUsername: text }))} />
+        <FormLabel>Password</FormLabel>
+        <FormInput
+          inputStyle={{ color: 'black' }}
+          secureTextEntry onChangeText={(text) => (this.setState({ inputPassword: text }))} />
+
+
+
+        <View style={{ height: 80 }} />
 
         {/* LOGIN/REGISTER/CONTINUE AS GUEST BUTTONS */}
-        <Button title="LogIn" onPress={() => this.onPressLogIn()} />
-        <Button onPress={() => this.onPressSignUp()} title="Register" />
-        <Button onPress={() => this.props.navigation.push('HomeScreen')} title="Continue as guest" />
-
+        <Button
+          buttonStyle={{ borderRadius: 10, backgroundColor: 'rgb(76,217,100)', width: '100%' }}
+          title=" LogIn "
+          onPress={() => this.onPressLogIn()} />
+        <View style={{ height: 10 }} />
+        <Button
+          buttonStyle={{ borderRadius: 10, backgroundColor: 'rgb(0,122,255)', width: '100%' }}
+          onPress={() => this.onPressSignUp()} title="Register" />
+        <Button
+          buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
+          fontSize={15}
+          color='rgb(0,122,255)'
+          onPress={() => this.props.navigation.push('MapScreen')} title="Continue as guest" />
 
 
 
@@ -68,7 +81,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'center',
   },
 });
