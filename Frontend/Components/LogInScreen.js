@@ -36,7 +36,7 @@ export default class LogInScreen extends React.Component {
 
         {/* TITLE */}
         <View style={{ alignItems: 'center' }}>
-          <Text style={{ marginBottom: 40, fontSize: 20, fontWeight: 'bold' }}> WELCOME TO PARKING BUDDY </Text>
+          <Text style={{ marginBottom: 40, fontSize: 30, fontWeight: 'bold' }}>Parking Buddy </Text>
         </View>
 
 

@@ -61,6 +61,7 @@ export default class SignUpScreen extends React.Component {
                 <Text style={styles.title} > Sign Up </Text>
                 <View style={styles.formError}></View>
 
+
                 <FormLabel>Username</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ username: text }))} />
                 <FormLabel>Password</FormLabel>
@@ -71,10 +72,17 @@ export default class SignUpScreen extends React.Component {
                 <FormInput onChangeText={(text) => (this.setState({ lname: text }))} />
                 <FormLabel>Email</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ email: text }))} />
-    
-                <View style={{height: 80}}/>
-                <Button title="Register" onPress={() => this.verifyInput(this)} />
-                <Button title="Back to Login" onPress={() => this.props.navigation.pop()} />
+
+                <View style={{ height: 80 }} />
+                <Button
+                    buttonStyle={{ borderRadius: 10, backgroundColor: 'rgb(76,217,100)', width: '100%' }}
+                    onPress={() => this.verifyInput(this)} title="Register" />
+
+                <Button
+                    buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
+                    fontSize={15}
+                    color='rgb(0,122,255)'
+                    onPress={() => this.props.navigation.pop()} title="Back to Login" />
 
 
 
@@ -122,7 +130,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        // alignItems: 'center',
         justifyContent: 'center',
     },
     title: {
