@@ -3,7 +3,7 @@ package database;
 public class ParkingSpot {
 	
 	private int id;
-	private int remoteId;
+	private String remoteId;
 	private int spotType;
 	private String label;
 	private double latitude;
@@ -13,15 +13,25 @@ public class ParkingSpot {
 	 * 1 - Meter
 	 * 2 - Street
 	 * 3 - Structure
+	 * 4 - Lot
 	 */
 	
-	public ParkingSpot(int id, int remoteId, String label, int spotType,  double latitude, double longitude) {
+	public ParkingSpot(int id, String remoteid, String label, int spotType,  double latitude, double longitude) {
 		this.id = id;
-		this.remoteId = remoteId;
+		this.remoteId = remoteid;
 		this.label = label;
 		this.spotType = spotType;
 		this.latitude = latitude;
-		this.longitude = longitude;
+		this.longitude = longitude;	
+	}
+	
+	public ParkingSpot(String remoteid, String label, int spotType,  double latitude, double longitude) {
+		this.id = -1;
+		this.remoteId = remoteid;
+		this.label = label;
+		this.spotType = spotType;
+		this.latitude = latitude;
+		this.longitude = longitude;	
 	}
 
 
@@ -30,7 +40,7 @@ public class ParkingSpot {
 	}
 
 
-	public int getRemoteId() {
+	public String getRemoteId() {
 		return remoteId;
 	}
 

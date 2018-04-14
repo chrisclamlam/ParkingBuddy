@@ -19,15 +19,15 @@ public class AdbTestRunner {
 	
 	public static void main(String[] args) {
 		
-//		initDB();
+		initDB();
 		
-		Result result = JUnitCore.runClasses(AppDatabaseTest.class);
-		
-		for (Failure failure : result.getFailures()) {
-	         System.out.println(failure.toString());
-	    }
-		
-		System.out.println("Successful: " + result.wasSuccessful());
+//		Result result = JUnitCore.runClasses(AppDatabaseTest.class);
+//		
+//		for (Failure failure : result.getFailures()) {
+//	         System.out.println(failure.toString());
+//	    }
+//		
+//		System.out.println("Successful: " + result.wasSuccessful());
 	}
 	
 	public static void initDB() {
@@ -57,11 +57,11 @@ public class AdbTestRunner {
 		
 		for(Feature spot : laSpots.getFeatures()) {
 			// Get the data for each spot
-			int id, remoteid;
-			String label;
+			int id;
+			String label, remoteid;
 			double latitude, longitude;
 			id = -1;
-			remoteid = spot.getProperties().getOBJECTID();
+			remoteid = String.valueOf(spot.getProperties().getOBJECTID());
 			label = spot.getProperties().getSENSORUNIQUEID();
 			latitude = spot.getProperties().getGPSX();
 			longitude = spot.getProperties().getGPSY();

@@ -24,6 +24,10 @@ public class Comment {
 		rating = rtg;
 		comment = comm;
 	}
+	
+	public int commentId() {
+		return commentId;
+	}
 
 
 	public int getUserId() {

@@ -145,13 +145,13 @@ public class AppDatabase {
 	
 	private ParkingSpot createParkingSpot(ResultSet rs) {
 		// Variables needed for ParkingSpot constructor
-		int id, remoteid, spotType;
-		String label;
+		int id, spotType;
+		String label, remoteid;
 		double latitude, longitude;
 		// Parse the ResultSet
 		try {
 			id = rs.getInt(1);
-			remoteid = rs.getInt(2);
+			remoteid = rs.getString(2);
 			label = rs.getString(3);
 			longitude = rs.getDouble(4);
 			latitude = rs.getDouble(5);

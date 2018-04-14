@@ -32,7 +32,7 @@ public class SignUp extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username, fname, lname, email;
 		byte[] password;
-		
+		System.out.println("Register endpoint hit");
 		try {
 			username = request.getParameter("username");
 			System.out.println(username);
@@ -44,7 +44,6 @@ public class SignUp extends HttpServlet {
 			System.out.println(lname);
 			email = request.getParameter("email");
 			System.out.println(email);
-			
 		} catch (NullPointerException npe) {
 			response.setStatus(400);
 			return;
