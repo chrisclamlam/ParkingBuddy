@@ -2,9 +2,13 @@ package test;
 
 import org.junit.Test;
 import database.AppDatabase;
+import database.ParkingSpot;
 import database.User;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.ArrayList;
 
 /*TODO
  * User getUserByUsername(String username) 
@@ -64,5 +68,25 @@ public class AppDatabaseTest {
 		// Delete a user and make sure they don't exist
 		db.delete("autoTest");
 		assertEquals(db.exists("autoTest"), false);
+	}
+	
+	@Test
+	public void testSearch() {
+		AppDatabase db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
+		// Search somewhere in LA
+		ArrayList<ParkingSpot> spots = db.searchSpotByLocation(34.0522, -118.445892);
+		System.out.println("Spots: " + spots);
+		assertNotNull(spots);
+		System.out.println("Testing searching by location. Spots: ");
+		for(ParkingSpot spot : spots) {
+			System.out.println(spot.getLabel());
+		}
+		// Search somewhere away from LA
+		spots = db.searchSpotByLocation(40.7128, -74.0060);
+		assertNotNull(spots);
+		System.out.println("Testing searching by location. Spots: ");
+		for(ParkingSpot spot : spots) {
+			System.out.println(spot.getLabel());
+		}	
 	}
 }

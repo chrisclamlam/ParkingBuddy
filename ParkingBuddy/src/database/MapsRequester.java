@@ -32,6 +32,7 @@ public class MapsRequester {
 			conn.setRequestMethod("GET");
 			// Check the status and parse the response
 			if(conn.getResponseCode() < 200 || conn.getResponseCode() > 299) {
+				System.out.println("Bad Request");
 				return null; // change to return null when you can
 			}
 			// Read the response
@@ -54,6 +55,7 @@ public class MapsRequester {
 			return null;
 		}
 		if(spots == null) {
+			System.out.println("No Google Maps results found");
 			return null;
 		}
 		// MapsSpots object -> ArrayList<database.ParkingSpot> object
@@ -67,6 +69,9 @@ public class MapsRequester {
 		// get the data types from the spots oject
 		// add the resulting spot to ourSpots
 		for(Result result : spots.getResults()) {
+			
+			System.out.println(remoteid);
+			System.out.println(remoteid.length());
 			remoteid = result.getId();
 			label = result.getName();
 			lng = result.getGeometry().getLocation().getLng();
@@ -75,5 +80,9 @@ public class MapsRequester {
 			ourSpots.add(s);
 		}
 		return ourSpots;
+	}
+	
+	public static void main(String[] args) {
+		ArrayList<ParkingSpot> spots = getNearbyParking(34.060677, -118.445892, 400);
 	}
 }
