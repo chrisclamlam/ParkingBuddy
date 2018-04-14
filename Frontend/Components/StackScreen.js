@@ -18,9 +18,6 @@ const AppStackNavigator = StackNavigator({
   SignUpScreen: {
     screen: SignUpScreen
   },
-  HomeScreen: {
-    screen: HomeScreen,
-  },
   MapScreen: {
     screen: MapScreen
   },
