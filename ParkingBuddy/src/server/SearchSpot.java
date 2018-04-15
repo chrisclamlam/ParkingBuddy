@@ -32,6 +32,7 @@ public class SearchSpot extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Get the location
+
 		AppDatabase db = (AppDatabase) getServletContext().getAttribute("db");
 		double latitude = Double.parseDouble(request.getParameter("lat"));
 		double longitude = Double.parseDouble(request.getParameter("lng"));
@@ -43,6 +44,9 @@ public class SearchSpot extends HttpServlet {
 		}
 		// Turn into JSON and write reponse
 		
+		String json = new Gson().toJson(spots);
 		response.setStatus(200);
+		response.getWriter().write(json);
+		
 	}
 }
