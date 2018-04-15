@@ -1,8 +1,8 @@
 {
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 1373,
-  "expoServerNgrokUrl": "https://x8-p9v.chrisclamlam.frontend.exp.direct",
-  "packagerNgrokUrl": "https://packager.x8-p9v.chrisclamlam.frontend.exp.direct",
-  "ngrokPid": 1396
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null
 }

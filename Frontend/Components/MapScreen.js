@@ -4,7 +4,7 @@ import { MapView, Constants, Location, Permissions } from 'expo';
 import { SearchBar } from 'react-native-elements'
 import { Marker } from 'react-native-maps';
 import { List, ListItem } from 'react-native-elements'
-
+// import ControlBanner from './ControlBannerHeader'
 
 
 export default class App extends React.Component {
@@ -18,46 +18,46 @@ export default class App extends React.Component {
       longitudeDelta: 0.0821,
     }
 
-      // Create array for map markers - current markers are tests
-      let markers = [
-          {
-              coordinate : {
-                  latitude: 37.421,
-                  longitude: -122.084
-              },
-              title: 'Marker 1',
-              description: "Test 1"
-          },
-          {
-              coordinate : {
-                  latitude: 38.421,
-                  longitude: -123.084
-              },
-              title: 'Marker 2',
-              description: "Test 2"
-          },
-          {
-              coordinate : {
-                  latitude: 36.421,
-                  longitude: -121.084
-              },
-              title: 'Marker 3',
-              description: "Test 3"
-          },
-      ];
+    // Create array for map markers - current markers are tests
+    let markers = [
+      {
+        coordinate: {
+          latitude: 37.421,
+          longitude: -122.084
+        },
+        title: 'Marker 1',
+        description: "Test 1"
+      },
+      {
+        coordinate: {
+          latitude: 38.421,
+          longitude: -123.084
+        },
+        title: 'Marker 2',
+        description: "Test 2"
+      },
+      {
+        coordinate: {
+          latitude: 36.421,
+          longitude: -121.084
+        },
+        title: 'Marker 3',
+        description: "Test 3"
+      },
+    ];
 
-      // Set state variables
-      this.state = {
-          initregion,
-          markers,
-      }
+    // Set state variables
+    this.state = {
+      initregion,
+      markers,
+    }
 
   }
   // Move map to map markers position
   animateTo(latitude, longitude) {
-      this.compo.animateToRegion({ latitude, longitude })
+    this.compo.animateToRegion({ latitude, longitude })
   }
-  
+
   componentWillMount() {
     this._getLocationAsync();
   }
@@ -85,8 +85,10 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ justifyContent: 'center', alignItems: 'center', height: '10%' }}>
           <Text style={{ marginTop: '10%', fontSize: 17, fontWeight: 'bold', color: '#f8971d' }}> Parking Buddy </Text>
+          <Text onPress={() => this.props.navigation.push('ProfileScreen')
+          }> User Profile </Text>
         </View>
         {/* <TextInput
           style={{
@@ -98,28 +100,28 @@ export default class App extends React.Component {
         /> */}
 
 
-          <View style={{ flex: 1 }}>
-              <MapView
-                  ref={component => this._MapView = component}
+        <View style={{ flex: 1 }}>
+          <MapView
+            ref={component => this._MapView = component}
 
-                  style={{ flex: 1 }}
-                  initialRegion={this.state.initregion}
-                  showsUserLocation={true}
-                  zoomEnabled={true}
-                  scrollEnabled={true}
-                  rotateEnabled={true}
-              />
+            style={{ flex: 1 }}
+            initialRegion={this.state.initregion}
+            showsUserLocation={true}
+            zoomEnabled={true}
+            scrollEnabled={true}
+            rotateEnabled={true}
+          />
 
-              {this.state.markers.map((marker, index) => {
-                  return (
-                      <MapView.Marker key={index} coordinate={marker.coordinate} onLoad={() => this.animateTo(marker.coordinate)}>
-                          <Animated.View style={[styles.markerWrap]}>
-                              <Animated.View style={[styles.ring]} />
-                              <View style={styles.marker} />
-                          </Animated.View>
-                      </MapView.Marker>
-                  );
-              })}
+          {this.state.markers.map((marker, index) => {
+            return (
+              <MapView.Marker key={index} coordinate={marker.coordinate} onLoad={() => this.animateTo(marker.coordinate)}>
+                <Animated.View style={[styles.markerWrap]}>
+                  <Animated.View style={[styles.ring]} />
+                  <View style={styles.marker} />
+                </Animated.View>
+              </MapView.Marker>
+            );
+          })}
         </View>
       </View >
     );
@@ -136,18 +138,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   marker: {
-      width: 8,
-      height: 8,
-      borderRadius: 4,
-      backgroundColor: "rgba(130,4,150, 0.9)",
-    },
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "rgba(130,4,150, 0.9)",
+  },
   ring: {
-      width: 24,
-      height: 24,
-      borderRadius: 12,
-      backgroundColor: "rgba(130,4,150, 0.3)",
-      position: "absolute",
-      borderWidth: 1,
-      borderColor: "rgba(130,4,150, 0.5)",
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: "rgba(130,4,150, 0.3)",
+    position: "absolute",
+    borderWidth: 1,
+    borderColor: "rgba(130,4,150, 0.5)",
   },
 });
