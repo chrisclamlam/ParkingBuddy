@@ -6,9 +6,9 @@ import { StackNavigator } from 'react-navigation'
 import HomeScreen from './HomeScreen';
 import MapScreen from './MapScreen';
 import LogInScreen from './LogInScreen';
-
+import AddSpotScreen from './AddSpotScreen';
 import SignUpScreen from './SignUpScreen';
-import ProfileScreen from './ProfileScreen'
+import SearchLocationScreen from './SearchLocationScreen';
 
 
 const AppStackNavigator = StackNavigator({
@@ -18,12 +18,15 @@ const AppStackNavigator = StackNavigator({
   SignUpScreen: {
     screen: SignUpScreen
   },
+  SearchLocationScreen: {
+    screen: SearchLocationScreen
+  },
   MapScreen: {
     screen: MapScreen
   },
-  ProfileScreen: {
-    screen: ProfileScreen
-  }
+  AddSpotScreen: {
+    screen: AddSpotScreen
+  },
 }, {
     headerMode: "none",
   })
