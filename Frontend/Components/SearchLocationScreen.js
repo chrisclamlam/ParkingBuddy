@@ -6,8 +6,8 @@ import { FormLabel, FormInput, Button } from 'react-native-elements'
 export default class SearchLocationScreen extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {,
-            location: "",
+        this.state = {
+            location: '',
         }
     }
 
@@ -54,28 +54,24 @@ export default class SearchLocationScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.title} > Suggest New Location </Text>
+                <Text style={styles.title} > Location to Search for Spots</Text>
                 <View style={styles.formError}></View>
 
 
-                <FormLabel>Name of Parking Location</FormLabel>
-                <FormInput onChangeText={(text) => (this.setState({ name: text }))} />
-                <FormLabel>Enter Address of Location</FormLabel>
-                <FormInput secureTextEntry onChangeText={(text) => (this.setState({ location: text }))} />
-                <FormLabel>Price</FormLabel>
-                <FormInput onChangeText={(text) => (this.setState({ price: text }))} />
+                <FormLabel>Location</FormLabel>
+                <FormInput onChangeText={(text) => (this.setState({ location: text }))} />
 
                 <View style={{ height: 80 }} />
                 <Button
                     buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', width: '100%' }}
-                    onPress={() => this.verifyInput(this)} title="Submit Location Suggestion" />
+                    onPress={() => this.verifyInput(this)} title="Search" />
 
                 <Button
                     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
                     textStyle= {{color: 'gray'}}
                     fontSize={15}
                     color='black'
-                    onPress={() => this.props.navigation.pop()} title="Back to Search" />
+                    onPress={() => this.props.navigation.pop()} title="Back to Login" />
             </View >
         );
     }
