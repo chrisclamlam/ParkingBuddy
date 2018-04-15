@@ -6,9 +6,9 @@ import { StackNavigator } from 'react-navigation'
 import HomeScreen from './HomeScreen';
 import MapScreen from './MapScreen';
 import LogInScreen from './LogInScreen';
-
+import AddSpotScreen from './AddSpotScreen';
 import SignUpScreen from './SignUpScreen';
-import ProfileScreen from './ProfileScreen'
+
 
 
 const AppStackNavigator = StackNavigator({
@@ -21,9 +21,9 @@ const AppStackNavigator = StackNavigator({
   MapScreen: {
     screen: MapScreen
   },
-  ProfileScreen: {
-    screen: ProfileScreen
-  }
+  AddSpotScreen: {
+    screen: AddSpotScreen
+  },
 }, {
     headerMode: "none",
   })
