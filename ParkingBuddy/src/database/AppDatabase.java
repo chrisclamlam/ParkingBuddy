@@ -107,6 +107,9 @@ public class AppDatabase {
 			close(conn, null, null);
 			return false;
 		}
+		if(exists(ps.getRemoteId())) {
+			return false;
+		}
 		try {
 			st.executeUpdate("INSERT INTO ParkingSpots (remoteid, label, longitude, latitude, spotType) VALUES("
 					+ "'" + ps.getRemoteId() + "',"
@@ -579,8 +582,12 @@ public class AppDatabase {
 				"			) < .25\r\n" + 
 				"		 ORDER BY distance\r\n" + 
 				"         LIMIT 0 , 20;";
-		// Search GoogleMaps for spots
+		// Search out database
 		spots = getParkingSpotsFromQuery(query);
+		if (spots == null) {
+			spots = new ArrayList<ParkingSpot>();
+		}
+		// Search GoogleMaps for spots
 		mapsSpots = searchGoogleMaps(latitude, longitude);
 		if(mapsSpots == null) {
 			System.out.println("Google Maps returned no results");
@@ -588,9 +595,7 @@ public class AppDatabase {
 		}
 		for(ParkingSpot spot : mapsSpots) {
 			// Add the MapsSpot to the database if it doesn't already exist
-			if(!exists(spot.getRemoteId())) {
-				insertSpot(spot);
-			}
+			insertSpot(spot);
 			spots.add(spot);
 		}
 		return spots;

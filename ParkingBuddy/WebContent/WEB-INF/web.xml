@@ -9,11 +9,9 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  
-  <listener>  
+  <listener>
     <listener-class>
     	server.Startup
     </listener-class>
   </listener>
-  
 </web-app>

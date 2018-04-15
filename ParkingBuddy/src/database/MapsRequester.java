@@ -38,9 +38,12 @@ public class MapsRequester {
 			// Read the response
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String line;
+			System.out.println("Searching for cities near " + latitude + ", " + longitude);
 			while((line = br.readLine()) != null) {
+				System.out.println(line);
 				response += line;
 			}
+			
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 			return null;
@@ -69,14 +72,11 @@ public class MapsRequester {
 		// get the data types from the spots oject
 		// add the resulting spot to ourSpots
 		for(Result result : spots.getResults()) {
-			
-			System.out.println(remoteid);
-			System.out.println(remoteid.length());
 			remoteid = result.getId();
 			label = result.getName();
 			lng = result.getGeometry().getLocation().getLng();
 			lat = result.getGeometry().getLocation().getLat();
-			s = new ParkingSpot(remoteid, label, spotType, lng, lat);
+			s = new ParkingSpot(remoteid, label, spotType, lat, lng);
 			ourSpots.add(s);
 		}
 		return ourSpots;
