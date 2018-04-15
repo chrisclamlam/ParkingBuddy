@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatList, } from 'react-native';
 import { MapView, Constants, Location, Permissions } from 'expo';
 import { List, ListItem, FormLabel, FormInput, Button, } from 'react-native-elements'
 import { Marker } from 'react-native-maps';
@@ -86,8 +86,8 @@ export default class App extends React.Component {
                     this.map.animateToRegion(
                         {
                             ...coordinate,
-                            latitudeDelta: this.state.region.latitudeDelta,
-                            longitudeDelta: this.state.region.longitudeDelta,
+                            latitudeDelta: this.state.initregion.latitudeDelta,
+                            longitudeDelta: this.state.initregion.longitudeDelta,
                         },
                         350
                     );
@@ -159,7 +159,7 @@ export default class App extends React.Component {
                 <View style={{ flex: 1 }}>
                     <MapView
                         ref={map => this.map = map}
-
+                        provider="google"
                         style={{ flex: 1 }}
                         initialRegion={this.state.initregion}
                         showsUserLocation={true}
@@ -214,10 +214,10 @@ export default class App extends React.Component {
 
                         { /* Dynamically display results of parking locations on screen */ }
                         {this.state.markers.map((marker, index) => (
-                            <View style={styles.card} key={index}>
+                            <View style={styles.park} key={index}>
                                 <Image
                                     style={styles.parkImage}
-                                    source={{uri: '../images/park.bmp'}}
+                                    source={{uri: 'ParkingBuddy/images/park.bmp'}}
                                     resizeMode="cover"
                                 />
                                 <View style={styles.textContent}>
@@ -245,8 +245,8 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         position: "absolute",
-        bottom: 30,
-        left: 0,
+        bottom: 100,
+        left: 10,
         right: 0,
         paddingVertical: 10,
     },
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
         paddingRight: width - PARK_WIDTH,
     },
     park: {
-        padding: 10,
+        padding: 5,
         elevation: 2,
         backgroundColor: "#FFF",
         marginHorizontal: 10,
