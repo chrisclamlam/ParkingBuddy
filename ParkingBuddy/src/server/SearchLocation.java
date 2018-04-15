@@ -26,8 +26,26 @@ public class SearchLocation extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		String address = request.getParameter("address");
+		//turn address into location first STILL IN WORKING PROGRESS
+		
+		AppDatabase db = (AppDatabase) getServletContext().getAttribute("db");
+		double latitude = Double.parseDouble(request.getParameter("lat"));
+		double longitude = Double.parseDouble(request.getParameter("lng"));
+		// Search for the location
+		ArrayList<ParkingSpot> spots = db.searchSpotByLocation(latitude, longitude);
+		if(spots == null) {
+			response.setStatus(400);
+			return;
+		}
+		// Turn into JSON and write reponse
+		
+		String json = new Gson().toJson(spots);
+		response.setStatus(200);
+		response.setContentType(json);
 	}
 	
 }
