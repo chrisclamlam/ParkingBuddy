@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatList, } from 'react-native';
 import { MapView, Constants, Location, Permissions } from 'expo';
 import { List, ListItem, FormLabel, FormInput, Button, } from 'react-native-elements'
 import { Marker } from 'react-native-maps';
@@ -9,8 +9,8 @@ const { width, height } = Dimensions.get("window");
 // Link to marker background
 const Images = "https://i.imgur.com/sNam9iJ.jpg";
 // Make the dimensions of the parking quick detail screen
-const PARK_HEIGHT = height / 4;
-const PARK_WIDTH = PARK_HEIGHT - 50;
+const PARK_HEIGHT = height / 6;
+const PARK_WIDTH = PARK_HEIGHT;
 
 export default class App extends React.Component {
     constructor(props) {
@@ -86,8 +86,8 @@ export default class App extends React.Component {
                     this.map.animateToRegion(
                         {
                             ...coordinate,
-                            latitudeDelta: this.state.region.latitudeDelta,
-                            longitudeDelta: this.state.region.longitudeDelta,
+                            latitudeDelta: this.state.initregion.latitudeDelta,
+                            longitudeDelta: this.state.initregion.longitudeDelta,
                         },
                         350
                     );
@@ -96,10 +96,12 @@ export default class App extends React.Component {
         });
     }
 
-    // Move map to map markers position
-    animateTo(latitude, longitude) {
-        this.compo.animateToRegion({ latitude, longitude })
+    // Send search location data to server
+    // In progress, see what
+    _sendLocationSearch = async () => {
+
     }
+
 
     _getLocationAsync = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -143,23 +145,16 @@ export default class App extends React.Component {
         });
         return (
             <View style={styles.container}>
-                {/*<View style={{ justifyContent: 'center', alignItems: 'center' }}>*/}
-                {/*<Text style={{ marginTop: '10%', fontSize: 17, fontWeight: 'bold' }}> PARKING BUDDY </Text>*/}
-                {/*</View>*/}
-                {/*<TextInput*/}
-                {/*style={{*/}
-                {/*height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 10, padding: 10, width: '100%',*/}
-                {/*marginTop: 10, justifyContent: 'center', alignContent: 'center', overflow: 'hidden'*/}
-                {/*}}*/}
-                {/*onChangeText={(text) => this.setState({ inputUsername: text })}*/}
-                {/*placeholder='Search'*/}
-                {/*/>*/}
+                {/* Search for an area with parking */}
                 <FormLabel>Parking Search</FormLabel>
-                <FormInput onChangeText={(text) => (this.setState({ searchQuery: text }))} />
+                <FormInput onChangeText={(text) => (this.setState({ searchQuery: text }))}  />
+                <Button
+                    buttonStyle={{ borderRadius: 10, backgroundColor: 'rgb(76,217,100)', width: '100%' }}
+                    onPress={() => this.verifyInput(this)} title="Search Location" />
                 <View style={{ flex: 1 }}>
                     <MapView
                         ref={map => this.map = map}
-
+                        provider="google"
                         style={{ flex: 1 }}
                         initialRegion={this.state.initregion}
                         showsUserLocation={true}
@@ -214,10 +209,10 @@ export default class App extends React.Component {
 
                         { /* Dynamically display results of parking locations on screen */ }
                         {this.state.markers.map((marker, index) => (
-                            <View style={styles.card} key={index}>
+                            <View style={styles.park} key={index}>
                                 <Image
                                     style={styles.parkImage}
-                                    source={{uri: '../images/park.bmp'}}
+                                    source={{uri: 'ParkingBuddy/images/park.bmp'}}
                                     resizeMode="cover"
                                 />
                                 <View style={styles.textContent}>
@@ -231,7 +226,7 @@ export default class App extends React.Component {
                     </Animated.ScrollView>
                     <Button
                         buttonStyle={{ borderRadius: 10, backgroundColor: 'rgb(76,217,100)', width: '100%' }}
-                        onPress={() => this.verifyInput(this)} title="Add a Custom Spot" />
+                        onPress={() => this.props.navigation.push('AddSpotScreen')} title="Don't see your spot?" />
                 </View>
             </View >
         );
@@ -245,8 +240,8 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         position: "absolute",
-        bottom: 30,
-        left: 0,
+        bottom: 100,
+        left: 10,
         right: 0,
         paddingVertical: 10,
     },
@@ -254,7 +249,7 @@ const styles = StyleSheet.create({
         paddingRight: width - PARK_WIDTH,
     },
     park: {
-        padding: 10,
+        padding: 5,
         elevation: 2,
         backgroundColor: "#FFF",
         marginHorizontal: 10,
@@ -273,14 +268,20 @@ const styles = StyleSheet.create({
         alignSelf: "center",
     },
     textContent: {
+        position: "absolute",
+        top: 0,
         flex: 1,
+        alignSelf: "center",
+
     },
     parktitle: {
+        alignSelf: "center",
         fontSize: 12,
         marginTop: 5,
         fontWeight: "bold",
     },
     parkDescription: {
+        alignSelf: "center",
         fontSize: 12,
         color: "#444",
     },
