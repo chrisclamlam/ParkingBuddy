@@ -514,7 +514,7 @@ public class AppDatabase {
 			close(conn, st, null);
 		}
 	}
-	public boolean existsParking(String parkingname)
+	public boolean existsParking(String remoteid)
 	{
 		Connection conn = getConnection();
 		if(conn == null) return false;
@@ -525,7 +525,7 @@ public class AppDatabase {
 		}
 		ResultSet rs = null;
 		try {
-			rs = st.executeQuery("SELECT COUNT(1) FROM ParkingSpots WHERE label = '" + parkingname + "'");
+			rs = st.executeQuery("SELECT COUNT(1) FROM ParkingSpots WHERE remoteid = '" + remoteid + "'");
 			if(rs == null || !rs.next() || rs.getBoolean(1) == false) { // empty check
 				return false;
 			}
@@ -546,14 +546,54 @@ public class AppDatabase {
 		return ps.get(0);
 	}
 	
+	private ArrayList<ParkingSpot> searchGoogleMaps(double latitude, double longitude){
+		return MapsRequester.getNearbyParking(latitude, longitude, 400);
+	}
+	
 	public ArrayList<ParkingSpot> searchSpotByLocation(double latitude, double longitude){
 		// Calculate the great circle distance between the destination (latitude and longitude vars) ^
 		// Check to see if the distance is within a quarter mile
 		// return good results
-		String query = "SELECT * FROM ParkingSpots WHERE "
-				+ "(3959 * ACOS( COS( RADIANS('" + latitude + "' ) ) * COS ( RADIANS (latitude) ) * COS ( RADIANS(latitude) - RADIANS('" + longitude + "') ) +  "
-				+ "SIN('" + longitude + "') * SIN(longitude))) < .25";
-		return getParkingSpotsFromQuery(query);
+		ArrayList<ParkingSpot> spots, mapsSpots;
+		String query = "SELECT * , ( 3959 * 2 * \r\n" + 
+				"			ASIN( \r\n" + 
+				"				 SQRT(\r\n" + 
+				"					 POW( SIN( RADIANS( '" + latitude + "' - latitude ) ) , 2 ) / 2 +\r\n" + 
+				"					 COS( RADIANS( '" + latitude + "' ) ) *\r\n" + 
+				"					 COS( RADIANS( '" + latitude + "' ) ) *\r\n" + 
+				"					 POW( SIN( RADIANS( -118.445892 - '" + longitude + "') ) , 2 ) / 2\r\n" + 
+				"				 )\r\n" + 
+				"			 )\r\n" + 
+				"			)\r\n" + 
+				"		 AS distance\r\n" + 
+				"		 FROM ParkingSpots\r\n" + 
+				"         WHERE ( 3959 * 2 * \r\n" + 
+				"			ASIN( \r\n" + 
+				"				 SQRT(\r\n" + 
+				"					 POW( SIN( RADIANS( '" + latitude + "' - latitude ) ) , 2 ) / 2 +\r\n" + 
+				"					 COS( RADIANS('" + latitude + "') ) *\r\n" + 
+				"					 COS( RADIANS( '" + latitude + "' ) ) *\r\n" + 
+				"					 POW( SIN( RADIANS( -118.445892 - '" + longitude + "') ) , 2 ) / 2\r\n" + 
+				"				 )\r\n" + 
+				"			 )\r\n" + 
+				"			) < .25\r\n" + 
+				"		 ORDER BY distance\r\n" + 
+				"         LIMIT 0 , 20;";
+		// Search GoogleMaps for spots
+		spots = getParkingSpotsFromQuery(query);
+		mapsSpots = searchGoogleMaps(latitude, longitude);
+		if(mapsSpots == null) {
+			System.out.println("Google Maps returned no results");
+			return spots;
+		}
+		for(ParkingSpot spot : mapsSpots) {
+			// Add the MapsSpot to the database if it doesn't already exist
+			if(!exists(spot.getRemoteId())) {
+				insertSpot(spot);
+			}
+			spots.add(spot);
+		}
+		return spots;
 	}
 	
 	public boolean addFavoriteParking(String username, String parkingname)

@@ -63,8 +63,8 @@ public class AdbTestRunner {
 			id = -1;
 			remoteid = String.valueOf(spot.getProperties().getOBJECTID());
 			label = spot.getProperties().getSENSORUNIQUEID();
-			latitude = spot.getProperties().getGPSX();
-			longitude = spot.getProperties().getGPSY();
+			longitude = spot.getProperties().getGPSX();
+			latitude = spot.getProperties().getGPSY();
 			db.addSpot(new ParkingSpot(id, remoteid, label, 1, latitude, longitude));
 		}
 		

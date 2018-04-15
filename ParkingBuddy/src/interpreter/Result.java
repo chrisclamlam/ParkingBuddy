@@ -24,7 +24,7 @@ public class Result {
     private String placeId;
     @SerializedName("rating")
     @Expose
-    private Integer rating;
+    private Double rating;
     @SerializedName("reference")
     @Expose
     private String reference;
@@ -78,11 +78,11 @@ public class Result {
         this.placeId = placeId;
     }
 
-    public Integer getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
