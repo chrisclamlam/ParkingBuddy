@@ -3,14 +3,11 @@ import { StyleSheet, Text, View, TextInput, Alert } from 'react-native'
 import { MapView } from 'expo';
 import { FormLabel, FormInput, Button } from 'react-native-elements'
 
-export default class AddSpotScreen extends React.Component {
+export default class SearchLocationScreen extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            name: "",
+        this.state = {,
             location: "",
-            type: "",
-            price: ""
         }
     }
 
@@ -20,14 +17,10 @@ export default class AddSpotScreen extends React.Component {
 
     verifyInput = () => {
         // Prepare user input to send to servlet
-        const paramInput = 'name=' + this.state.name +
-            '&location=' + this.state.location +
-            '&price=' + this.state.price;
+        const paramInput = '&location=' + this.state.location;
 
-        if(this.state.name == "" ||
-            this.state.location == "" ||
-            this.state.type == ""){
-            Alert.alert("Invalid Name or Location");
+        if(this.state.location == ""){
+            Alert.alert("Invalid Location");
             return;
         }
         // Fetch to our servlet: sending the user form data as the body
