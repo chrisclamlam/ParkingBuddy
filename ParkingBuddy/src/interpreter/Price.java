@@ -1,5 +1,5 @@
 
-package uber;
+package interpreter;
 
 import java.io.Serializable;
 import com.google.gson.annotations.Expose;
@@ -10,8 +10,8 @@ public class Price implements Serializable
 
 	public Price(double low, double high)
 	{
-		self.highEstimate = (Object) high;
-		self.lowEstimate = (Object) low;
+		this.highEstimate = (Object) high;
+		this.lowEstimate = (Object) low;
 	}
     @SerializedName("localized_display_name")
     @Expose

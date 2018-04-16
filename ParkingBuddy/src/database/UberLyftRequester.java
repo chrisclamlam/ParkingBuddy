@@ -1,16 +1,23 @@
-
+package database;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import interpreter.CostEstimate;
+import interpreter.LyftPrices;
+import interpreter.Price;
+import interpreter.UberPrices;
+
 public class UberLyftRequester {
 	private static String uberhost = "https://api.uber.com/v1.2/estimates/price?";
 	private static String lyfthost = "https://api.lyft.com/v1/cost?";
-	private static String uberkey = "-673kLvZUxb4p8tJbEqQrqilKoqwQRt3nqJBRlk-";
+	private static String uberkey = "673kLvZUxb4p8tJbEqQrqilKoqwQRt3nqJBRlk";
 	//READ ME
 	//keys are not correct --must do 
 	public static void main(String[] args)
@@ -18,7 +25,7 @@ public class UberLyftRequester {
 		ArrayList<Price> test = getUberPrice(34.022677,-118.289497,34.034702, -118.292584);
 	}
 	
-	public ArrayList<Price> getUberPrice(double latitude, double longitude, double endlatitude, double endlongitude)
+	public static ArrayList<Price> getUberPrice(double latitude, double longitude, double endlatitude, double endlongitude)
 	{
 		String requestString = uberhost;
 		requestString += "start_latitude=" + latitude + "&start_longitude=" + longitude + "&";
@@ -72,9 +79,9 @@ public class UberLyftRequester {
 //		
 //		// get the data types from the spots oject
 //		// add the resulting spot to ourSpots
-		for(Result result : UberPrices.getPrices()) {
-			pricemax = result.getLowEstimate();
-			pricemin = result.getHighEstimate();
+		for(Price result : UberPrices.getPrices()) {
+			pricemax = (int) result.getLowEstimate();
+			pricemin = (int) result.getHighEstimate();
 			s = new Price(pricemin, pricemax);
 			up.add(s);
 		}
@@ -110,19 +117,19 @@ public class UberLyftRequester {
 		}
 
 		Gson gson = new Gson();
-		LyftPrices LyftPrices = null;
+		LyftPrices lyftPrices = null;
 		try {
-			LyftPrices = gson.fromJson(response, LyftPrices.class);
+			lyftPrices = gson.fromJson(response, LyftPrices.class);
 		} catch (JsonSyntaxException jse) {
 			System.out.println("Response parsing LYFT API response: " + jse.getMessage());
 			return null;
 		}
-		if(price == null) {
+		if(lyftPrices == null) {
 			System.out.println("No Lyft price results found");
 			return null;
 		}
 
-		ArrayList<CostEstimate> LyftPrices = new ArrayList<Price>();
+		ArrayList<CostEstimate> LyftPrices = new ArrayList<CostEstimate>();
 		CostEstimate s= null;
 		String current;
 		int pricemax;
@@ -130,7 +137,7 @@ public class UberLyftRequester {
 
 	// get the data types from the spots oject
 	// add the resulting spot to ourSpots
-		for(Result result : LyftPrices.getCostEstimates()) {
+		for(CostEstimate result : lyftPrices.getCostEstimates()) {
 			pricemax = result.getEstimatedCostCentsMin();
 			pricemin = result.getEstimatedCostCentsMax();
 			s = new CostEstimate(pricemin, pricemax);

@@ -1,5 +1,5 @@
 
-package Lyft;
+package interpreter;
 
 import java.io.Serializable;
 import com.google.gson.annotations.Expose;
@@ -10,7 +10,7 @@ public class CostEstimate implements Serializable
 	public CostEstimate(int estimatedCostCentsMax, int estimatedCostCentsMin)
 	{
 		this.estimatedCostCentsMax = estimatedCostCentsMax;
-		this.estimatedCostCentsMin
+		this.estimatedCostCentsMin = estimatedCostCentsMin;
 	}
 
     @SerializedName("ride_type")

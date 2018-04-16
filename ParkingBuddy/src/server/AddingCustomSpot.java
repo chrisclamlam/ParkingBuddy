@@ -47,11 +47,10 @@ public class AddingCustomSpot extends MiddlewareServlet {
 		String latS = request.getParameter("lat");
 		String lngS = request.getParameter("lngS");
 		
-		ParkingSpot ps = new ParkingSpot("-1", label, Integer.parseInt(spotType), Double.parseDouble(latS), Double.parseDouble(lngS)) {
-			
-		}
+		ParkingSpot ps = new ParkingSpot("-1", label, Integer.parseInt(spotType), Double.parseDouble(latS), Double.parseDouble(lngS));
 		
-		if(db.exists(parkingname) && !db.existsParking(parkingname))
+		
+		/*if(db.exists(parkingname) && !db.existsParking(parkingname))
 		{
 			//ParkingSpot ps = new ParkingSpot(0, parkingname,  Integer.parseInt(spottype),  double latitude, double longitude)
 			//database.addSpot(ps);
@@ -60,7 +59,7 @@ public class AddingCustomSpot extends MiddlewareServlet {
 			response.setStatus(200);
 		}
 		
-		response.setStatus(400);
+		response.setStatus(400);*/
 	}
 
 }
