@@ -20,7 +20,8 @@ export default class SearchLocationScreen extends React.Component {
         const paramInput = '&location=' + this.state.location;
 
         if(this.state.location == ""){
-            Alert.alert("Invalid Location");
+            this.props.navigation.push('MapScreen')
+            // Alert.alert("Invalid Location");
             return;
         }
         // Fetch to our servlet: sending the user form data as the body
@@ -49,12 +50,15 @@ export default class SearchLocationScreen extends React.Component {
         //         //
         //         Alert.alert(error.message);
         //     });
+
+    
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.title} > Location to Search for Spots</Text>
+                <Text> User Button </Text>
+                <Text style={styles.title} >Search </Text>
                 <View style={styles.formError}></View>
 
 
