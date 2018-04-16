@@ -9,6 +9,7 @@ export default class AddSpotScreen extends React.Component {
         this.state = {
             name: "",
             location: "",
+            type: "",
             price: ""
         }
     }
@@ -24,7 +25,8 @@ export default class AddSpotScreen extends React.Component {
             '&price=' + this.state.price;
 
         if(this.state.name == "" ||
-            this.state.location == ""){
+            this.state.location == "" ||
+            this.state.type == ""){
             Alert.alert("Invalid Name or Location");
             return;
         }

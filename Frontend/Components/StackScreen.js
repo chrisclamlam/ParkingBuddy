@@ -8,7 +8,7 @@ import MapScreen from './MapScreen';
 import LogInScreen from './LogInScreen';
 import AddSpotScreen from './AddSpotScreen';
 import SignUpScreen from './SignUpScreen';
-
+import SearchLocationScreen from './SearchLocationScreen';
 
 
 const AppStackNavigator = StackNavigator({
@@ -23,6 +23,9 @@ const AppStackNavigator = StackNavigator({
   },
   AddSpotScreen: {
     screen: AddSpotScreen
+  },
+  SearchLocationScreen: {
+    screen: SearchLocationScreen
   },
 }, {
     headerMode: "none",

@@ -48,7 +48,6 @@ public class SearchLocation extends HttpServlet {
 		// ArrayList<ParkingSpot> -> JSON
 		Gson gson = new Gson();
 		String jsonResponse = gson.toJson(spots);
-		System.out.println("Location response: " + jsonResponse);
 		// Write the response
 		try {
 			PrintWriter pw = response.getWriter();
