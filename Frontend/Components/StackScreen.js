@@ -9,7 +9,7 @@ import LogInScreen from './LogInScreen';
 import AddSpotScreen from './AddSpotScreen';
 import SignUpScreen from './SignUpScreen';
 import SearchLocationScreen from './SearchLocationScreen';
-
+import ProfileScreen from './ProfileScreen'
 
 const AppStackNavigator = StackNavigator({
   LogInScreen: {
@@ -27,6 +27,10 @@ const AppStackNavigator = StackNavigator({
   SearchLocationScreen: {
     screen: SearchLocationScreen
   },
+  ProfileScreen: {
+    screen: ProfileScreen
+
+  }
 }, {
     headerMode: "none",
   })
