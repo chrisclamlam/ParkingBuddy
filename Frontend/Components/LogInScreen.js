@@ -19,7 +19,7 @@ export default class LogInScreen extends React.Component {
 
 
 
-    this.props.navigation.push('MapScreen')
+    this.props.navigation.push('SearchLocationScreen')
   }
 
   onPressSignUp() {
@@ -69,7 +69,7 @@ export default class LogInScreen extends React.Component {
           buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
           fontSize={15}
           color='white'
-          onPress={() => this.props.navigation.push('MapScreen')} title="Continue as guest" />
+          onPress={() => this.props.navigation.push('SearchLocationScreen')} title="Continue as guest" />
 
 
 

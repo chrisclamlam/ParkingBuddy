@@ -75,18 +75,9 @@ public class AppDatabaseTest {
 		AppDatabase db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
 		// Search somewhere in LA
 		ArrayList<ParkingSpot> spots = db.searchSpotByLocation(34.0522, -118.445892);
-		/*System.out.println("Spots: " + spots);
 		assertNotNull(spots);
-		System.out.println("Testing searching by location. Spots: ");
-		for(ParkingSpot spot : spots) {
-			System.out.println(spot.getLabel());
-		}*/
 		// Search somewhere away from LA
 		spots = db.searchSpotByLocation(40.7128, -74.0060);
-		System.out.println("Testing searching by location. Spots: ");
 		assertNotNull(spots);
-		for(ParkingSpot spot : spots) {
-			System.out.println(spot.getLabel());
-		}	
 	}
 }

@@ -116,7 +116,7 @@ public class AppDatabase {
 					+ "'" + ps.getLabel() + "',"
 					+ "'" + ps.getLongitude() + "'," 
 					+ "'" + ps.getLatitude() + "'," 
-					+ "'" + 1 + "')");
+					+ "'" + ps.getSpotType() + "')");
 			return true;
 		} catch (SQLException sqle) {
 			System.out.print(sqle.getMessage());
@@ -231,6 +231,85 @@ public class AppDatabase {
 		}
 	}
 	
+	// Query the database for the result set
+	// iterate through the set and create an array of users
+	// if the size of the list is 0, return null
+	private ArrayList<User> getUsersFromQuery(String query){
+		Connection conn = getConnection();
+		if(conn == null) return null;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return null;
+		}
+		ResultSet rs = null;;
+		ArrayList<User> users = new ArrayList<User>();
+		try {
+			// Execute the Query
+			rs = st.executeQuery(query);
+			if(rs == null || !rs.next()) {
+				return null;
+			}	
+			// Parse and iterate over rs
+			while(rs.next()) {
+				User u = createUser(rs);
+				// Add User to list
+				if(u != null) {
+					users.add(u);
+				}
+			}
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		} finally {
+			close(conn, st, rs);
+		}
+		// if the size of the list is 0, return null
+		if(users.size() == 0) {
+			return null;
+		}
+		return users;
+	}
+		
+	private ArrayList<ParkingSpot> getParkingSpotsFromQuery(String query){
+		Connection conn = getConnection();
+		if(conn == null) return null;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return null;
+		}
+		ResultSet rs = null;
+		ArrayList<ParkingSpot> spots = new ArrayList<ParkingSpot>();
+		try {
+			// Execute the Query
+			rs = st.executeQuery(query);
+			if(rs == null || !rs.next()) {
+				return null;
+			}	
+			// Parse and iterate over rs
+			while(rs.next()) {
+				ParkingSpot ps = createParkingSpot(rs);
+				// Add User to list
+				if(ps != null) {
+					spots.add(ps);
+				}
+			}
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		} finally {
+			close(conn, st, rs);
+		}
+		// if the size of the list is 0, return null
+		if(spots.size() == 0) {
+			return null;
+		}
+		return spots;
+	}
+	
+	private ArrayList<ParkingSpot> searchGoogleMaps(double latitude, double longitude){
+		return MapsRequester.getNearbyParking(latitude, longitude, 400);
+	}
+	
 	public boolean addSpot(ParkingSpot ps) {
 		return insertSpot(ps);
 	}
@@ -320,44 +399,7 @@ public class AppDatabase {
 		return insertUser(u);
 	}
 	
-	// Query the database for the result set
-	// iterate through the set and create an array of users
-	// if the size of the list is 0, return null
-	private ArrayList<User> getUsersFromQuery(String query){
-		Connection conn = getConnection();
-		if(conn == null) return null;
-		Statement st = getStatement(conn);
-		if(st == null) {
-			close(conn, null, null);
-			return null;
-		}
-		ResultSet rs = null;;
-		ArrayList<User> users = new ArrayList<User>();
-		try {
-			// Execute the Query
-			rs = st.executeQuery(query);
-			if(rs == null || !rs.next()) {
-				return null;
-			}	
-			// Parse and iterate over rs
-			while(rs.next()) {
-				User u = createUser(rs);
-				// Add User to list
-				if(u != null) {
-					users.add(u);
-				}
-			}
-		} catch (SQLException sqle) {
-			System.out.println(sqle.getMessage());
-		} finally {
-			close(conn, st, rs);
-		}
-		// if the size of the list is 0, return null
-		if(users.size() == 0) {
-			return null;
-		}
-		return users;
-	}
+	
 	
 	public ArrayList<User> getUserFriends(String username){	
 		// Query the database for the result set
@@ -379,41 +421,7 @@ public class AppDatabase {
 		return getUsersFromQuery("SELECT * FROM USERS WHERE email = '" + email + "'");
 	}
 	
-	private ArrayList<ParkingSpot> getParkingSpotsFromQuery(String query){
-		Connection conn = getConnection();
-		if(conn == null) return null;
-		Statement st = getStatement(conn);
-		if(st == null) {
-			close(conn, null, null);
-			return null;
-		}
-		ResultSet rs = null;
-		ArrayList<ParkingSpot> spots = new ArrayList<ParkingSpot>();
-		try {
-			// Execute the Query
-			rs = st.executeQuery(query);
-			if(rs == null || !rs.next()) {
-				return null;
-			}	
-			// Parse and iterate over rs
-			while(rs.next()) {
-				ParkingSpot ps = createParkingSpot(rs);
-				// Add User to list
-				if(ps != null) {
-					spots.add(ps);
-				}
-			}
-		} catch (SQLException sqle) {
-			System.out.println(sqle.getMessage());
-		} finally {
-			close(conn, st, rs);
-		}
-		// if the size of the list is 0, return null
-		if(spots.size() == 0) {
-			return null;
-		}
-		return spots;
-	}
+	
 	
 	public ArrayList<ParkingSpot> getUserSpots(String username){
 		return getParkingSpotsFromQuery("SELECT * FROM FavoritesList WHERE firstid = '" + getUserId(username) + "'");
@@ -549,8 +557,13 @@ public class AppDatabase {
 		return ps.get(0);
 	}
 	
-	private ArrayList<ParkingSpot> searchGoogleMaps(double latitude, double longitude){
-		return MapsRequester.getNearbyParking(latitude, longitude, 400);
+	public ArrayList<ParkingSpot> searchLocations(String name, double latitude, double longitude){
+		ArrayList<ParkingSpot> spots = MapsRequester.getLocations(name, latitude, longitude);
+		System.out.println("Locations:");
+		for(ParkingSpot spot : spots) {
+			System.out.println(spot.getLabel());
+		}
+		return spots;
 	}
 	
 	public ArrayList<ParkingSpot> searchSpotByLocation(double latitude, double longitude){

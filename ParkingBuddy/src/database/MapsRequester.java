@@ -16,14 +16,9 @@ import interpreter.Result;
 public class MapsRequester {
 	
 	private static String host = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-
-	public static ArrayList<ParkingSpot> getNearbyParking(double latitude, double longitude, double radius) {
-		String requestString = host;
-		requestString += "location=" + latitude + "," + longitude + "&";
-		requestString += "radius=" + radius + "&";
-		requestString += "type=parking&";
-		requestString += "key=" + "AIzaSyBjpBzb-segfA_rM4r14z-PKmZ61_3wv74";
-		System.out.println(requestString);
+	private static String key  = "AIzaSyBjpBzb-segfA_rM4r14z-PKmZ61_3wv74";
+	
+	private static String makeRequest(String requestString) {
 		String response = "";
 		try {
 			// Connect through a GET requeset
@@ -38,17 +33,18 @@ public class MapsRequester {
 			// Read the response
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String line;
-			System.out.println("Searching for cities near " + latitude + ", " + longitude);
 			while((line = br.readLine()) != null) {
-				System.out.println(line);
 				response += line;
 			}
+			return response;
 			
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 			return null;
 		}
-		// JSON -> MapsSpots object
+	}
+	
+	private static ArrayList<ParkingSpot> parseResponse(String response, int spotType){
 		Gson gson = new Gson();
 		MapsSpots spots = null;
 		try {
@@ -67,7 +63,6 @@ public class MapsRequester {
 		String remoteid = "";
 		String label = "";
 		double lng, lat;
-		int spotType = 4;
 		
 		// get the data types from the spots oject
 		// add the resulting spot to ourSpots
@@ -80,6 +75,27 @@ public class MapsRequester {
 			ourSpots.add(s);
 		}
 		return ourSpots;
+	}
+
+	public static ArrayList<ParkingSpot> getNearbyParking(double latitude, double longitude, double radius) {
+		String requestString = host;
+		requestString += "location=" + latitude + "," + longitude + "&";
+		requestString += "radius=" + radius + "&";
+		requestString += "type=parking&";
+		requestString += "key=" + key;
+		String response = makeRequest(requestString);
+		return parseResponse(response, 3);
+	}
+	
+	public static ArrayList<ParkingSpot> getLocations(String name, double latitude, double longitude){
+		String requestString = host;
+		requestString += "location=" + latitude + "," + longitude + "&";
+		requestString += "keyword=" + name + "&";
+		requestString += "key=" + key + "&";
+		requestString += "radius=50000";
+		String response = makeRequest(requestString);
+		System.out.println("Response from google: " + response);
+		return parseResponse(response, -1);
 	}
 	
 	public static void main(String[] args) {

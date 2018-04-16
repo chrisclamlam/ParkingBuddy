@@ -18,14 +18,14 @@ const AppStackNavigator = StackNavigator({
   SignUpScreen: {
     screen: SignUpScreen
   },
-  SearchLocationScreen: {
-    screen: SearchLocationScreen
-  },
   MapScreen: {
     screen: MapScreen
   },
   AddSpotScreen: {
     screen: AddSpotScreen
+  },
+  SearchLocationScreen: {
+    screen: SearchLocationScreen
   },
 }, {
     headerMode: "none",

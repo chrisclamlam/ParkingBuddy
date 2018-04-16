@@ -144,4 +144,19 @@ public class ServletTest {
 		}
 		
 	}
+	
+	@Test
+	public void testSearchLocation() {
+		String searchEndpoint = "http://localhost:8080/ParkingBuddy/SearchLocation?keyword=USC&lat=34.060677&lng=-118.445892";
+		try {
+			URL url = new URL(searchEndpoint);
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			conn.setRequestMethod("GET");
+			assertEquals(200, conn.getResponseCode());
+		} catch (MalformedURLException mue) {
+			System.out.println(mue.getMessage());
+		} catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
+		}
+	}
 }

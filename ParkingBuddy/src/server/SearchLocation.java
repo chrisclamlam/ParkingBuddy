@@ -1,11 +1,19 @@
 package server;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
+import database.AppDatabase;
+import database.ParkingSpot;
 
 /**
  * Servlet implementation class SearchLocation
@@ -25,27 +33,33 @@ public class SearchLocation extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
-		String address = request.getParameter("address");
-		//turn address into location first STILL IN WORKING PROGRESS
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		AppDatabase db = (AppDatabase) getServletContext().getAttribute("db");
-		double latitude = Double.parseDouble(request.getParameter("lat"));
-		double longitude = Double.parseDouble(request.getParameter("lng"));
-		// Search for the location
-		ArrayList<ParkingSpot> spots = db.searchSpotByLocation(latitude, longitude);
-		if(spots == null) {
+		// Get the name and coordinates from the request
+		String keyword = request.getParameter("keyword");
+		String latS = request.getParameter("lat");
+		String lngS = request.getParameter("lng");
+		if(keyword == null || latS == null || lngS == null) {
 			response.setStatus(400);
 			return;
 		}
-		// Turn into JSON and write reponse
-		
-		String json = new Gson().toJson(spots);
-		response.setStatus(200);
-		response.setContentType(json);
+		// Query the location on the backend
+		ArrayList<ParkingSpot> spots = db.searchLocations(keyword, Double.parseDouble(latS), Double.parseDouble(lngS));
+		// ArrayList<ParkingSpot> -> JSON
+		Gson gson = new Gson();
+		String jsonResponse = gson.toJson(spots);
+		// Write the response
+		try {
+			PrintWriter pw = response.getWriter();
+			response.setStatus(200);
+			pw.write(jsonResponse);
+			pw.flush();
+			pw.close();
+		} catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
+			response.setStatus(400);
+			return;
+		}
 	}
 	
 }
