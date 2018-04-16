@@ -29,7 +29,6 @@ const AppStackNavigator = StackNavigator({
   },
   ProfileScreen: {
     screen: ProfileScreen
-
   }
 }, {
     headerMode: "none",

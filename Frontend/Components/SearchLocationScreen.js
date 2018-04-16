@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, Alert } from 'react-native'
 import { MapView } from 'expo';
 import { FormLabel, FormInput, Button } from 'react-native-elements'
+import { Ionicons } from '@expo/vector-icons';
+
 
 export default class SearchLocationScreen extends React.Component {
     constructor(props) {
@@ -96,7 +98,13 @@ export default class SearchLocationScreen extends React.Component {
         return (
             <View style={styles.container}>
 
-                <Text onPress={()=> {this.props.navigation.push('ProfileScreen')}}> Profile </Text>
+                <Ionicons 
+                style={{justifyContent: 'flex-start', alignContent: 'flex-start'}}
+                onPress={()=> {this.props.navigation.push('ProfileScreen')}}
+                name="md-person" size={32} color="gray" />
+
+
+
                 <Text style={styles.title} > Search </Text>
 
                 <FormLabel>Location</FormLabel>
