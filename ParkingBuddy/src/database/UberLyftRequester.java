@@ -23,6 +23,7 @@ public class UberLyftRequester {
 		String requestString = uberhost;
 		requestString += "start_latitude=" + latitude + "&start_longitude=" + longitude + "&";
 		requestString += "endlatitude=" + endlatitude+ "&end_longitude=" + endlongitude;
+		requestString += uberkey;
 		//requestString += "key=" + "-673kLvZUxb4p8tJbEqQrqilKoqwQRt3nqJBRlk-";
 		String response = "";
 
