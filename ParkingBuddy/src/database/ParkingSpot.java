@@ -12,8 +12,7 @@ public class ParkingSpot {
 	/* SpotTypes
 	 * 1 - Meter
 	 * 2 - Street
-	 * 3 - Structure
-	 * 4 - Lot
+	 * 3 - Structure/Lot
 	 */
 	
 	public ParkingSpot(int id, String remoteid, String label, int spotType,  double latitude, double longitude) {
