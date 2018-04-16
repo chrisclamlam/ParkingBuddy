@@ -8,18 +8,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import database.AppDatabase;
+import database.ParkingSpot;
 
 /**
  * Servlet implementation class AddingCustomizeSpot
  */
-@WebServlet("/AddingCustomizeSpot")
-public class AddingCustomizeSpot extends HttpServlet {
+@WebServlet("/AddingCustomSpot")
+public class AddingCustomSpot extends MiddlewareServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddingCustomizeSpot() {
+    public AddingCustomSpot() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,14 +37,21 @@ public class AddingCustomizeSpot extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String parkingname = request.getParameter("parkingname");
-		String username = request.getParameter("username");
-		String spottype = request.getParameter("spottype");
-		String address = request.getParameter("address");
-		String price = request.getParameter("price");
-		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
 		
-		if(database.exists(parkingname) && !database.existsParking(parkingname))
+		// Get the db instance
+		AppDatabase db = (AppDatabase) getServletContext().getAttribute("db");
+		// Get the data needed to create a parking Spot and a favoritesList entry
+		String username = user.getUsername();
+		String label = request.getParameter("label");
+		String spotType = request.getParameter("spotType");
+		String latS = request.getParameter("lat");
+		String lngS = request.getParameter("lngS");
+		
+		ParkingSpot ps = new ParkingSpot("-1", label, Integer.parseInt(spotType), Double.parseDouble(latS), Double.parseDouble(lngS)) {
+			
+		}
+		
+		if(db.exists(parkingname) && !db.existsParking(parkingname))
 		{
 			//ParkingSpot ps = new ParkingSpot(0, parkingname,  Integer.parseInt(spottype),  double latitude, double longitude)
 			//database.addSpot(ps);
