@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 import database.AppDatabase;
 import database.ParkingSpot;
 
@@ -43,10 +45,10 @@ public class SearchSpot extends HttpServlet {
 			return;
 		}
 		// Turn into JSON and write reponse
-		
 		String json = new Gson().toJson(spots);
 		response.setStatus(200);
 		response.getWriter().write(json);
-		
+		response.getWriter().flush();
+		response.getWriter().close();
 	}
 }
