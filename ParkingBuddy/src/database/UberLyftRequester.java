@@ -10,28 +10,35 @@ import com.google.gson.JsonSyntaxException;
 public class UberLyftRequester {
 	private static String uberhost = "https://api.uber.com/v1.2/estimates/price?";
 	private static String lyfthost = "https://api.lyft.com/v1/cost?";
+	private static String uberkey = "-673kLvZUxb4p8tJbEqQrqilKoqwQRt3nqJBRlk-";
 	//READ ME
 	//keys are not correct --must do 
+	public static void main(String[] args)
+	{
+		ArrayList<Price> test = getUberPrice(34.022677,-118.289497,34.034702, -118.292584);
+	}
+	
 	public ArrayList<Price> getUberPrice(double latitude, double longitude, double endlatitude, double endlongitude)
 	{
 		String requestString = uberhost;
 		requestString += "start_latitude=" + latitude + "&start_longitude=" + longitude + "&";
 		requestString += "endlatitude=" + endlatitude+ "&end_longitude=" + endlongitude;
-		requestString += "key=" + "-673kLvZUxb4p8tJbEqQrqilKoqwQRt3nqJBRlk-";
+		//requestString += "key=" + "-673kLvZUxb4p8tJbEqQrqilKoqwQRt3nqJBRlk-";
 		String response = "";
 
 		try {
 			URL url = new URL (requestString);
 			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Authorization",uberkey);
 //			// Check the status and parse the response
 			if(conn.getResponseCode() < 200 || conn.getResponseCode() > 299) {
-//					System.out.println("Bad Request");
+					System.out.println("Bad Request");
 					return null; // change to return null when you can
 			}
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String line;
-//			System.out.println("Searching for cities near " + latitude + ", " + longitude);
+			System.out.println("Searching  " + latitude + ", " + longitude);
 			while((line = br.readLine()) != null) {
 				System.out.println(line);
 				response += line;
@@ -130,5 +137,6 @@ public class UberLyftRequester {
 		}
 		return LyftPrices;
 	}
+
 
 }
