@@ -7,9 +7,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class CostEstimate implements Serializable
 {
-	public CostEstimate(String currency, int estimatedCostCentsMax, int estimatedCostCentsMin)
+	public CostEstimate(int estimatedCostCentsMax, int estimatedCostCentsMin)
 	{
-		this.currency = currency;
 		this.estimatedCostCentsMax = estimatedCostCentsMax;
 		this.estimatedCostCentsMin
 	}
