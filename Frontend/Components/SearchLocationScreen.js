@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, Alert } from 'react-native'
 import { MapView } from 'expo';
 import { FormLabel, FormInput, Button } from 'react-native-elements'
+import { Ionicons } from '@expo/vector-icons';
+
 
 export default class SearchLocationScreen extends React.Component {
     constructor(props) {
@@ -27,9 +29,9 @@ export default class SearchLocationScreen extends React.Component {
         var lng;
 
         // Check to see if user entered an address or keyword
-        if(this.state.location == ""){
-            Alert.alert("Invalid Location");
-        }
+        // if(this.state.location == ""){
+        //     Alert.alert("Invalid Location");
+        // }
 
         var newLoc = this.state.location;
         for(var i = 0; i < newLoc.length; i++){
@@ -46,6 +48,7 @@ export default class SearchLocationScreen extends React.Component {
             }
             else {
                 Alert.alert("Unable to search. Please try again.");
+
                 return;
             }
         } catch(error){
@@ -74,6 +77,7 @@ export default class SearchLocationScreen extends React.Component {
                         markers: responseJson.responseText
                     }
                 });
+                
             }
             else { // No results
                 Alert.alert("Unable to find any location");
@@ -93,7 +97,15 @@ export default class SearchLocationScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.title} > Location to Search for Spots</Text>
+
+                <Ionicons 
+                style={{justifyContent: 'flex-start', alignContent: 'flex-start'}}
+                onPress={()=> {this.props.navigation.push('ProfileScreen')}}
+                name="md-person" size={32} color="gray" />
+
+
+
+                <Text style={styles.title} > Search </Text>
 
                 <FormLabel>Location</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ location: text }))} />
@@ -123,7 +135,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        textAlign: 'center',
+        // textAlign: 'center',
         fontSize: 35,
         marginLeft: 10,
         marginBottom: 30,
