@@ -125,7 +125,7 @@ public class UberLyftRequester {
 		for(Result result : LyftPrices.getCostEstimates()) {
 			pricemax = result.getEstimatedCostCentsMin();
 			pricemin = result.getEstimatedCostCentsMax();
-			s = new Price(pricemin, pricemax);
+			s = new CostEstimate(pricemin, pricemax);
 			LyftPrices.add(s);
 		}
 		return LyftPrices;
