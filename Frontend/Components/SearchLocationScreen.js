@@ -97,15 +97,14 @@ export default class SearchLocationScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-
                 <Ionicons 
-                style={{justifyContent: 'flex-start', alignContent: 'flex-start'}}
+                style={{marginLeft:'90%'}}
                 onPress={()=> {this.props.navigation.push('ProfileScreen')}}
                 name="md-person" size={32} color="gray" />
 
-
-
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={styles.title} > Search </Text>
+                </View>
 
                 <FormLabel>Location</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ location: text }))} />
