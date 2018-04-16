@@ -7,7 +7,6 @@ import { Marker } from 'react-native-maps';
 // Get the dimensions of the screen
 const { width, height } = Dimensions.get("window");
 // Link to marker background
-const Images = "https://i.imgur.com/sNam9iJ.jpg";
 // Make the dimensions of the parking quick detail screen
 const PARK_HEIGHT = height / 6;
 const PARK_WIDTH = PARK_HEIGHT;
@@ -28,32 +27,7 @@ export default class App extends React.Component {
         this.state = {
             initregion,
             // Create array for map markers
-            markers: [
-                {
-                    coordinate : {
-                        latitude: 37.421,
-                        longitude: -122.084,
-                    },
-                    title: 'Marker 1',
-                    description: "Test 1",
-                },
-                {
-                    coordinate : {
-                        latitude: 38.421,
-                        longitude: -123.084,
-                    },
-                    title: 'Marker 2',
-                    description: "Test 2",
-                },
-                {
-                    coordinate : {
-                        latitude: 36.421,
-                        longitude: -121.084,
-                    },
-                    title: 'Marker 3',
-                    description: "Test 3",
-                },
-            ],
+            markers: this.props.navigation.state.params.markers,
             searchQuery: "",
         }
 
@@ -95,13 +69,6 @@ export default class App extends React.Component {
             }, 10);
         });
     }
-
-    // Send search location data to server
-    // In progress, see what
-    _sendLocationSearch = async () => {
-
-    }
-
 
     _getLocationAsync = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -146,11 +113,6 @@ export default class App extends React.Component {
         return (
             <View style={styles.container}>
                 {/* Search for an area with parking */}
-                <FormLabel>Parking Search</FormLabel>
-                <FormInput onChangeText={(text) => (this.setState({ searchQuery: text }))}  />
-                <Button
-                    buttonStyle={{ borderRadius: 10, backgroundColor: 'rgb(76,217,100)', width: '100%' }}
-                    onPress={() => this.verifyInput(this)} title="Search Location" />
                 <View style={{ flex: 1 }}>
                     <MapView
                         ref={map => this.map = map}
@@ -210,11 +172,6 @@ export default class App extends React.Component {
                         { /* Dynamically display results of parking locations on screen */ }
                         {this.state.markers.map((marker, index) => (
                             <View style={styles.park} key={index}>
-                                <Image
-                                    style={styles.parkImage}
-                                    source={{uri: 'ParkingBuddy/images/park.bmp'}}
-                                    resizeMode="cover"
-                                />
                                 <View style={styles.textContent}>
                                     <Text numberOfLines={1} style={styles.parktitle}>{marker.title}</Text>
                                     <Text numberOfLines={1} style={styles.parkDescription}>
@@ -224,9 +181,15 @@ export default class App extends React.Component {
                             </View>
                         ))}
                     </Animated.ScrollView>
-                    <Button
-                        buttonStyle={{ borderRadius: 10, backgroundColor: 'rgb(76,217,100)', width: '100%' }}
-                        onPress={() => this.props.navigation.push('AddSpotScreen')} title="Don't see your spot?" />
+                    <View style={{flexDirection: 'row', justifyContent: 'center', padding: 2}}>
+                        <Button
+                            buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', }}
+                            onPress={() => this.props.navigation.pop()} title="Go Back" />
+
+                        <Button
+                            buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d',  }}
+                            onPress={() => this.props.navigation.push('AddSpotScreen')} title="Don't see your spot?" />
+                    </View>
                 </View>
             </View >
         );
