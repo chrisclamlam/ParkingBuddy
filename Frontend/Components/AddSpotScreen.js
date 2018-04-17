@@ -20,10 +20,6 @@ export default class AddSpotScreen extends React.Component {
 
     verifyInput = async() => {
         // Prepare user input to send to servlet
-        const paramInput = 'name=' + this.state.name +
-            '&location=' + this.state.location +
-            '&price=' + this.state.price +
-            '&spotType=' + this.state.type;
 
             console.log("spotType quals " + this.state.type);
 
@@ -61,7 +57,13 @@ export default class AddSpotScreen extends React.Component {
         
         
         //COMMUNCIATION WITH OUR SERVEr
-        
+
+        const paramInput = 'name=' + this.state.name +
+            '&lat=' + lat +
+            '&lng=' + lng +
+            '&price=' + this.state.price +
+            '&spotType=' + this.state.type;
+
         fetch(serverIP + 'AddCustomSpot', {
             method: 'POST',
             headers: {
