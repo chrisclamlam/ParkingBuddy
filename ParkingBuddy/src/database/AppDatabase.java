@@ -114,7 +114,8 @@ public class AppDatabase {
 		if(insertSpot(ps)) {
 			// Update the id and remoteid field after it is inserted
 			if(updateSpot(ps.getRemoteId())) {
-				return getSpotId(ps.getRemoteId());
+				System.out.println("Label of custom spot: " + ps.getLabel());
+				return getSpotId(ps.getLabel());
 			}else {
 				deleteSpot(ps.getRemoteId());
 				return -1;
@@ -624,9 +625,13 @@ public class AppDatabase {
 		return ps.get(0);
 	}
 	
-	public int getSpotId(String remoteid) {
-		return getParkingSpotsFromQuery("SELECT id FROM ParkingSpots WHERE remoteid = '" + remoteid + "'").get(0).getId();
-		
+	public int getSpotId(String label) {
+		System.out.println("Querying DB for spot with label: " + label);
+		ArrayList<ParkingSpot> spots = getParkingSpotsFromQuery("SELECT * FROM ParkingSpots WHERE label = '" + label + "'");
+		if(spots == null) {
+			return -1;
+		}
+		return spots.get(0).getId();
 	}
 	
 	public ArrayList<ParkingSpot> searchLocations(String name, double latitude, double longitude){

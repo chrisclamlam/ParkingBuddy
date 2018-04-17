@@ -159,4 +159,9 @@ public class ServletTest {
 			System.out.println(ioe.getMessage());
 		}
 	}
+	
+	@Test
+	public void testAddCustomSpot() {
+		String customSpotEndpoint = "http://localhost:8080/ParkingBuddy/SearchLocation?keyword=USC&lat=34.060677&lng=-118.445892";
+	}
 }

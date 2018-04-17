@@ -34,11 +34,15 @@ public class SearchLocation extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("Hit location endpoint");
 		AppDatabase db = (AppDatabase) getServletContext().getAttribute("db");
 		// Get the name and coordinates from the request
 		String keyword = request.getParameter("keyword");
 		String latS = request.getParameter("lat");
 		String lngS = request.getParameter("lng");
+		System.out.println("Keyword: " + keyword);
+		System.out.println("lat: " + latS);
+		System.out.println("lng: " + lngS);
 		if(keyword == null || latS == null || lngS == null) {
 			response.setStatus(400);
 			return;
@@ -48,6 +52,7 @@ public class SearchLocation extends HttpServlet {
 		// ArrayList<ParkingSpot> -> JSON
 		Gson gson = new Gson();
 		String jsonResponse = gson.toJson(spots);
+		System.out.println("Location endpoint response: " + spots);
 		// Write the response
 		try {
 			PrintWriter pw = response.getWriter();

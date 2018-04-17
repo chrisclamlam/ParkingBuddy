@@ -38,7 +38,7 @@ public class AddingCustomSpot extends MiddlewareServlet {
 		double lat, lng;
 		try {
 			uid = user.getId();
-			label = request.getParameter("label");
+			label = request.getParameter("name");
 			spotType = Integer.parseInt(request.getParameter("spotType"));
 			lat = Double.parseDouble(request.getParameter("lat"));
 			lng = Double.parseDouble(request.getParameter("lng"));
@@ -46,9 +46,11 @@ public class AddingCustomSpot extends MiddlewareServlet {
 			response.setStatus(400);
 			System.out.println("Error parsing CustomSpot GET Endpoint");
 			return;
+		} catch (NumberFormatException nfe) {
+			response.setStatus(400);
+			System.out.println("Incorrect arguments sent from client in CustomSpot GET Endpoint>");
+			return;
 		}
-		
-		
 		ParkingSpot ps = new ParkingSpot("-1", label, spotType, lat, lng);
 		
 		// Add the spot and get the spot id
