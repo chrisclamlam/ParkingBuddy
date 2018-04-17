@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Alert } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Alert, Picker } from 'react-native'
 import { MapView } from 'expo';
 import { FormLabel, FormInput, Button } from 'react-native-elements'
 
@@ -22,7 +22,8 @@ export default class AddSpotScreen extends React.Component {
         // Prepare user input to send to servlet
         const paramInput = 'name=' + this.state.name +
             '&location=' + this.state.location +
-            '&price=' + this.state.price;
+            '&price=' + this.state.price +
+            '&spotType=' + this.state.type;
 
         // if(this.state.name == "" ||
         //     this.state.location == "" ||
@@ -75,6 +76,14 @@ export default class AddSpotScreen extends React.Component {
                 
                 <FormLabel>Enter Address of Location</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ location: text }))} />
+
+                <FormLabel> Parking Type </FormLabel>
+                <Picker selectedValue = {this.state.type} onValueChange = {this.state.type}>
+                    <Picker.Item label = "Meter" value = "1" />
+                    <Picker.Item label = "Street" value = "2" />
+                    <Picker.Item label = "Structure/Lot" value = "3" />
+                </Picker>
+
                 <FormLabel>Price</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ price: text }))} />
 
