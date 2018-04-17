@@ -11,6 +11,31 @@ export default class ProfileScreen extends React.Component {
 
   }
 
+  onPressBookmarks() {
+    fetch(serverIP + '/SearchUsers', {
+        method: 'POST',
+        headers: {
+          'Token' : global.authKey,
+            'Accept': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'searchingUser:ChrisLam'
+    })
+        .then(function (response) {
+            // Handle HTTP response
+            if (response.status.toString() == 200) {
+                // console.log(respons)
+            }
+            else {
+                global.username = "guest";
+                return;
+            }
+        })
+        .catch((error) => {
+            //
+            Alert.alert(error.message);
+        });
+}
   // Takes user back to search page
 
   
@@ -23,9 +48,9 @@ export default class ProfileScreen extends React.Component {
 
         {/* General User Info */}
         <View>
-          <FormLabel>Bookmarks</FormLabel>
+          <FormLabel>Email:</FormLabel>
 
-          <FormLabel>Email</FormLabel>
+          <FormLabel>Followers</FormLabel>
 
           <FormLabel>Default Location</FormLabel>
 

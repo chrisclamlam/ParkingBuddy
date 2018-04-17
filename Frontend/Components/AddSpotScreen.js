@@ -9,7 +9,7 @@ export default class AddSpotScreen extends React.Component {
         this.state = {
             name: "",
             location: "",
-            type: "",
+            type: "1",
             price: ""
         }
     }
@@ -64,6 +64,8 @@ export default class AddSpotScreen extends React.Component {
             '&price=' + this.state.price +
             '&spotType=' + this.state.type;
 
+            console.log(paramInput);
+
         fetch(serverIP + 'AddCustomSpot', {
             method: 'POST',
             headers: {
@@ -79,7 +81,7 @@ export default class AddSpotScreen extends React.Component {
                 if (response.status.toString() == 200) {
                     // Save this in a global variable, locally on filesystem is slow
                     //response.headers.get('Set-Cookie'); // Gets Bryce's token
-                    Alert.alert("Successful Sign Up!");
+                    Alert.alert("Successful Add!");
                 }
                 else {
                     Alert.alert("Unsuccessful Sign up: " + response.status.toString());
@@ -94,12 +96,8 @@ export default class AddSpotScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.title} > Suggest New Location </Text>
+                <Text style={styles.title} > Suggest  </Text>
                 <View style={styles.formError}></View>
-
-
-
-                <Text onPress={() => console.log(global.authKey)}> PRESS ME </Text>
 
 
                 <FormLabel>Name of Parking Location</FormLabel>
@@ -123,12 +121,12 @@ export default class AddSpotScreen extends React.Component {
                     buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', width: '100%' }}
                     onPress={() => this.verifyInput(this)} title="Submit Location Suggestion" />
 
-                <Button
+                {/* <Button
                     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
                     textStyle= {{color: 'gray'}}
                     fontSize={15}
                     color='black'
-                    onPress={() => this.props.navigation.pop()} title="Back to Search" />
+                    onPress={() => this.props.navigation.pop()} title="Back to Search" /> */}
             </View >
         );
     }

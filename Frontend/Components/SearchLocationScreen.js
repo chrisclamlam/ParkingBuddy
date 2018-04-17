@@ -136,12 +136,12 @@ export default class SearchLocationScreen extends React.Component {
                     buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', width: '100%' }}
                     onPress={() => this.verifyInput(this)} title="Search" />
 
-                <Button
-                    buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
-                    textStyle={{ color: 'gray' }}
-                    fontSize={15}
-                    color='black'
-                    onPress={() => this.props.navigation.pop()} title="Back to Login" />
+                {/* // <Button */}
+                {/* //     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }} */}
+                {/* //     textStyle={{ color: 'gray' }} */}
+                {/* //     fontSize={15} */}
+                {/* //     color='black' */}
+                {/* //     onPress={() => this.props.navigation.pop()} title="Back to Login" /> */}
                     </View>
             </View >
         );

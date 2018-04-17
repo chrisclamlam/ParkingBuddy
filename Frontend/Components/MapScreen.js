@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatList, Alert} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatList, Alert,TouchableHighlight} from 'react-native';
 import { MapView, Constants, Location, Permissions } from 'expo';
 import { List, ListItem, FormLabel, FormInput, Button, } from 'react-native-elements'
 import { Marker } from 'react-native-maps';
@@ -181,16 +181,19 @@ export default class App extends React.Component {
                             </View>
                         ))}
                     </Animated.ScrollView>
-                    <View style={{flexDirection: 'row', justifyContent: 'center', padding: 2}}>
-                        <Button
-                            buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', }}
-                            onPress={() => this.props.navigation.pop()} title="Go Back" />
+                    {/* <View style={{flexDirection: 'row', justifyContent: 'center', padding: 2}}> */}
 
-                        <Button
-                            buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d',  }}
+
+                        <View style={{backgroundColor:'#f8971d', height:30, justifyContent:'center', alignItems:'center', borderRadius: 13}}>
+                            <TouchableHighlight>
+                        {/* <Button
+                            buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d',  flex:1}}
                             onPress={() => this.props.navigation.push('AddSpotScreen')} title="Don't see your spot?"
-                            disabled={!global.loggedIn} />
-                    </View>
+                            disabled={!global.loggedIn} /> */}
+                            <Text style={{color:'white'}}> Don't see your spot? </Text>
+                            </TouchableHighlight>
+                            </View>
+                    {/* </View> */}
                 </View>
             </View >
         );
@@ -200,7 +203,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'transparent',
     },
     scrollView: {
         position: "absolute",
