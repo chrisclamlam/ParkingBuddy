@@ -11,7 +11,7 @@ export default class SignUpScreen extends React.Component {
             password: "",
             fname: "",
             lname: "",
-            email: ""
+            email: "",
         }
     }
 
@@ -19,7 +19,7 @@ export default class SignUpScreen extends React.Component {
     // If user data is valid, the database will create user
     // Else, the user will be told that sign up was unsuccessful
 
-    verifyInput = () => {
+    verifyInput = async () => {
         // Prepare user input to send to servlet
         const paramInput = 'fname=' + this.state.fname +
             '&lname=' + this.state.lname +
@@ -29,7 +29,7 @@ export default class SignUpScreen extends React.Component {
 
         // Fetch to our servlet: sending the user form data as the body
         // Bryce has his authen token in response header as "Set-Cookie": token
-        fetch(serverIP + 'SignUp', {
+        await fetch(serverIP + 'SignUp', {
             method: 'POST',
             headers: {
                 'Accept': 'application/x-www-form-urlencoded',
@@ -43,7 +43,8 @@ export default class SignUpScreen extends React.Component {
                 if (response.status.toString() == 200) {
                     // Save this in a global variable, locally on filesystem is slow
                     //response.headers.get('Set-Cookie'); // Gets Bryce's token
-                    Alert.alert("Successful Sign Up!");
+                    // Alert.alert("Successful Sign Up!");
+                    global.successfulSignup = true;
                 }
                 else {
                     Alert.alert("Unsuccessful Sign up: " + response.status.toString());
@@ -54,6 +55,11 @@ export default class SignUpScreen extends React.Component {
                 //
                 Alert.alert(error.message);
             });
+
+
+        if (global.successfulSignup) {
+            this.props.navigation.pop();
+        }
     }
 
     render() {

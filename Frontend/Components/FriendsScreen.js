@@ -45,20 +45,19 @@ export default class ProfileScreen extends React.Component {
       <View style={styles.container}>
         <View style={{ height: '3%' }} />
         {/* <Text onPress= {() => this.props.navigation.pop()}> back to Search</Text> */}
-        <Text style={styles.title} > Hello  {global.username} </Text>
+        <Text style={styles.title} > Friends </Text>
 
         {/* General User Info */}
-        <Text style={styles.category} onPress={() => this.onPressBookmarks()}>Email</Text>
+        <View>
+         <Text> Friends Screen </Text>
+        </View>
 
-
-        <Text style={styles.category} onPress={() => this.props.navigation.push('FriendsScreen')}>Followers </Text>
-
-        <Text style={styles.category}>Default Location</Text>
-
-        <Text style={styles.category}>User Preferences</Text>
-      </View>
-
-    )
+        {/* Buttlson to take User to Search Page */}
+        {/* <View>
+          <Button onclick={() => toSearch()}>Search</Button>
+        </View> */}
+      </View >
+    );
   }
 }
 
@@ -74,15 +73,8 @@ const styles = StyleSheet.create({
     // textAlign: 'center',
     fontSize: 35,
     marginBottom: 30,
-    fontWeight: 'bold',
+    fontWeight: '500',
     color: '#f8971d',
     marginTop: '5%'
   },
-  category: {
-    marginBottom: 10,
-    color:'gray',
-    fontWeight: 'bold',
-    fontSize: 20,
-    paddingLeft:5
-  }
 });

@@ -18,11 +18,10 @@ export default class LogInScreen extends React.Component {
     async onPressLogIn() {
         // Set up parameters to send to servlet
         var params = "username=" + this.state.inputUsername + "&passhash=" + this.state.inputPassword;
-        global.username = this.state.inputUsername;
         // For testing
         // this.props.navigation.push('SearchLocationScreen');
         // Fetch to our login servlet
-        fetch(serverIP + '/Login', {
+        await fetch(serverIP + '/Login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/x-www-form-urlencoded',
@@ -37,11 +36,8 @@ export default class LogInScreen extends React.Component {
                     //response.headers.get('Set-Cookie'); // Gets Bryce's token
                     // Alert.alert("Successful Log-In!");
                     global.loggedIn = true;
-                    // console.log("dsfdsfdsf" + response.headers.get('Set-Cookie'));
-                    // global.authKey = response.headers('Set-Cookie');
+                    console.log("dsfdsfdsf" + response.headers.get('Set-Cookie'));
                     global.authKey = response.headers.get('Set-Cookie');
-                    this.props.navigation.push('SearchLocationScreen');
-
 
                 }
                 else {
@@ -55,8 +51,11 @@ export default class LogInScreen extends React.Component {
                 Alert.alert(error.message);
             });
 
-        // If successful, send to Search page
-        // this.props.navigation.push('SearchLocationScreen');
+        if (global.loggedIn) {
+            this.props.navigation.push('SearchLocationScreen');
+            global.username = this.state.inputUsername;
+        }
+
     }
 
     // Directs user to sign up page
@@ -71,6 +70,12 @@ export default class LogInScreen extends React.Component {
             this.props.navigation.push('SearchLocationScreen');
 
         }
+    }
+
+    continueGuest() {
+        global.loggedIn = false;
+        global.username = "Guest";
+        this.props.navigation.push('SearchLocationScreen')
     }
 
 
@@ -113,7 +118,7 @@ export default class LogInScreen extends React.Component {
                     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent', marginTop: -20 }}
                     fontSize={15}
                     color='gray'
-                    onPress={() => this.props.navigation.push('SearchLocationScreen')} title="Continue as guest" />
+                    onPress={() => this.continueGuest()} title="Continue as guest" />
 
 
 

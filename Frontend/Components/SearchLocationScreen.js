@@ -62,6 +62,8 @@ export default class SearchLocationScreen extends React.Component {
             if (responseJson.status == ('OK')) {
                 lat = responseJson.results[0].geometry.location.lat;
                 lng = responseJson.results[0].geometry.location.lng;
+                lat = parseFloat(lat);
+                lng = parseFloat(lng);
             }
             else {
                 Alert.alert("Unable to search. Please try again.");
@@ -73,20 +75,31 @@ export default class SearchLocationScreen extends React.Component {
         }
 
         // Servlet request param
-        var coords = "lat=" + lat + "&lng=" + lng;
-
+        var params = "lat=" + lat + "&lng=" + lng + '&keyword=' + newLoc;
         // Now that we have long/lat send a request to our servlet
+        console.log("search url=" + global.serverIP + 'SearchLocation?' + params);
         try {
-            let response = await fetch(global.serverIP + '/SearchLocation', {
-                method: 'POST',
+            let response = await fetch(global.serverIP + 'SearchLocation?' + params, {
+                method: 'GET',
                 headers: {
                     'Accept': 'application/x-www-form-urlencoded',
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 timeout: 10,
-                body: coords
+                // body: coords
             });
+
+
+            // console.log(response.body.)
             let responseJson = await response.json();
+            // let responseJson = await response.text();
+            console.log("response Json = " + responseJson)
+            // let responseJson = await response.body.jsonRes;
+
+
+
+            console.log(responseJson);
+
         if (responseJson.status == 200) { // Request is good and there are results
             this.props.navigation.push({
                 name: 'MapScreen',
@@ -134,12 +147,12 @@ export default class SearchLocationScreen extends React.Component {
                     buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', width: '100%' }}
                     onPress={() => this.verifyInput(this)} title="Search" />
 
-                <Button
-                    buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
-                    textStyle={{ color: 'gray' }}
-                    fontSize={15}
-                    color='black'
-                    onPress={() => this.props.navigation.pop()} title="Back to Login" />
+                {/* // <Button */}
+                {/* //     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }} */}
+                {/* //     textStyle={{ color: 'gray' }} */}
+                {/* //     fontSize={15} */}
+                {/* //     color='black' */}
+                {/* //     onPress={() => this.props.navigation.pop()} title="Back to Login" /> */}
                     </View>
             </View >
         );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatList, Alert} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatList, Alert, TouchableHighlight } from 'react-native';
 import { MapView, Constants, Location, Permissions } from 'expo';
 import { List, ListItem, FormLabel, FormInput, Button, } from 'react-native-elements'
 import { Marker } from 'react-native-maps';
@@ -137,9 +137,9 @@ export default class App extends React.Component {
                                 opacity: interpolations[index].opacity,
                             };
                             return (
-                                <MapView.Marker key={index} coordinate={marker.coordinate} >
+                                <MapView.Marker key={index} coordinate={marker.coordinate}>
                                     <Animated.View style={[styles.markerWrap, opacityStyle]}>
-                                        <Animated.View style={[styles.ring, scaleStyle]} />
+                                        <Animated.View style={[styles.ring, scaleStyle]} onPress={() => this.props.navigation.push('DetailsScreen')}/>
                                         <View style={styles.marker} />
                                     </Animated.View>
                                 </MapView.Marker>
@@ -147,7 +147,7 @@ export default class App extends React.Component {
                         })}
                     </MapView>
 
-                    { /* To scroll through results of parking spots and display on screen */ }
+                    { /* To scroll through results of parking spots and display on screen */}
                     <Animated.ScrollView
                         horizontal
                         scrollEventThrottle={1}
@@ -169,7 +169,7 @@ export default class App extends React.Component {
                         contentContainerStyle={styles.endPadding}
                     >
 
-                        { /* Dynamically display results of parking locations on screen */ }
+                        { /* Dynamically display results of parking locations on screen */}
                         {this.state.markers.map((marker, index) => (
                             <View style={styles.park} key={index}>
                                 <View style={styles.textContent}>
@@ -181,16 +181,21 @@ export default class App extends React.Component {
                             </View>
                         ))}
                     </Animated.ScrollView>
-                    <View style={{flexDirection: 'row', justifyContent: 'center', padding: 2}}>
-                        <Button
-                            buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', }}
-                            onPress={() => this.props.navigation.pop()} title="Go Back" />
+                    {/* <View style={{flexDirection: 'row', justifyContent: 'center', padding: 2}}> */}
 
-                        <Button
-                            buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d',  }}
+
+                    <TouchableHighlight
+                        onPress={() => this.props.navigation.push('AddSpotScreen')}
+                        disabled={!global.loggedIn}>
+                        <View style={{ backgroundColor: '#f8971d', height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 13 }}>
+                            {/* <Button
+                            buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d',  flex:1}}
                             onPress={() => this.props.navigation.push('AddSpotScreen')} title="Don't see your spot?"
-                            disabled={!global.loggedIn} />
-                    </View>
+                            disabled={!global.loggedIn} /> */}
+                            <Text style={{ color: 'white' }}> Don't see your spot? </Text>
+                        </View>
+                    </TouchableHighlight>
+                    {/* </View> */}
                 </View>
             </View >
         );
@@ -200,7 +205,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'transparent',
     },
     scrollView: {
         position: "absolute",

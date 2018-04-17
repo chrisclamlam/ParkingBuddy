@@ -10,6 +10,10 @@ import AddSpotScreen from './AddSpotScreen';
 import SignUpScreen from './SignUpScreen';
 import SearchLocationScreen from './SearchLocationScreen';
 import ProfileScreen from './ProfileScreen'
+import FriendsScreen from './FriendsScreen'
+import DetailsScreen from './DetailsScreen'
+
+import { Header } from 'react-native-elements';
 
 const AppStackNavigator = StackNavigator({
   LogInScreen: {
@@ -25,10 +29,19 @@ const AppStackNavigator = StackNavigator({
     screen: AddSpotScreen
   },
   SearchLocationScreen: {
-    screen: SearchLocationScreen
+    screen: SearchLocationScreen,
+    navigationOptions: {
+      gesturesEnabled: false,
+    }
   },
   ProfileScreen: {
     screen: ProfileScreen
+  },
+  FriendsScreen :{
+    screen: FriendsScreen
+  },
+  DetailsScreen :{
+    screen: DetailsScreen
   }
 }, {
     headerMode: "none",

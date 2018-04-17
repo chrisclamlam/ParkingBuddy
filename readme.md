@@ -44,3 +44,5 @@ To Do List:
     - Short description
     - Historic price - if it exists
     - Comments for location
+6. Authentication
+    - Successful logIn despite wrong password.
