@@ -22,7 +22,7 @@ export default class LogInScreen extends React.Component {
         // For testing
         this.props.navigation.push('SearchLocationScreen');
         // Fetch to our login servlet
-        fetch(global.serverIP + '/ParkingBuddy/Login', {
+        fetch(serverIP + '/Login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/x-www-form-urlencoded',
@@ -38,6 +38,7 @@ export default class LogInScreen extends React.Component {
                     Alert.alert("Successful Log-In!");
                     global.loggedIn = true;
                     global.authKey = response.headers('Set-Cookie');
+
                 }
                 else {
                     Alert.alert("Unsuccessful Log-In");

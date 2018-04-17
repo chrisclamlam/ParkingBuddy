@@ -22,7 +22,7 @@ export default class SearchLocationScreen extends React.Component {
     // URL to call google api
     // https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
 
-    verifyInput =  async () => {
+    verifyInput = async () => {
         // Prepare user input to send to servlet
         const paramInput = '&location=' + this.state.location;
         var lat;
@@ -30,18 +30,20 @@ export default class SearchLocationScreen extends React.Component {
 
         // For testing only
 
-        this.props.navigation.navigate('MapScreen', { markers: [
-            {
-                coordinate: {
-                    latitude: 11,
-                    longitude: 12,
+        this.props.navigation.navigate('MapScreen', {
+            markers: [
+                {
+                    coordinate: {
+                        latitude: 11,
+                        longitude: 12,
+                    },
+                    title: "test1",
+                    description: "test1",
+                    distance: 12,
+                    spotType: 2
                 },
-                title: "test1",
-                description: "test1",
-                distance: 12,
-                spotType: 2
-            },
-        ], });
+            ],
+        });
 
         // Check to see if user entered an address or keyword
         // if(this.state.location == ""){
@@ -49,7 +51,7 @@ export default class SearchLocationScreen extends React.Component {
         // }
 
         var newLoc = this.state.location;
-        for(var i = 0; i < newLoc.length; i++){
+        for (var i = 0; i < newLoc.length; i++) {
             newLoc = newLoc.replace(" ", "+");
         }
 
@@ -114,14 +116,15 @@ export default class SearchLocationScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Ionicons 
-                style={{marginLeft:'90%'}}
-                onPress={()=> {this.props.navigation.push('ProfileScreen')}}
-                name="md-person" size={32} color="gray" />
 
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={styles.title} > Search </Text>
-                </View>
+                <Ionicons
+                    style={{ marginLeft: '90%',marginTop:'10%' }}
+                    onPress={() => { this.props.navigation.push('ProfileScreen') }}
+                    name="md-person" size={32} color="gray" />
+
+
+                <View style={{ marginTop:'50%'}}>
+                    <Text style={styles.title} > Search </Text>
 
                 <FormLabel>Location</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ location: text }))} />
@@ -133,10 +136,11 @@ export default class SearchLocationScreen extends React.Component {
 
                 <Button
                     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
-                    textStyle= {{color: 'gray'}}
+                    textStyle={{ color: 'gray' }}
                     fontSize={15}
                     color='black'
                     onPress={() => this.props.navigation.pop()} title="Back to Login" />
+                    </View>
             </View >
         );
     }
@@ -148,7 +152,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        justifyContent: 'center',
+        // justifyContent: 'center',
     },
     title: {
         // textAlign: 'center',

@@ -24,38 +24,39 @@ export default class AddSpotScreen extends React.Component {
             '&location=' + this.state.location +
             '&price=' + this.state.price;
 
-        if(this.state.name == "" ||
-            this.state.location == "" ||
-            this.state.type == ""){
-            Alert.alert("Invalid Name or Location");
-            return;
-        }
+        // if(this.state.name == "" ||
+        //     this.state.location == "" ||
+        //     this.state.type == ""){
+        //     Alert.alert("Invalid Name or Location");
+        //     return;
+        // }
         // Fetch to our servlet: sending the user form data as the body
         // Bryce has his authen token in response header as "Set-Cookie": token
-        // fetch('http://10.123.112.238:8080/ParkingBuddy/SignUp', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Accept': 'application/x-www-form-urlencoded',
-        //         'Content-Type': 'application/x-www-form-urlencoded',
-        //     },
-        //     timeout: 10,
-        //     body: paramInput
-        // })
-        //     .then(function (response) {
-        //         // Handle HTTP response
-        //         if (response.status.toString() == 200) {
-        //             // Save this in a global variable, locally on filesystem is slow
-        //             //response.headers.get('Set-Cookie'); // Gets Bryce's token
-        //             Alert.alert("Successful Sign Up!");
-        //         }
-        //         else {
-        //             Alert.alert("Unsuccessful Sign up: " + response.status.toString());
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         //
-        //         Alert.alert(error.message);
-        //     });
+        fetch(serverIP + 'AddCustomSpot', {
+            method: 'POST',
+            headers: {
+                'Token': global.authKey,
+                'Accept': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            timeout: 10,
+            body: paramInput
+        })
+            .then(function (response) {
+                // Handle HTTP response
+                if (response.status.toString() == 200) {
+                    // Save this in a global variable, locally on filesystem is slow
+                    //response.headers.get('Set-Cookie'); // Gets Bryce's token
+                    Alert.alert("Successful Sign Up!");
+                }
+                else {
+                    Alert.alert("Unsuccessful Sign up: " + response.status.toString());
+                }
+            })
+            .catch((error) => {
+                //
+                Alert.alert(error.message);
+            });
     }
 
     render() {
@@ -68,7 +69,7 @@ export default class AddSpotScreen extends React.Component {
                 <FormLabel>Name of Parking Location</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ name: text }))} />
                 <FormLabel>Enter Address of Location</FormLabel>
-                <FormInput secureTextEntry onChangeText={(text) => (this.setState({ location: text }))} />
+                <FormInput onChangeText={(text) => (this.setState({ location: text }))} />
                 <FormLabel>Price</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ price: text }))} />
 
