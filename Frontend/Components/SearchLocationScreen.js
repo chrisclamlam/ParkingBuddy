@@ -75,13 +75,12 @@ export default class SearchLocationScreen extends React.Component {
         }
 
         // Servlet request param
-        var coords = "lat=" + lat + "&lng=" + lng;
-        console.log("cords= " + coords);
+        var params = "lat=" + lat + "&lng=" + lng + '&keyword=' + newLoc;
         // Now that we have long/lat send a request to our servlet
-        console.log("search url=" + global.serverIP + 'SearchLocation?' + coords);
+        console.log("search url=" + global.serverIP + 'SearchLocation?' + params);
         try {
-            let response = await fetch(global.serverIP + 'SearchLocation?' + coords, {
-                method: 'POST',
+            let response = await fetch(global.serverIP + 'SearchLocation?' + params, {
+                method: 'GET',
                 headers: {
                     'Accept': 'application/x-www-form-urlencoded',
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -91,8 +90,16 @@ export default class SearchLocationScreen extends React.Component {
             });
 
 
-
+            // console.log(response.body.)
             let responseJson = await response.json();
+            // let responseJson = await response.text();
+            console.log("response Json = " + responseJson)
+            // let responseJson = await response.body.jsonRes;
+
+
+
+            console.log(responseJson);
+
         if (responseJson.status == 200) { // Request is good and there are results
             this.props.navigation.push({
                 name: 'MapScreen',

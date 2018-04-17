@@ -10,6 +10,7 @@ import AddSpotScreen from './AddSpotScreen';
 import SignUpScreen from './SignUpScreen';
 import SearchLocationScreen from './SearchLocationScreen';
 import ProfileScreen from './ProfileScreen'
+import FriendsScreen from './FriendsScreen'
 
 const AppStackNavigator = StackNavigator({
   LogInScreen: {
@@ -29,6 +30,9 @@ const AppStackNavigator = StackNavigator({
   },
   ProfileScreen: {
     screen: ProfileScreen
+  },
+  FriendsScreen :{
+    screen: FriendsScreen
   }
 }, {
     headerMode: "none",

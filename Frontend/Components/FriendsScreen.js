@@ -45,20 +45,11 @@ export default class ProfileScreen extends React.Component {
       <View style={styles.container}>
         <View style={{ height: '3%' }} />
         {/* <Text onPress= {() => this.props.navigation.pop()}> back to Search</Text> */}
-        <Text style={styles.title} > Hello  {global.username} </Text>
+        <Text style={styles.title} > Friends </Text>
 
         {/* General User Info */}
         <View>
-          <FormLabel onPress={() => this.onPressBookmarks()}>Email</FormLabel>
-
-          <Text
-            onPress={() =>  this.props.navigation.push('FriendsScreen') }>
-            Followers
-            </Text>
-
-          <FormLabel>Default Location</FormLabel>
-
-          <FormLabel>User Preferences</FormLabel>
+         <Text> Friends Screen </Text>
         </View>
 
         {/* Buttlson to take User to Search Page */}

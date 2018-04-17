@@ -10,7 +10,8 @@ export default class AddSpotScreen extends React.Component {
             name: "",
             location: "",
             type: "1",
-            price: ""
+            price: "",
+            justAddedSpot : false,
         }
     }
 
@@ -81,7 +82,8 @@ export default class AddSpotScreen extends React.Component {
                 if (response.status.toString() == 200) {
                     // Save this in a global variable, locally on filesystem is slow
                     //response.headers.get('Set-Cookie'); // Gets Bryce's token
-                    Alert.alert("Successful Add!");
+                    // Alert.alert("Successful Add!");
+                    global.justAddedSpot = true;
                 }
                 else {
                     Alert.alert("Unsuccessful Sign up: " + response.status.toString());
@@ -91,6 +93,11 @@ export default class AddSpotScreen extends React.Component {
                 //
                 Alert.alert(error.message);
             });
+
+            if(global.justAddedSpot){
+                global.justAddedSpot = false;
+                this.props.navigation.pop();
+            }
     }
 
     render() {

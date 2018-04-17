@@ -8,6 +8,7 @@ global.authKey = ""; // To hold auth key
 global.loggedIn = false; // To check if user is logged in
 global.username = "Guest";
 global.signedUp = false;
+global.addedSpot = false;
 
 
 
