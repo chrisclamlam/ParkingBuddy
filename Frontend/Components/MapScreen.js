@@ -187,7 +187,7 @@ export default class App extends React.Component {
                             onPress={() => this.props.navigation.pop()} title="Go Back" />
 
                         <Button
-                            buttonStyle={{ disabled: global.loggedIn, borderRadius: 10, backgroundColor: '#f8971d',  }}
+                            buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d',  }}
                             onPress={() => this.props.navigation.push('AddSpotScreen')} title="Don't see your spot?"
                             disabled={global.loggedIn} />
                     </View>
