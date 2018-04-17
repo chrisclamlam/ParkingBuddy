@@ -39,11 +39,6 @@ public class Util {
 		// Generate the token
 		key.setKeyId("k1");
 		
-		// Set data claims
-		JwtClaims claims = new JwtClaims();
-		claims.setIssuer("ParkingBuddy");
-		claims.setAudience("user");
-		
 		// Make sure that the claim always generates all these fields:
 		/* id
 		 * username
@@ -51,11 +46,36 @@ public class Util {
 		 * lname
 		 * email
 		 */
-		claims.setClaim("id", db.getUserByUsername(u.getUsername()).getId());
-		claims.setClaim("username", u.getUsername());
-		claims.setClaim("fname", u.getFname());
-		claims.setClaim("lname", u.getLname());
-		claims.setClaim("email", u.getEmail());
+		int id = -1;
+		String username = "";
+		String fname = "";
+		String lname = "";
+		String email = "";
+		// Get the data for the claims
+		try {
+			id = db.getUserByUsername(u.getUsername()).getId();
+			username = u.getUsername();
+			fname = u.getFname();
+			lname = u.getLname();
+			email = u.getEmail();
+		} catch (NullPointerException npe) {
+			System.out.println(npe.getMessage());
+		}
+		// Check to see all the data is there
+		if(id == -1 || username == null || fname == null || lname == null || email == null) {
+			return null;
+		}
+		
+		
+		// Set data claims
+		JwtClaims claims = new JwtClaims();
+		claims.setIssuer("ParkingBuddy");
+		claims.setAudience("user");
+		claims.setClaim("id", id);
+		claims.setClaim("username", username);
+		claims.setClaim("fname", fname);
+		claims.setClaim("lname", lname);
+		claims.setClaim("email", email);
 		claims.setExpirationTimeMinutesInTheFuture(30);
 		claims.setSubject("auth");
 		

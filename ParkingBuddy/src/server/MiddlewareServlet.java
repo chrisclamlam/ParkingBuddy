@@ -29,6 +29,12 @@ public class MiddlewareServlet extends HttpServlet {
 		// Get the initialized Util class
 		System.out.println("Encryption type: " + ((Util)getServletContext().getAttribute("util")).getKey().getKeyType());
 		user = ((Util)getServletContext().getAttribute("util")).readToken(token);
+		// if the user token didn't parse correctly, return a bad response code
+		if(user == null) {
+			res.setStatus(400);
+			System.out.println("Error decryption token in MiddlewareServlet");
+			return;
+		}
 		// Get the request method
 		String method = req.getMethod();
 		// Invoke the request

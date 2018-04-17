@@ -69,6 +69,7 @@ public class AppDatabase {
 			
 		}
 		catch (SQLException se) {}
+		System.out.println("Closed database connection");
 	}
 	
 	private boolean insertUser(User u) {
@@ -96,6 +97,68 @@ public class AppDatabase {
 			System.out.println("Closing insert connection");
 			close(conn, st, null);
 		}
+	}
+	
+	private int insertCustomSpot(ParkingSpot ps) {
+		// Get a connection to the database
+		if(ps == null) return -1;
+		Connection conn = getConnection();
+		if(conn == null) return -1;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return -1;
+		}
+		
+		// Insert the spot
+		if(insertSpot(ps)) {
+			// Update the id and remoteid field after it is inserted
+			if(updateSpot(ps.getRemoteId())) {
+				return getSpotId(ps.getRemoteId());
+			}else {
+				deleteSpot(ps.getRemoteId());
+				return -1;
+			}
+		}
+		return -1;
+	}
+
+	private boolean updateSpot(String remoteid) {
+		Connection conn = getConnection();
+		if(conn == null) return false;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return false;
+		}
+		
+		try {
+			st.executeUpdate("UPDATE ParkingSpots SET remoteid=id WHERE remoteid='" + remoteid + "'");
+		} catch (SQLException sqle) {
+			System.out.println(sqle);
+		} finally {
+			close(conn, st, null);
+		}
+		return true;
+	}
+	
+	private boolean deleteSpot(String remoteid) {
+		Connection conn = getConnection();
+		if(conn == null) return false;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return false;
+		}
+		try {
+			st.executeUpdate("DELETE FROM ParkingSpots WHERE remoteid = '" + remoteid + "'");
+			return true;
+		} catch (SQLException sqle) {
+			System.out.println(sqle);
+		} finally {
+			close(conn, st, null);
+		}
+		return false;
 	}
 	
 	private boolean insertSpot(ParkingSpot ps) {
@@ -312,6 +375,10 @@ public class AppDatabase {
 	
 	public boolean addSpot(ParkingSpot ps) {
 		return insertSpot(ps);
+	}
+	
+	public int addCustomSpot(ParkingSpot ps) {
+		return insertCustomSpot(ps);
 	}
 
 	public User getUserById(int id) {
@@ -557,6 +624,11 @@ public class AppDatabase {
 		return ps.get(0);
 	}
 	
+	public int getSpotId(String remoteid) {
+		return getParkingSpotsFromQuery("SELECT id FROM ParkingSpots WHERE remoteid = '" + remoteid + "'").get(0).getId();
+		
+	}
+	
 	public ArrayList<ParkingSpot> searchLocations(String name, double latitude, double longitude){
 		ArrayList<ParkingSpot> spots = MapsRequester.getLocations(name, latitude, longitude);
 		System.out.println("Locations:");
@@ -614,9 +686,9 @@ public class AppDatabase {
 		return spots;
 	}
 	
-	public boolean addFavoriteParking(String username, String parkingname)
+	public boolean addFavoriteParking(int uid, int sid)
 	{
-		if(username == null || parkingname == null) return false;
+		if(uid == -1 || sid == -1) return false;
 		Connection conn = getConnection();
 		if(conn == null) return false;
 		Statement st = getStatement(conn);
@@ -625,11 +697,9 @@ public class AppDatabase {
 			return false;
 		}
 		try {
-			int firstid =  getUserByUsername(username).getId();
-			ParkingSpot spot = getSpotByName(parkingname); 
-			st.executeUpdate("INSERT INTO FavoritesList (userid, parkingspots) VALUES ("
-					+ "'" + firstid + "',"
-					+ "'" + spot + "')" );
+			st.executeUpdate("INSERT INTO FavoritesList (userid, spotid) VALUES ("
+					+ "'" + uid + "',"
+					+ "'" + sid + "')" );
 			return true;
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
