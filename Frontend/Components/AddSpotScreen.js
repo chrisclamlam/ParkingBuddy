@@ -66,8 +66,13 @@ export default class AddSpotScreen extends React.Component {
                 <View style={styles.formError}></View>
 
 
+
+                <Text onPress={() => console.log(global.authKey)}> PRESS ME </Text>
+
+
                 <FormLabel>Name of Parking Location</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ name: text }))} />
+                
                 <FormLabel>Enter Address of Location</FormLabel>
                 <FormInput onChangeText={(text) => (this.setState({ location: text }))} />
                 <FormLabel>Price</FormLabel>

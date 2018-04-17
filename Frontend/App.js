@@ -8,6 +8,7 @@ global.authKey = ""; // To hold auth key
 global.loggedIn = true; // To check if user is logged in
 
 
+
 export default class App extends React.Component {
   render() {
     return (

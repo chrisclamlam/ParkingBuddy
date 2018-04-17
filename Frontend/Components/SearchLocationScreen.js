@@ -56,59 +56,59 @@ export default class SearchLocationScreen extends React.Component {
         }
 
         // Call google api to get coordinates
-        // try {
-        //     let response = await fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + newLoc + '&key=' + 'AIzaSyBcRR3ARN-8LLMfbjt5dfMgZ6ERKkKEdxA');
-        //     let responseJson = await response.json();
-        //     if (responseJson.status == ('OK')) {
-        //         lat = responseJson.results[0].geometry.location.lat;
-        //         lng = responseJson.results[0].geometry.location.lng;
-        //     }
-        //     else {
-        //         Alert.alert("Unable to search. Please try again.");
-        //
-        //         return;
-        //     }
-        // } catch(error){
-        //     console.error(error);
-        // }
-        //
-        // // Servlet request param
-        // var coords = "lat=" + lat + "&lng=" + lng;
-        //
-        // // Now that we have long/lat send a request to our servlet
-        // try {
-        //     let response = await fetch(global.serverIP + '/SearchLocation', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Accept': 'application/x-www-form-urlencoded',
-        //             'Content-Type': 'application/x-www-form-urlencoded',
-        //         },
-        //         timeout: 10,
-        //         body: coords
-        //     });
-        //     let responseJson = await response.json();
-        //     if (responseJson.status == 200) { // Request is good and there are results
-        //         this.props.navigation.push({
-        //             name: 'MapScreen',
-        //             passProps: {
-        //                 markers: responseJson.responseText
-        //             }
-        //         });
-        //
-        //     }
-        //     else { // No results
-        //         Alert.alert("Unable to find any location");
-        //         this.props.navigation.push({
-        //             name: 'MapScreen',
-        //             passProps: {
-        //                 markers: ""
-        //             }
-        //         });
-        //     }
-        // } catch(error){
-        //     console.error(error);
-        // }
-        //this.props.navigation.push('MapScreen');
+        try {
+            let response = await fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + newLoc + '&key=' + 'AIzaSyBcRR3ARN-8LLMfbjt5dfMgZ6ERKkKEdxA');
+            let responseJson = await response.json();
+            if (responseJson.status == ('OK')) {
+                lat = responseJson.results[0].geometry.location.lat;
+                lng = responseJson.results[0].geometry.location.lng;
+            }
+            else {
+                Alert.alert("Unable to search. Please try again.");
+
+                return;
+            }
+        } catch(error){
+            console.error(error);
+        }
+
+        // Servlet request param
+        var coords = "lat=" + lat + "&lng=" + lng;
+
+        // Now that we have long/lat send a request to our servlet
+        try {
+            let response = await fetch(global.serverIP + '/SearchLocation', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                timeout: 10,
+                body: coords
+            });
+            let responseJson = await response.json();
+        if (responseJson.status == 200) { // Request is good and there are results
+            this.props.navigation.push({
+                name: 'MapScreen',
+                passProps: {
+                    markers: response.responseText
+                }
+            });
+
+        }
+            else { // No results
+                Alert.alert("Unable to find any location");
+                this.props.navigation.push({
+                    name: 'MapScreen',
+                    passProps: {
+                        markers: ""
+                    }
+                });
+            }
+        } catch(error){
+            console.error(error);
+        }
+        this.props.navigation.push('MapScreen');
 
         return;
     }

@@ -37,7 +37,10 @@ export default class LogInScreen extends React.Component {
                     //response.headers.get('Set-Cookie'); // Gets Bryce's token
                     Alert.alert("Successful Log-In!");
                     global.loggedIn = true;
-                    global.authKey = response.headers('Set-Cookie');
+                    // console.log("dsfdsfdsf" + response.headers.get('Set-Cookie'));
+                    // global.authKey = response.headers('Set-Cookie');
+                    global.authKey = response.headers.get('Set-Cookie');
+
 
                 }
                 else {
