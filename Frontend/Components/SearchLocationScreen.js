@@ -77,7 +77,7 @@ export default class SearchLocationScreen extends React.Component {
 
         // Now that we have long/lat send a request to our servlet
         try {
-            let response = await fetch(global.serverIP + '/SearchLocation', {
+            let response = await fetch(global.serverIP + 'SearchLocation', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/x-www-form-urlencoded',
