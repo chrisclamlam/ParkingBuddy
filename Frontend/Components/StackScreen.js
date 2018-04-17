@@ -11,6 +11,8 @@ import SignUpScreen from './SignUpScreen';
 import SearchLocationScreen from './SearchLocationScreen';
 import ProfileScreen from './ProfileScreen'
 import FriendsScreen from './FriendsScreen'
+import DetailsScreen from './DetailsScreen'
+
 import { Header } from 'react-native-elements';
 
 const AppStackNavigator = StackNavigator({
@@ -37,6 +39,9 @@ const AppStackNavigator = StackNavigator({
   },
   FriendsScreen :{
     screen: FriendsScreen
+  },
+  DetailsScreen :{
+    screen: DetailsScreen
   }
 }, {
     headerMode: "none",

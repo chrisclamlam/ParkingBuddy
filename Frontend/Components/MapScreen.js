@@ -137,9 +137,9 @@ export default class App extends React.Component {
                                 opacity: interpolations[index].opacity,
                             };
                             return (
-                                <MapView.Marker key={index} coordinate={marker.coordinate} >
+                                <MapView.Marker key={index} coordinate={marker.coordinate}>
                                     <Animated.View style={[styles.markerWrap, opacityStyle]}>
-                                        <Animated.View style={[styles.ring, scaleStyle]} />
+                                        <Animated.View style={[styles.ring, scaleStyle]} onPress={() => this.props.navigation.push('DetailsScreen')}/>
                                         <View style={styles.marker} />
                                     </Animated.View>
                                 </MapView.Marker>
