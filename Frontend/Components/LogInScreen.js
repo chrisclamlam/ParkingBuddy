@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, Alert } from 'react-native';
 import { MapView } from 'expo';
 import { FormLabel, FormInput, Button } from 'react-native-elements'
 
