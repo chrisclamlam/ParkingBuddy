@@ -39,3 +39,8 @@ To Do List:
 2. SearchSpot servlet - is put on hold until we get GOOGLE API
 3. Uber/Lyft servlet Comparisons - do after once basic functionalities are working
 4. Search/Point-in-a-polygon Database func and Server endpoint
+5. Parking location general information
+    - Average pricing - if it exits
+    - Short description
+    - Historic price - if it exists
+    - Comments for location
