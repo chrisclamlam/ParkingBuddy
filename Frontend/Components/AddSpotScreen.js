@@ -25,6 +25,8 @@ export default class AddSpotScreen extends React.Component {
             '&price=' + this.state.price +
             '&spotType=' + this.state.type;
 
+            console.log("spotType quals " + this.state.type);
+
         // if(this.state.name == "" ||
         //     this.state.location == "" ||
         //     this.state.type == ""){
@@ -78,7 +80,7 @@ export default class AddSpotScreen extends React.Component {
                 <FormInput onChangeText={(text) => (this.setState({ location: text }))} />
 
                 <FormLabel> Parking Type </FormLabel>
-                <Picker selectedValue = {this.state.type} onValueChange = {this.state.type}>
+                <Picker selectedValue = {this.state.type} onValueChange = {this.setState.type}>
                     <Picker.Item label = "Meter" value = "1" />
                     <Picker.Item label = "Street" value = "2" />
                     <Picker.Item label = "Structure/Lot" value = "3" />

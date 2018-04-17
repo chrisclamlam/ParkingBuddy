@@ -25,7 +25,7 @@ export default class ProfileScreen extends React.Component {
 
         {/* General User Info */}
         <View>
-          <FormLabel>Username</FormLabel>
+          <FormLabel>Bookmarks</FormLabel>
 
           <FormLabel>Email</FormLabel>
 
@@ -34,10 +34,10 @@ export default class ProfileScreen extends React.Component {
           <FormLabel>User Preferences</FormLabel>
         </View>
 
-        {/* Button to take User to Search Page */}
-        <View>
+        {/* Buttlson to take User to Search Page */}
+        {/* <View>
           <Button onclick={() => toSearch()}>Search</Button>
-        </View>
+        </View> */}
       </View >
     );
   }

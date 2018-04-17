@@ -7,6 +7,7 @@ global.serverIP = "http://172.20.10.4:8080/ParkingBuddy/";
 global.authKey = ""; // To hold auth key
 global.loggedIn = false; // To check if user is logged in
 global.username = "guest";
+global.signedUp = false;
 
 
 
