@@ -12,9 +12,7 @@ export default class ProfileScreen extends React.Component {
   }
 
   // Takes user back to search page
-  // toSearch () => {
-  //   this.props.navigation.pop();
-  // }
+
   
   render() {
     return (
