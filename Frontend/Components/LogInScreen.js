@@ -54,7 +54,6 @@ export default class LogInScreen extends React.Component {
         if (global.loggedIn) {
             this.props.navigation.push('SearchLocationScreen');
             global.username = this.state.inputUsername;
-
         }
 
     }
@@ -71,6 +70,12 @@ export default class LogInScreen extends React.Component {
             this.props.navigation.push('SearchLocationScreen');
 
         }
+    }
+
+    continueGuest() {
+        global.loggedIn = "false";
+        global.username = "guest";
+        this.props.navigation.push('SearchLocationScreen')
     }
 
 
@@ -113,7 +118,7 @@ export default class LogInScreen extends React.Component {
                     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent', marginTop: -20 }}
                     fontSize={15}
                     color='gray'
-                    onPress={() => this.props.navigation.push('SearchLocationScreen')} title="Continue as guest" />
+                    onPress={() => this.continueGuest()} title="Continue as guest" />
 
 
 
