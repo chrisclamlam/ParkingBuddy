@@ -19,6 +19,8 @@ export default class LogInScreen extends React.Component {
         // Set up parameters to send to servlet
         var params = "username=" + this.state.inputUsername + "&passhash=" + this.state.inputPassword;
 
+        // For testing
+        this.props.navigation.push('SearchLocationScreen');
         // Fetch to our login servlet
         fetch(global.serverIP + '/ParkingBuddy/Login', {
             method: 'POST',
@@ -48,7 +50,7 @@ export default class LogInScreen extends React.Component {
             });
 
         // If successful, send to Search page
-        this.props.navigation.push('SearchLocationScreen')
+        this.props.navigation.push('SearchLocationScreen');
     }
 
     // Directs user to sign up page
