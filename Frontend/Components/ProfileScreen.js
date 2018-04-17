@@ -10,7 +10,11 @@ export default class ProfileScreen extends React.Component {
     super(props)
 
   }
-  
+
+  // Takes user back to search page
+  // toSearch () => {
+  //   this.props.navigation.pop();
+  // }
   
   render() {
     return (
@@ -19,7 +23,21 @@ export default class ProfileScreen extends React.Component {
         {/* <Text onPress= {() => this.props.navigation.pop()}> back to Search</Text> */}
         <Text style={styles.title} > Hello  {global.username} </Text>
 
+        {/* General User Info */}
+        <View>
+          <FormLabel>Username</FormLabel>
 
+          <FormLabel>Email</FormLabel>
+
+          <FormLabel>Default Location</FormLabel>
+
+          <FormLabel>User Preferences</FormLabel>
+        </View>
+
+        {/* Button to take User to Search Page */}
+        <View>
+          <Button onclick={() => toSearch()}>Search</Button>
+        </View>
       </View >
     );
   }
