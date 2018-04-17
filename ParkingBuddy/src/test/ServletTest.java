@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -64,13 +65,26 @@ public class ServletTest {
 			out.close();
 			assertEquals(200, conn.getResponseCode());
 			assertNotNull(conn.getHeaderField("Set-Cookie"));
-			return;
 		} catch (MalformedURLException mue) {
 			System.out.println(mue.getMessage());
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}
-		assertEquals(true, false); // Make the test fail if an exception occurs
+		
+		try {
+			URL url = new URL(host);
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			conn.setRequestMethod("POST");
+			String body = "username=test0&passhash=" + "noooo".getBytes();
+			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+			out.writeBytes(body);
+			out.flush();
+			out.close();
+			assertEquals(200, conn.getResponseCode());
+			assertNull(conn.getHeaderField("Set-Cookie"));
+		} catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
+		}
 	}
 	
 	@Test

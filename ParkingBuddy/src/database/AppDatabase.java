@@ -47,28 +47,17 @@ public class AppDatabase {
 	}
 	
 	private void close(Connection conn, Statement st, ResultSet rs) {
-		try {
-			if(rs != null) {
-				rs.close();
-			}
-			
-		}
-		catch (SQLException se) {}
-		try {
-			if(st != null) {
-				st.close();
-			}
-			
-		}
-		catch (SQLException se) {}
-		
+		System.out.println("Closing connection class: " + conn.getClass());
+		// Result sets, statements do not need to be closed, as they are ended by the connectionProxy closing
 		try {
 			if(conn != null) {
 				conn.close();
 			}
 			
 		}
-		catch (SQLException se) {}
+		catch (SQLException se) {
+			System.out.println("Error closing connection: " + se.getMessage());
+		}
 		System.out.println("Closed database connection");
 	}
 	
@@ -443,9 +432,13 @@ public class AppDatabase {
 		}
 		ResultSet rs = null;
 		try {
-			rs = st.executeQuery("SELECT COUNT(1) FROM Users WHERE username = '" + username 
-			+ "' AND passhash = '" + passhash + "'");
+			rs = st.executeQuery("SELECT passhash FROM Users WHERE username = '" + username  + "'");
 			if(rs == null || !rs.next()) {
+				return false;
+			}
+			byte[] ph = rs.getBytes(1);
+			System.out.println("Comparing: " + ph + " " + passhash);
+			if(ph.equals(passhash)) {
 				return false;
 			}
 			return true;
