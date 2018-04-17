@@ -62,6 +62,8 @@ export default class SearchLocationScreen extends React.Component {
             if (responseJson.status == ('OK')) {
                 lat = responseJson.results[0].geometry.location.lat;
                 lng = responseJson.results[0].geometry.location.lng;
+                lat = parseFloat(lat);
+                lng = parseFloat(lng);
             }
             else {
                 Alert.alert("Unable to search. Please try again.");
