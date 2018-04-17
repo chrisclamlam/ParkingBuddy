@@ -35,6 +35,23 @@ export default class AddSpotScreen extends React.Component {
         // }
         // Fetch to our servlet: sending the user form data as the body
         // Bryce has his authen token in response header as "Set-Cookie": token
+
+        try {
+            let response = await fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + newLoc + '&key=' + 'AIzaSyBcRR3ARN-8LLMfbjt5dfMgZ6ERKkKEdxA');
+            let responseJson = await response.json();
+            if (responseJson.status == ('OK')) {
+                lat = responseJson.results[0].geometry.location.lat;
+                lng = responseJson.results[0].geometry.location.lng;
+            }
+            else {
+                Alert.alert("Unable to search. Please try again.");
+
+                return;
+            }
+        } catch(error){
+            console.error(error);
+        }
+        
         fetch(serverIP + 'AddCustomSpot', {
             method: 'POST',
             headers: {
