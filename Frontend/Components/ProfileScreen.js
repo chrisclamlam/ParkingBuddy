@@ -17,7 +17,7 @@ export default class ProfileScreen extends React.Component {
       <View style={styles.container}>
       <View style={{height:'3%'}}/>
         {/* <Text onPress= {() => this.props.navigation.pop()}> back to Search</Text> */}
-        <Text style={styles.title} > Hello Name! </Text>
+        <Text style={styles.title} > Hello  {global.username} </Text>
 
 
       </View >

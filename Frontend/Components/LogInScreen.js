@@ -18,9 +18,9 @@ export default class LogInScreen extends React.Component {
     async onPressLogIn() {
         // Set up parameters to send to servlet
         var params = "username=" + this.state.inputUsername + "&passhash=" + this.state.inputPassword;
-
+        global.username = this.state.inputUsername;
         // For testing
-        this.props.navigation.push('SearchLocationScreen');
+        // this.props.navigation.push('SearchLocationScreen');
         // Fetch to our login servlet
         fetch(serverIP + '/Login', {
             method: 'POST',
@@ -35,16 +35,18 @@ export default class LogInScreen extends React.Component {
                 if (response.status.toString() == 200) {
                     // Save this in a global variable, locally on filesystem is slow
                     //response.headers.get('Set-Cookie'); // Gets Bryce's token
-                    Alert.alert("Successful Log-In!");
+                    // Alert.alert("Successful Log-In!");
                     global.loggedIn = true;
                     // console.log("dsfdsfdsf" + response.headers.get('Set-Cookie'));
                     // global.authKey = response.headers('Set-Cookie');
                     global.authKey = response.headers.get('Set-Cookie');
+                    this.props.navigation.push('SearchLocationScreen');
 
 
                 }
                 else {
-                    Alert.alert("Unsuccessful Log-In");
+                    Alert.alert("Username/Password invalid. Please try again. ");
+                    global.username = "guest";
                     return;
                 }
             })
@@ -54,7 +56,7 @@ export default class LogInScreen extends React.Component {
             });
 
         // If successful, send to Search page
-        this.props.navigation.push('SearchLocationScreen');
+        // this.props.navigation.push('SearchLocationScreen');
     }
 
     // Directs user to sign up page
@@ -64,7 +66,7 @@ export default class LogInScreen extends React.Component {
 
     // Checks to see if user is logged in already
     checkLogin = () => {
-        if(global.loggedIn == true){
+        if (global.loggedIn == true) {
             Alert.alert("You're logged in!");
             this.props.navigation.push('SearchLocationScreen');
 
@@ -75,7 +77,7 @@ export default class LogInScreen extends React.Component {
 
     render() {
         return (
-            <View onload={() => this.checkLogin(this) } style={styles.container}>
+            <View onload={() => this.checkLogin(this)} style={styles.container}>
 
                 {/* TITLE */}
                 <View style={{ flex: 1, alignItems: 'center' }}>
@@ -106,10 +108,11 @@ export default class LogInScreen extends React.Component {
                 <Button
                     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent', width: '100%' }}
                     textStyle={{ color: 'gray', fontSize: 15, marginTop: -15 }} onPress={() => this.onPressSignUp()} title="Register" />
+                {/* <Text style={{alignContent:'center', justifyContent:'center'}}> fdsafds</Text> */}
                 <Button
-                    buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }}
+                    buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent', marginTop: -20 }}
                     fontSize={15}
-                    color='white'
+                    color='gray'
                     onPress={() => this.props.navigation.push('SearchLocationScreen')} title="Continue as guest" />
 
 
