@@ -189,7 +189,7 @@ export default class App extends React.Component {
                         <Button
                             buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d',  }}
                             onPress={() => this.props.navigation.push('AddSpotScreen')} title="Don't see your spot?"
-                            disabled={global.loggedIn} />
+                            disabled={!global.loggedIn} />
                     </View>
                 </View>
             </View >
