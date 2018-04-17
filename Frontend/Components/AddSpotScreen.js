@@ -18,7 +18,7 @@ export default class AddSpotScreen extends React.Component {
     // If user data is valid, the database will create user
     // Else, the user will be told that sign up was unsuccessful
 
-    verifyInput = () => {
+    verifyInput = async() => {
         // Prepare user input to send to servlet
         const paramInput = 'name=' + this.state.name +
             '&location=' + this.state.location +
@@ -36,7 +36,13 @@ export default class AddSpotScreen extends React.Component {
         // Fetch to our servlet: sending the user form data as the body
         // Bryce has his authen token in response header as "Set-Cookie": token
 
+        var newLoc = this.state.location;
+        for (var i = 0; i < newLoc.length; i++) {
+            newLoc = newLoc.replace(" ", "+");
+        }
+        
         try {
+            // console.log(newLoc);
             let response = await fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + newLoc + '&key=' + 'AIzaSyBcRR3ARN-8LLMfbjt5dfMgZ6ERKkKEdxA');
             let responseJson = await response.json();
             if (responseJson.status == ('OK')) {
@@ -51,6 +57,10 @@ export default class AddSpotScreen extends React.Component {
         } catch(error){
             console.error(error);
         }
+        
+        
+        
+        //COMMUNCIATION WITH OUR SERVEr
         
         fetch(serverIP + 'AddCustomSpot', {
             method: 'POST',
