@@ -48,25 +48,17 @@ export default class ProfileScreen extends React.Component {
         <Text style={styles.title} > Hello  {global.username} </Text>
 
         {/* General User Info */}
-        <View>
-          <FormLabel onPress={() => this.onPressBookmarks()}>Email</FormLabel>
+        <Text style={styles.category} onPress={() => this.onPressBookmarks()}>Email</Text>
 
-          <Text
-            onPress={() =>  this.props.navigation.push('FriendsScreen') }>
-            Followers
-            </Text>
 
-          <FormLabel>Default Location</FormLabel>
+        <Text style={styles.category} onPress={() => this.props.navigation.push('FriendsScreen')}>Followers </Text>
 
-          <FormLabel>User Preferences</FormLabel>
-        </View>
+        <Text style={styles.category}>Default Location</Text>
 
-        {/* Buttlson to take User to Search Page */}
-        {/* <View>
-          <Button onclick={() => toSearch()}>Search</Button>
-        </View> */}
-      </View >
-    );
+        <Text style={styles.category}>User Preferences</Text>
+      </View>
+
+    )
   }
 }
 
@@ -76,7 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     // alignItems: 'center',
     // justifyContent: 'center',
-    marginLeft: 10,
+    paddingLeft: 10,
   },
   title: {
     // textAlign: 'center',
@@ -86,4 +78,11 @@ const styles = StyleSheet.create({
     color: '#f8971d',
     marginTop: '5%'
   },
+  category: {
+    marginBottom: 10,
+    color:'gray',
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingLeft:5
+  }
 });

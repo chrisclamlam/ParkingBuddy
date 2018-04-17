@@ -67,13 +67,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     // alignItems: 'center',
     // justifyContent: 'center',
-    marginLeft: 10,
+    paddingLeft: 10,
   },
   title: {
     // textAlign: 'center',
     fontSize: 35,
     marginBottom: 30,
-    fontWeight: 'bold',
+    fontWeight: '500',
     color: '#f8971d',
     marginTop: '5%'
   },
