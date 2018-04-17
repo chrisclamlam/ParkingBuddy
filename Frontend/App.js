@@ -6,7 +6,9 @@ import StackScreen from './Components/StackScreen.js'
 global.serverIP = "http://10.123.112.238:8080/ParkingBuddy/";
 global.authKey = ""; // To hold auth key
 global.loggedIn = false; // To check if user is logged in
+global.initMat = {
 
+}
 
 export default class App extends React.Component {
   render() {
