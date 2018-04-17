@@ -74,7 +74,7 @@ export default class LogInScreen extends React.Component {
 
     continueGuest() {
         global.loggedIn = false;
-        global.username = "guest";
+        global.username = "Guest";
         this.props.navigation.push('SearchLocationScreen')
     }
 

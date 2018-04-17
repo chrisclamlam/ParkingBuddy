@@ -76,18 +76,22 @@ export default class SearchLocationScreen extends React.Component {
 
         // Servlet request param
         var coords = "lat=" + lat + "&lng=" + lng;
-
+        console.log("cords= " + coords);
         // Now that we have long/lat send a request to our servlet
+        console.log("search url=" + global.serverIP + 'SearchLocation?' + coords);
         try {
-            let response = await fetch(global.serverIP + 'SearchLocation', {
+            let response = await fetch(global.serverIP + 'SearchLocation?' + coords, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/x-www-form-urlencoded',
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 timeout: 10,
-                body: coords
+                // body: coords
             });
+
+
+
             let responseJson = await response.json();
         if (responseJson.status == 200) { // Request is good and there are results
             this.props.navigation.push({

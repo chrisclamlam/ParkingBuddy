@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Image} from 'react-native';
-import { MapView,  Font, AppLoading } from 'expo';
-import { FormLabel, FormInput, Button,List,ListItem } from 'react-native-elements'
+import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { MapView, Font, AppLoading } from 'expo';
+import { FormLabel, FormInput, Button, List, ListItem } from 'react-native-elements'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 
@@ -13,42 +13,43 @@ export default class ProfileScreen extends React.Component {
 
   onPressBookmarks() {
     fetch(serverIP + '/SearchUsers', {
-        method: 'POST',
-        headers: {
-          'Token' : global.authKey,
-            'Accept': 'application/x-www-form-urlencoded',
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'searchingUser:ChrisLam'
+      method: 'POST',
+      headers: {
+        'Token': global.authKey,
+        'Accept': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'searchingUser:ChrisLam'
     })
-        .then(function (response) {
-            // Handle HTTP response
-            if (response.status.toString() == 200) {
-                // console.log(respons)
-            }
-            else {
-                global.username = "guest";
-                return;
-            }
-        })
-        .catch((error) => {
-            //
-            Alert.alert(error.message);
-        });
-}
+      .then(function (response) {
+        // Handle HTTP response
+        if (response.status.toString() == 200) {
+          // console.log(respons)
+          console.log("responseboyd fdsfds ")
+        }
+        else {
+          global.username = "Guest";
+          return;
+        }
+      })
+      .catch((error) => {
+        //
+        Alert.alert(error.message);
+      });
+  }
   // Takes user back to search page
 
-  
+
   render() {
     return (
       <View style={styles.container}>
-      <View style={{height:'3%'}}/>
+        <View style={{ height: '3%' }} />
         {/* <Text onPress= {() => this.props.navigation.pop()}> back to Search</Text> */}
         <Text style={styles.title} > Hello  {global.username} </Text>
 
         {/* General User Info */}
         <View>
-          <FormLabel>Email:</FormLabel>
+          <Text onPress={() => this.onPressBookmarks()}>Email:</Text>
 
           <FormLabel>Followers</FormLabel>
 
@@ -81,5 +82,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#f8971d',
     marginTop: '5%'
-},
+  },
 });

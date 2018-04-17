@@ -184,8 +184,9 @@ export default class App extends React.Component {
                     {/* <View style={{flexDirection: 'row', justifyContent: 'center', padding: 2}}> */}
 
 
-                        <View style={{backgroundColor:'#f8971d', height:30, justifyContent:'center', alignItems:'center', borderRadius: 13}}>
-                            <TouchableHighlight>
+                        <View style={{backgroundColor:'#f8971d', height:40, justifyContent:'center', alignItems:'center', borderRadius: 13}}>
+                            <TouchableHighlight
+                            onPress={() => this.props.navigation.push('AddSpotScreen')}>
                         {/* <Button
                             buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d',  flex:1}}
                             onPress={() => this.props.navigation.push('AddSpotScreen')} title="Don't see your spot?"
