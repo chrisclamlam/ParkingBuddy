@@ -10,24 +10,29 @@ const { width, height } = Dimensions.get("window");
 // Link to marker background
 // Make the dimensions of the parking quick detail screen
 const PARK_HEIGHT = height / 6;
-const PARK_WIDTH = width / 1.5;
+const PARK_WIDTH = width / 2;
 
 export default class App extends React.Component {
     constructor(props) {
         super(props)
 
         // Set an initial region, for when user location cannot be determined
-        let initregion = {
-            latitude: 34.052235,
-            longitude: -118.243685,
-            latitudeDelta: 0.692,
-            longitudeDelta: 0.0821,
-        };
+        // let initregion = {
+        //     latitude: 34.052235,
+        //     longitude: -118.243685,
+        //     latitudeDelta: 0.692,
+        //     longitudeDelta: 0.0821,
+        // };
 
         // Set state variables
         this.state = {
             json: '',
-            initregion,
+            initregion: {
+                latitude: 34.052235,
+                longitude: -118.243685,
+                latitudeDelta: 0.692,
+                longitudeDelta: 0.0821,
+            },
             // Create array for map markers
             markers: [ // Default marker, and example for how markers need to be formatted
                 {
@@ -48,6 +53,8 @@ export default class App extends React.Component {
     }
     // To set up props when page loads
     componentWillMount = () => {
+        this._getLocationAsync();
+
         console.log("MapScreen load: if not null, markers will be displayed in console");
         // console.lot("Navigation props: " + this.props.navigation.state);
         // if(this.props.navigation.state.params.json != null){
@@ -74,6 +81,8 @@ export default class App extends React.Component {
         // We should just debounce the event listener here
 
         this.animation.addListener(({ value }) => {
+            // Get current location
+
             let index = Math.floor(value / PARK_WIDTH + 0.3); // animate 30% away from landing on the next item
             if (index >= this.state.markers.length) {
                 index = this.state.markers.length - 1;
@@ -210,7 +219,7 @@ export default class App extends React.Component {
                                         {marker.description}
                                     </Text>
                                     <Button title="Go to Details" onPress={() => this.props.navigation.navigate('DetailsScreen', {
-                                        initRegion: this.state.initRegion,
+                                        initRegion: this.state.initregion,
                                         markerCoord: marker,
                                     })}
                                     ></Button>
