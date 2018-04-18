@@ -1,15 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatList, Alert, TouchableHighlight } from 'react-native';
-import { MapView, Constants, Location, Permissions } from 'expo';
+import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatList, Alert, TouchableHighlight, TouchableOpacity, } from 'react-native';
+import { Constants, Location, Permissions } from 'expo';
 import { List, ListItem, FormLabel, FormInput, Button, } from 'react-native-elements'
-import { Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 
 // Get the dimensions of the screen
 const { width, height } = Dimensions.get("window");
 // Link to marker background
 // Make the dimensions of the parking quick detail screen
 const PARK_HEIGHT = height / 6;
-const PARK_WIDTH = PARK_HEIGHT;
+const PARK_WIDTH = width / 1.5;
 
 export default class App extends React.Component {
     constructor(props) {
@@ -27,16 +27,31 @@ export default class App extends React.Component {
         this.state = {
             initregion,
             // Create array for map markers
-            markers: this.props.navigation.state.params.markers,
+            markers: [ // Default marker, and example for how markers need to be formatted
+                {
+                    "id": -1,
+                    "remoteId": "8b40ce9d2ed10824f12dfc66834536f8888c187d",
+                    "spotType": -1,
+                    "label": "University of South Carolina",
+                    "coordinate": {
+                        "latitude": 34.052235,
+                        "longitude": -118.243685,
+                    },
+                }
+            ],
             searchQuery: "",
         }
 
 
     }
-    // To set up animation and default index
+    // To set up props when page loads
     componentWillMount() {
         this.index = 0;
         this.animation = new Animated.Value(0);
+        this.setState({
+            //markers doesn't work at the moment
+            //markers: this.props.navigation.state.params.markers
+        })
     }
 
     // On marker load
@@ -139,7 +154,7 @@ export default class App extends React.Component {
                             return (
                                 <MapView.Marker key={index} coordinate={marker.coordinate}>
                                     <Animated.View style={[styles.markerWrap, opacityStyle]}>
-                                        <Animated.View style={[styles.ring, scaleStyle]} onPress={() => this.props.navigation.push('DetailsScreen')}/>
+                                        <Animated.View style={[styles.ring, scaleStyle]} />
                                         <View style={styles.marker} />
                                     </Animated.View>
                                 </MapView.Marker>
@@ -171,14 +186,14 @@ export default class App extends React.Component {
 
                         { /* Dynamically display results of parking locations on screen */}
                         {this.state.markers.map((marker, index) => (
-                            <View style={styles.park} key={index}>
+                            <TouchableOpacity style={styles.park} key={index} onPress={() => this.props.navigation.push('DetailsScreen')}>
                                 <View style={styles.textContent}>
-                                    <Text numberOfLines={1} style={styles.parktitle}>{marker.title}</Text>
+                                    <Text numberOfLines={1} style={styles.parktitle}>{marker.label}</Text>
                                     <Text numberOfLines={1} style={styles.parkDescription}>
                                         {marker.description}
                                     </Text>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         ))}
                     </Animated.ScrollView>
                     {/* <View style={{flexDirection: 'row', justifyContent: 'center', padding: 2}}> */}
