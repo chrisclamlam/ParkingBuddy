@@ -7,12 +7,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class CostEstimate implements Serializable
 {
-	public CostEstimate(int estimatedCostCentsMax, int estimatedCostCentsMin)
-	{
-		this.estimatedCostCentsMax = estimatedCostCentsMax;
-		this.estimatedCostCentsMin = estimatedCostCentsMin;
-	}
-
+    
+    public CostEstimate(int min,int max)
+    {
+        this.estimatedCostCentsMax = max;
+        this.estimatedCostCentsMin = min;
+    }
     @SerializedName("ride_type")
     @Expose
     private String rideType;
@@ -22,15 +22,24 @@ public class CostEstimate implements Serializable
     @SerializedName("estimated_distance_miles")
     @Expose
     private Double estimatedDistanceMiles;
+    @SerializedName("price_quote_id")
+    @Expose
+    private String priceQuoteId;
     @SerializedName("estimated_cost_cents_max")
     @Expose
     private Integer estimatedCostCentsMax;
     @SerializedName("primetime_percentage")
     @Expose
     private String primetimePercentage;
+    @SerializedName("is_valid_estimate")
+    @Expose
+    private Boolean isValidEstimate;
     @SerializedName("currency")
     @Expose
     private String currency;
+    @SerializedName("cost_token")
+    @Expose
+    private Object costToken;
     @SerializedName("estimated_cost_cents_min")
     @Expose
     private Integer estimatedCostCentsMin;
@@ -40,100 +49,114 @@ public class CostEstimate implements Serializable
     @SerializedName("primetime_confirmation_token")
     @Expose
     private Object primetimeConfirmationToken;
-    @SerializedName("cost_token")
+    @SerializedName("can_request_ride")
     @Expose
-    private Object costToken;
-    @SerializedName("is_valid_estimate")
-    @Expose
-    private Boolean isValidEstimate;
-    private final static long serialVersionUID = -3599134079345614157L;
-
+    private Boolean canRequestRide;
+    private final static long serialVersionUID = -6002236419909805586L;
+    
     public String getRideType() {
         return rideType;
     }
-
+    
     public void setRideType(String rideType) {
         this.rideType = rideType;
     }
-
+    
     public Integer getEstimatedDurationSeconds() {
         return estimatedDurationSeconds;
     }
-
+    
     public void setEstimatedDurationSeconds(Integer estimatedDurationSeconds) {
         this.estimatedDurationSeconds = estimatedDurationSeconds;
     }
-
+    
     public Double getEstimatedDistanceMiles() {
         return estimatedDistanceMiles;
     }
-
+    
     public void setEstimatedDistanceMiles(Double estimatedDistanceMiles) {
         this.estimatedDistanceMiles = estimatedDistanceMiles;
     }
-
+    
+    public String getPriceQuoteId() {
+        return priceQuoteId;
+    }
+    
+    public void setPriceQuoteId(String priceQuoteId) {
+        this.priceQuoteId = priceQuoteId;
+    }
+    
     public Integer getEstimatedCostCentsMax() {
         return estimatedCostCentsMax;
     }
-
+    
     public void setEstimatedCostCentsMax(Integer estimatedCostCentsMax) {
         this.estimatedCostCentsMax = estimatedCostCentsMax;
     }
-
+    
     public String getPrimetimePercentage() {
         return primetimePercentage;
     }
-
+    
     public void setPrimetimePercentage(String primetimePercentage) {
         this.primetimePercentage = primetimePercentage;
     }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public Integer getEstimatedCostCentsMin() {
-        return estimatedCostCentsMin;
-    }
-
-    public void setEstimatedCostCentsMin(Integer estimatedCostCentsMin) {
-        this.estimatedCostCentsMin = estimatedCostCentsMin;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public Object getPrimetimeConfirmationToken() {
-        return primetimeConfirmationToken;
-    }
-
-    public void setPrimetimeConfirmationToken(Object primetimeConfirmationToken) {
-        this.primetimeConfirmationToken = primetimeConfirmationToken;
-    }
-
-    public Object getCostToken() {
-        return costToken;
-    }
-
-    public void setCostToken(Object costToken) {
-        this.costToken = costToken;
-    }
-
+    
     public Boolean getIsValidEstimate() {
         return isValidEstimate;
     }
-
+    
     public void setIsValidEstimate(Boolean isValidEstimate) {
         this.isValidEstimate = isValidEstimate;
     }
-
+    
+    public String getCurrency() {
+        return currency;
+    }
+    
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+    
+    public Object getCostToken() {
+        return costToken;
+    }
+    
+    public void setCostToken(Object costToken) {
+        this.costToken = costToken;
+    }
+    
+    public Integer getEstimatedCostCentsMin() {
+        return estimatedCostCentsMin;
+    }
+    
+    public void setEstimatedCostCentsMin(Integer estimatedCostCentsMin) {
+        this.estimatedCostCentsMin = estimatedCostCentsMin;
+    }
+    
+    public String getDisplayName() {
+        return displayName;
+    }
+    
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+    
+    public Object getPrimetimeConfirmationToken() {
+        return primetimeConfirmationToken;
+    }
+    
+    public void setPrimetimeConfirmationToken(Object primetimeConfirmationToken) {
+        this.primetimeConfirmationToken = primetimeConfirmationToken;
+    }
+    
+    public Boolean getCanRequestRide() {
+        return canRequestRide;
+    }
+    
+    public void setCanRequestRide(Boolean canRequestRide) {
+        this.canRequestRide = canRequestRide;
+    }
+    
 }
+
