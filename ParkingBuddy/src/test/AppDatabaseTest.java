@@ -30,7 +30,7 @@ public class AppDatabaseTest {
 		User u = db.getUserById(1);
 		
 		// Asserting
-		assertEquals(u.getUsername(), "test0");
+		assertEquals(u.getUsername(), "ChrisLam");
 		assertEquals(u.getEmail(), "test0@test.com");
 	}
 	

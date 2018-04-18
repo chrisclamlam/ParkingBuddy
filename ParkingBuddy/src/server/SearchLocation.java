@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -51,10 +52,19 @@ public class SearchLocation extends HttpServlet {
 		ArrayList<ParkingSpot> spots = db.searchLocations(keyword, Double.parseDouble(latS), Double.parseDouble(lngS));
 		// ArrayList<ParkingSpot> -> JSON
 		Gson gson = new Gson();
-		String jsonResponse = gson.toJson(spots);
-		System.out.println("Location endpoint response: " + spots);
+		String jsonResponse = "[";
+		
 		// Write the response
 		try {
+			Iterator it = spots.iterator();
+			while(it.hasNext()) {
+				ParkingSpot spot = (ParkingSpot)it.next();
+				jsonResponse += gson.toJson(spot);
+				if(it.hasNext()) {
+					jsonResponse += ",";
+				}	
+			}
+			jsonResponse += "]";
 			PrintWriter pw = response.getWriter();
 			response.setStatus(200);
 			pw.write(jsonResponse);
