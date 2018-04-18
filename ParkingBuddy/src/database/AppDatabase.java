@@ -5,6 +5,11 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+
+import interpreter.CostEstimate;
+import interpreter.Price;
 
 public class AppDatabase {
 	
@@ -30,7 +35,7 @@ public class AppDatabase {
 	
 	private Connection getConnection() {
 		try {
-			return cpds.getConnection();
+			return (Connection) cpds.getConnection();
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return null;
@@ -39,7 +44,7 @@ public class AppDatabase {
 	
 	private Statement getStatement(Connection conn) {
 		try {
-			return conn.createStatement();
+			return (Statement) conn.createStatement();
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return null;
@@ -47,18 +52,28 @@ public class AppDatabase {
 	}
 	
 	private void close(Connection conn, Statement st, ResultSet rs) {
-		System.out.println("Closing connection class: " + conn.getClass());
-		// Result sets, statements do not need to be closed, as they are ended by the connectionProxy closing
+		try {
+			if(rs != null) {
+				rs.close();
+			}
+			
+		}
+		catch (SQLException se) {}
+		try {
+			if(st != null) {
+				st.close();
+			}
+			
+		}
+		catch (SQLException se) {}
+		
 		try {
 			if(conn != null) {
 				conn.close();
 			}
 			
 		}
-		catch (SQLException se) {
-			System.out.println("Error closing connection: " + se.getMessage());
-		}
-		System.out.println("Closed database connection");
+		catch (SQLException se) {}
 	}
 	
 	private boolean insertUser(User u) {
@@ -71,7 +86,7 @@ public class AppDatabase {
 			return false;
 		}
 		try {
-			st = conn.createStatement();
+			st = (Statement) conn.createStatement();
 			st.executeUpdate("INSERT INTO Users (username, fname, lname, email, passhash) VALUES ("
 					+ "'" + u.getUsername() + "',"
 					+ "'" + u.getFname() + "',"
@@ -86,69 +101,6 @@ public class AppDatabase {
 			System.out.println("Closing insert connection");
 			close(conn, st, null);
 		}
-	}
-	
-	private int insertCustomSpot(ParkingSpot ps) {
-		// Get a connection to the database
-		if(ps == null) return -1;
-		Connection conn = getConnection();
-		if(conn == null) return -1;
-		Statement st = getStatement(conn);
-		if(st == null) {
-			close(conn, null, null);
-			return -1;
-		}
-		
-		// Insert the spot
-		if(insertSpot(ps)) {
-			// Update the id and remoteid field after it is inserted
-			if(updateSpot(ps.getRemoteId())) {
-				System.out.println("Label of custom spot: " + ps.getLabel());
-				return getSpotId(ps.getLabel());
-			}else {
-				deleteSpot(ps.getRemoteId());
-				return -1;
-			}
-		}
-		return -1;
-	}
-
-	private boolean updateSpot(String remoteid) {
-		Connection conn = getConnection();
-		if(conn == null) return false;
-		Statement st = getStatement(conn);
-		if(st == null) {
-			close(conn, null, null);
-			return false;
-		}
-		
-		try {
-			st.executeUpdate("UPDATE ParkingSpots SET remoteid=id WHERE remoteid='" + remoteid + "'");
-		} catch (SQLException sqle) {
-			System.out.println(sqle);
-		} finally {
-			close(conn, st, null);
-		}
-		return true;
-	}
-	
-	private boolean deleteSpot(String remoteid) {
-		Connection conn = getConnection();
-		if(conn == null) return false;
-		Statement st = getStatement(conn);
-		if(st == null) {
-			close(conn, null, null);
-			return false;
-		}
-		try {
-			st.executeUpdate("DELETE FROM ParkingSpots WHERE remoteid = '" + remoteid + "'");
-			return true;
-		} catch (SQLException sqle) {
-			System.out.println(sqle);
-		} finally {
-			close(conn, st, null);
-		}
-		return false;
 	}
 	
 	private boolean insertSpot(ParkingSpot ps) {
@@ -366,10 +318,6 @@ public class AppDatabase {
 	public boolean addSpot(ParkingSpot ps) {
 		return insertSpot(ps);
 	}
-	
-	public int addCustomSpot(ParkingSpot ps) {
-		return insertCustomSpot(ps);
-	}
 
 	public User getUserById(int id) {
 		return getUserFromQuery("SELECT * FROM users WHERE id = '" + id + "'");
@@ -432,13 +380,9 @@ public class AppDatabase {
 		}
 		ResultSet rs = null;
 		try {
-			rs = st.executeQuery("SELECT passhash FROM Users WHERE username = '" + username  + "'");
+			rs = st.executeQuery("SELECT COUNT(1) FROM Users WHERE username = '" + username 
+			+ "' AND passhash = '" + passhash + "'");
 			if(rs == null || !rs.next()) {
-				return false;
-			}
-			byte[] ph = rs.getBytes(1);
-			System.out.println("Comparing: " + ph + " " + passhash);
-			if(ph.equals(passhash)) {
 				return false;
 			}
 			return true;
@@ -618,15 +562,6 @@ public class AppDatabase {
 		return ps.get(0);
 	}
 	
-	public int getSpotId(String label) {
-		System.out.println("Querying DB for spot with label: " + label);
-		ArrayList<ParkingSpot> spots = getParkingSpotsFromQuery("SELECT * FROM ParkingSpots WHERE label = '" + label + "'");
-		if(spots == null) {
-			return -1;
-		}
-		return spots.get(0).getId();
-	}
-	
 	public ArrayList<ParkingSpot> searchLocations(String name, double latitude, double longitude){
 		ArrayList<ParkingSpot> spots = MapsRequester.getLocations(name, latitude, longitude);
 		System.out.println("Locations:");
@@ -684,9 +619,9 @@ public class AppDatabase {
 		return spots;
 	}
 	
-	public boolean addFavoriteParking(int uid, int sid)
+	public boolean addFavoriteParking(String username, String parkingname)
 	{
-		if(uid == -1 || sid == -1) return false;
+		if(username == null || parkingname == null) return false;
 		Connection conn = getConnection();
 		if(conn == null) return false;
 		Statement st = getStatement(conn);
@@ -695,9 +630,11 @@ public class AppDatabase {
 			return false;
 		}
 		try {
-			st.executeUpdate("INSERT INTO FavoritesList (userid, spotid) VALUES ("
-					+ "'" + uid + "',"
-					+ "'" + sid + "')" );
+			int firstid =  getUserByUsername(username).getId();
+			ParkingSpot spot = getSpotByName(parkingname); 
+			st.executeUpdate("INSERT INTO FavoritesList (userid, parkingspots) VALUES ("
+					+ "'" + firstid + "',"
+					+ "'" + spot + "')" );
 			return true;
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
@@ -705,5 +642,57 @@ public class AppDatabase {
 		} finally {
 			close(conn, st, null);
 		}
+	}
+	public String uberPrice(double start_lat, double start_long, double end_lat, double end_long)
+	{
+		UberLyftRequester request = new UberLyftRequester();
+		ArrayList<Price> uber = request.getUberPrice(start_lat, start_long, end_lat, end_long);
+		for(int i=0; i< uber.size() ;i++)
+		{
+			String estimate = null;
+			if(uber.get(i).getLocalizedDisplayName().equals("uberX"))
+			{
+				//System.out.println("test "+ uber.get(i).getEstimate());
+				double min = (double) uber.get(i).getHighEstimate();
+				double max = (double) uber.get(i).getLowEstimate();
+				if(min == max)
+				{
+					estimate = "$" +Double.toString(min);
+					System.out.println(estimate);
+				}else {
+					estimate = "$" +Double.toString(min) + "-"+ Double.toString(max);
+				}
+				
+				return estimate;
+			}
+		}
+		return null;//can't find value
+	}
+	public String lyftPrice(double start_lat, double start_long, double end_lat, double end_long)
+	{
+		UberLyftRequester request = new UberLyftRequester();
+		ArrayList<CostEstimate> lyft = request.getLyftPrice(start_lat, start_long, end_lat, end_long);
+		String estimate =null;
+		for(int i=0; i< lyft.size() ;i++)
+		{
+//			System.out.println(test.get(i).getLocalizedDisplayName());
+			if(lyft.get(i).getRideType().equals("lyft"))
+			{
+				//System.out.println("test "+ lyft.get(i).getEstimate());
+				double max = lyft.get(i).getEstimatedCostCentsMax()/100;
+				double min = lyft.get(i).getEstimatedCostCentsMin()/100;
+				if(max == min)
+				{
+					estimate = "$"+Double.toString(max);
+				}
+				else
+				{
+					estimate = "$" +Double.toString(min) + " "+ Double.toString(max);
+				}
+				
+				return estimate;
+			}
+		}
+		return null;//can't find value
 	}
 }
