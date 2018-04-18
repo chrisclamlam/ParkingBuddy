@@ -1,5 +1,7 @@
 package database;
 
+import java.util.ArrayList;
+
 public class User {
 
 	// Declare the member Variables
@@ -9,6 +11,9 @@ public class User {
 	private String lname;
 	private String email;
 	private byte[] passhash;
+	// These are used for getting the details from other tables
+	private ArrayList<ParkingSpot> favoriteSpots;
+	private ArrayList<User>        friends;
 	
 	// Constructors set everything
 	public User(int id, String username, String fname, String lname, String email, byte[] passhash) {
@@ -18,6 +23,8 @@ public class User {
 		this.lname = lname;
 		this.email = email;
 		this.passhash = passhash;
+		favoriteSpots = null;
+		friends = null;
 	}
 	
 	public User(String username, String fname, String lname, String email, byte[] passhash) {
@@ -27,6 +34,8 @@ public class User {
 		this.lname = lname;
 		this.email = email;
 		this.passhash = passhash;
+		favoriteSpots = null;
+		friends = null;
 	}
 	
 	public User(int id, String username, String fname, String lname, String email) {
@@ -35,6 +44,8 @@ public class User {
 		this.fname = fname;
 		this.lname = lname;
 		this.email = email;
+		favoriteSpots = null;
+		friends = null;
 	}
 	
 	// Only use getters as everything is set in constructors
@@ -55,5 +66,21 @@ public class User {
 	}
 	public byte[] getPasshash() {
 		return passhash;
+	}
+	
+	public void setFriends(ArrayList<User> friends) {
+		this.friends = friends;
+	}
+	
+	public ArrayList<User> getFriends(){
+		return friends;
+	}
+	
+	public void setFavoriteSpots(ArrayList<ParkingSpot> favoriteSpots) {
+		this.favoriteSpots = favoriteSpots;
+	}
+	
+	public ArrayList<ParkingSpot> getFavoriteSpots(){
+		return favoriteSpots;
 	}
 }

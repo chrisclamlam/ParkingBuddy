@@ -327,6 +327,17 @@ public class AppDatabase {
 		return getUserFromQuery("SELECT * FROM users WHERE username = '" + username + "'");
 	}
 	
+	public ArrayList<User> getUserFriends(String username){	
+		// Query the database for the result set
+		int id = getUserId(username);
+		if(id == -1) return null;
+		return getUsersFromQuery("SELECT * FROM FriendsList WHERE firstid = '" + id + "' OR secondid = '" + id + "'");
+	}
+	
+	public ArrayList<ParkingSpot> getUserSpots(String username){
+		return getParkingSpotsFromQuery("SELECT * FROM FavoritesList WHERE firstid = '" + getUserId(username) + "'");
+	}
+	
 	public void delete(String username) {
 		Connection conn = getConnection();
 		if(conn == null) return;
@@ -406,30 +417,15 @@ public class AppDatabase {
 	
 	
 	
-	public ArrayList<User> getUserFriends(String username){	
-		// Query the database for the result set
-		int id = getUserId(username);
-		if(id == -1) return null;
-		return getUsersFromQuery("SELECT * FROM FriendsList WHERE firstid = '" + id + "' OR secondid = '" + id + "'");
-	}
+	
 	
 	public ArrayList<User> searchUsersByName(String name){
 		// Query the database for the result set
 		return getUsersFromQuery("SELECT * FROM Users WHERE fname LIKE '" + name + "%' OR lname LIKE '" + name + "'");
 	}
 	
-	public ArrayList<User> searchUsersByUsername(String username){
-		return getUsersFromQuery("SELECT * FROM USERS WHERE username = '" + username + "'");
-	}
-	
 	public ArrayList<User> searchUsersByEmail(String email){
 		return getUsersFromQuery("SELECT * FROM USERS WHERE email = '" + email + "'");
-	}
-	
-	
-	
-	public ArrayList<ParkingSpot> getUserSpots(String username){
-		return getParkingSpotsFromQuery("SELECT * FROM FavoritesList WHERE firstid = '" + getUserId(username) + "'");
 	}
 	
 	public ParkingSpot getSpotById(int id) {
