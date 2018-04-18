@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatList, Alert, TouchableHighlight, TouchableOpacity, } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatList, Alert, TouchableHighlight, TouchableOpacity, Platform} from 'react-native';
 import { Constants, Location, Permissions } from 'expo';
 import { List, ListItem, FormLabel, FormInput, Button, } from 'react-native-elements'
 import MapView, { Marker } from 'react-native-maps';
@@ -93,7 +93,8 @@ export default class App extends React.Component {
                             latitudeDelta: this.state.initregion.latitudeDelta,
                             longitudeDelta: this.state.initregion.longitudeDelta,
                         },
-                        350
+                        //350
+                        150
                     );
                 }
             }, 10);
@@ -147,6 +148,7 @@ export default class App extends React.Component {
                     <MapView
                         ref={map => this.map = map}
                         provider="google"
+                        // mapType={Platform.OS == "android" ? "none" : "standard"}
                         style={{ flex: 1 }}
                         initialRegion={this.state.initregion}
                         showsUserLocation={true}
@@ -209,8 +211,9 @@ export default class App extends React.Component {
                                     </Text>
                                     <Button title="Go to Details" onPress={() => this.props.navigation.navigate('DetailsScreen', {
                                         initRegion: this.state.initRegion,
-                                        markerCoord: marker.coordinate,
-                                    })}></Button>
+                                        markerCoord: marker,
+                                    })}
+                                    ></Button>
                                 </View>
                             </View>
                         ))}

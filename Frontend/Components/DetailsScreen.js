@@ -23,7 +23,7 @@ export default class ProfileScreen extends React.Component {
             let params = "lat=" + markerLocation.latitude + "&lng=" + markerLocation.longitude;
 
             // Make call to saerch spot servlet
-            let response = await fetch(global.serverIP + 'SearchSpot?' + params, {
+            let response = await fetch(global.serverIP + '/SearchSpot?' + params, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/x-www-form-urlencoded',
@@ -85,7 +85,7 @@ export default class ProfileScreen extends React.Component {
         const {params} = this.props.navigation.state;
 
         // See if params are being sent
-        console.log("params: " + params);
+        console.log("params: " + Object.key(params));
         // console.out("MarkerLocation: " + params.markerCoord);
 
         // Set state variables to params that were sent

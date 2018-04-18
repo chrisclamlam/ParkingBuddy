@@ -12,6 +12,7 @@ export default class SearchLocationScreen extends React.Component {
         this.state = {
             location: '',
             json: '',
+            foundLocation: [],
         }
     }
 
@@ -51,7 +52,38 @@ export default class SearchLocationScreen extends React.Component {
 
     // Get actual spots to show on the map
     getSpots = async () => {
+        let params = "lat=" + this.state.foundLocation.coordinate.latitude +
+                     "&lng=" + this.state.foundLocation.coordinate.longitude
+        console.log("params getSpot: " + params);
+        try {
+            let response = await fetch(global.serverIP + 'SearchSpot?' + params, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                timeout: 10,
+                // body: coords
+            });
+            let responseJson = await response.json();
 
+            if (response.status == 200) { // Request is good and there are results
+                var json = this.toProperJson(responseJson);
+                console.log("JSON getSpot: " + json);
+
+                // Pass array from get spots into MapScreen
+                this.props.navigation.navigate('MapScreen', {
+                    markers: json
+                });
+
+            }
+            else { // No results
+                Alert.alert("Unable to find any location");
+
+            }
+        } catch(error){
+            console.error(error);
+        }
     }
 
     verifyInput = async () => {
@@ -116,13 +148,18 @@ export default class SearchLocationScreen extends React.Component {
                 // body: coords
             });
             let responseJson = await response.json();
-            console.log(response);
+            // console.log(response);
             if (response.status == 200) { // Request is good and there are results
                 var json = this.toProperJson(responseJson);
-                this.props.navigation.navigate('MapScreen', {
-                    markers: json
+
+                // Set the foundLocation to the location that we got
+                // console.log("foundLocation: " + Object.keys(json[0]));
+                this.setState({
+                    foundLocation: json[0],
                 });
 
+                // Call getSpots, which will call getSpots servlet, then push to MapScreen
+                this.getSpots();
             }
             else { // No results
                 Alert.alert("Unable to find any location");
