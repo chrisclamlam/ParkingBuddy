@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TextInput, Animated, Dimensions, Image, FlatLis
 import { Constants, Location, Permissions } from 'expo';
 import { List, ListItem, FormLabel, FormInput, Button, } from 'react-native-elements'
 import MapView, { Marker } from 'react-native-maps';
+import { StackNavigator } from 'react-navigation'
 
 // Get the dimensions of the screen
 const { width, height } = Dimensions.get("window");
@@ -25,6 +26,7 @@ export default class App extends React.Component {
 
         // Set state variables
         this.state = {
+            json: '',
             initregion,
             // Create array for map markers
             markers: [ // Default marker, and example for how markers need to be formatted
@@ -45,19 +47,35 @@ export default class App extends React.Component {
 
     }
     // To set up props when page loads
-    componentWillMount() {
+    componentWillMount = () => {
+        console.log("MapScreen load: if not null, markers will be displayed in console");
+        // console.lot("Navigation props: " + this.props.navigation.state);
+        // if(this.props.navigation.state.params.json != null){
+        //     console.log("Markers: " + this.props.navigation.state.params.json);
+        // }
+        const {params} = this.props.navigation.state;
         this.index = 0;
         this.animation = new Animated.Value(0);
+
+        // console.log("NAV: ", params.markers[0].coordinate);
+        // console.log("marker: " + this.props.navigation);
+
+        console.log("Markers 1 longitude: " + params.markers[0].coordinate.longitude);
+        console.log("Markers 1 latitude: " + params.markers[0].coordinate.latitude);
         this.setState({
-            //markers doesn't work at the moment
-            //markers: this.props.navigation.state.params.markers
-        })
+            markers: params.markers,
+        });
+        // console.log("marker: " + this.navigator.navigation.props.markers);
     }
 
     // On marker load
-    componentDidMount() {
+    componentDidMount = () => {
         // We should detect when scrolling has stopped then animate
         // We should just debounce the event listener here
+
+        // Get current location
+        _getLocationAsync();
+
         this.animation.addListener(({ value }) => {
             let index = Math.floor(value / PARK_WIDTH + 0.3); // animate 30% away from landing on the next item
             if (index >= this.state.markers.length) {
@@ -186,14 +204,18 @@ export default class App extends React.Component {
 
                         { /* Dynamically display results of parking locations on screen */}
                         {this.state.markers.map((marker, index) => (
-                            <TouchableOpacity style={styles.park} key={index} onPress={() => this.props.navigation.push('DetailsScreen')}>
+                            <View style={styles.park} key={index} >
                                 <View style={styles.textContent}>
                                     <Text numberOfLines={1} style={styles.parktitle}>{marker.label}</Text>
                                     <Text numberOfLines={1} style={styles.parkDescription}>
                                         {marker.description}
                                     </Text>
+                                    <Button title="Go to Details" onPress={() => this.props.navigation.navigate('DetailsScreen', {
+                                        initRegion: this.state.initRegion,
+                                        markerCoord: marker.coordinate,
+                                    })}></Button>
                                 </View>
-                            </TouchableOpacity>
+                            </View>
                         ))}
                     </Animated.ScrollView>
                     {/* <View style={{flexDirection: 'row', justifyContent: 'center', padding: 2}}> */}
