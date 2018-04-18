@@ -43,7 +43,6 @@ public class SearchUsers extends HttpServlet {
 			response.setStatus(200);
 		}
 		response.setStatus(400);
-//		response.sendRedirect(pageToForward);
 	}
 
 

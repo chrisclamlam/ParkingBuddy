@@ -47,18 +47,15 @@ public class AppDatabase {
 	}
 	
 	private void close(Connection conn, Statement st, ResultSet rs) {
-		System.out.println("Closing connection class: " + conn.getClass());
 		// Result sets, statements do not need to be closed, as they are ended by the connectionProxy closing
 		try {
 			if(conn != null) {
 				conn.close();
 			}
-			
 		}
 		catch (SQLException se) {
 			System.out.println("Error closing connection: " + se.getMessage());
 		}
-		System.out.println("Closed database connection");
 	}
 	
 	private boolean insertUser(User u) {
@@ -663,20 +660,18 @@ public class AppDatabase {
 				"         LIMIT 0 , 20;";
 		// Search out database
 		spots = getParkingSpotsFromQuery(query);
-		if (spots == null) {
-			spots = new ArrayList<ParkingSpot>();
-		}
 		// Search GoogleMaps for spots
 		mapsSpots = searchGoogleMaps(latitude, longitude);
 		if(mapsSpots == null) {
 			System.out.println("Google Maps returned no results");
 			return spots;
 		}
+		// Add the MapsSpot to the database if it doesn't already exist
 		for(ParkingSpot spot : mapsSpots) {
-			// Add the MapsSpot to the database if it doesn't already exist
 			insertSpot(spot);
-			spots.add(spot);
 		}
+		// Run the query again to get the proper id's from the new spots
+		spots = getParkingSpotsFromQuery(query);
 		return spots;
 	}
 	

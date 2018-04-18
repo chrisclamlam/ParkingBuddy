@@ -4,6 +4,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 import database.AppDatabase;
 import database.User;
 
@@ -15,10 +17,10 @@ public class GetUserDetails extends MiddlewareServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private String makeUserJson(User u) {
-		String json = "";
-		
-		
-		return null;
+		Gson gson = new Gson();
+		String json = gson.toJson(u);
+		System.out.println("User details: " + json);
+		return json;
 	}
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -41,7 +43,7 @@ public class GetUserDetails extends MiddlewareServlet {
 		}
 		u.setFavoriteSpots(db.getUserSpots(username));
 		u.setFriends(db.getUserFriends(username));
-		
-		
+		// Write the json to the response DataOutputStream
+		String json = makeUserJson(u);
 	}
 }
