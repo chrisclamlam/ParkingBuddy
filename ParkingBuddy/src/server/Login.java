@@ -23,10 +23,10 @@ public class Login extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username;
-		byte[] password;
+		int password;
 		try {
 			username = request.getParameter("username");
-			password = request.getParameter("passhash").getBytes();
+			password= Integer.parseInt(request.getParameter("passhash"));
 		} catch (NullPointerException npe) {
 			System.out.println("Incorrectly formatted Login Request");
 			response.setStatus(400);

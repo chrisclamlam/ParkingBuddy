@@ -47,7 +47,6 @@ public class AppDatabase {
 	}
 	
 	private void close(Connection conn, Statement st, ResultSet rs) {
-		System.out.println("Closing connection class: " + conn.getClass());
 		// Result sets, statements do not need to be closed, as they are ended by the connectionProxy closing
 		try {
 			if(conn != null) {
@@ -58,7 +57,6 @@ public class AppDatabase {
 		catch (SQLException se) {
 			System.out.println("Error closing connection: " + se.getMessage());
 		}
-		System.out.println("Closed database connection");
 	}
 	
 	private boolean insertUser(User u) {
@@ -71,6 +69,7 @@ public class AppDatabase {
 			return false;
 		}
 		try {
+			System.out.println("Inserting user: " + u.getUsername() + ", " + u.getPasshash());
 			st = conn.createStatement();
 			st.executeUpdate("INSERT INTO Users (username, fname, lname, email, passhash) VALUES ("
 					+ "'" + u.getUsername() + "',"
@@ -172,7 +171,7 @@ public class AppDatabase {
 					+ "'" + ps.getSpotType() + "')");
 			return true;
 		} catch (SQLException sqle) {
-			System.out.print(sqle.getMessage());
+			System.out.println(sqle.getMessage());
 			return false;
 		} finally {
 			close(conn, st, null);
@@ -180,9 +179,8 @@ public class AppDatabase {
 	}
 	
 	private User createUser(ResultSet rs) {
-		int uid;
+		int uid, passhash;
 		String username, fname, lname, email;
-		byte[] passhash;
 		
 		try {
 			// Get data to instantiate class
@@ -191,7 +189,8 @@ public class AppDatabase {
 			fname = rs.getString(3);
 			lname = rs.getString(4);
 			email = rs.getString(5);
-			passhash = rs.getBytes(6);
+			passhash = rs.getInt(6);
+			System.out.println("Creating user (id, username); " + uid + ", " + username);
 			return new User(uid, username, fname, lname, email, passhash);
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
@@ -250,6 +249,7 @@ public class AppDatabase {
 			if(rs == null || !rs.next()) { // empty check
 				return -1;
 			}
+			
 			return rs.getInt(1);
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
@@ -372,7 +372,7 @@ public class AppDatabase {
 	}
 
 	public User getUserById(int id) {
-		return getUserFromQuery("SELECT * FROM users WHERE id = '" + id + "'");
+		return getUserFromQuery("SELECT * FROM Users WHERE id = '" + id + "'");
 	}
 	
 	public User getUserByUsername(String username) {
@@ -416,12 +416,11 @@ public class AppDatabase {
 			System.out.println(sqle.getMessage());
 			return false;
 		} finally {
-			System.out.println("Closing exists connection");
 			close(conn, st, rs);
 		}
 	}
 	
-	public boolean loginUser(String username, byte[] passhash) {
+	public boolean loginUser(String username, int passhash) {
 		// Check password
 		Connection conn = getConnection();
 		if(conn == null) return false;
@@ -430,18 +429,18 @@ public class AppDatabase {
 			close(conn, null, null);
 			return false;
 		}
+		System.out.println("About to login user");
 		ResultSet rs = null;
 		try {
 			rs = st.executeQuery("SELECT passhash FROM Users WHERE username = '" + username  + "'");
 			if(rs == null || !rs.next()) {
 				return false;
 			}
-			byte[] ph = rs.getBytes(1);
-			System.out.println("Comparing: " + ph + " " + passhash);
-			if(ph.equals(passhash)) {
-				return false;
+			int ph = rs.getInt(1);
+			if(ph == passhash) {
+				return true;
 			}
-			return true;
+			return false;
 		} catch (SQLException sqle) {
 			return false;
 		} finally {

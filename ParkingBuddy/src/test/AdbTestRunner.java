@@ -19,15 +19,15 @@ public class AdbTestRunner {
 	
 	public static void main(String[] args) {
 		
-		initDB();
+//		initDB();
 		
-//		Result result = JUnitCore.runClasses(AppDatabaseTest.class);
-//		
-//		for (Failure failure : result.getFailures()) {
-//	         System.out.println(failure.toString());
-//	    }
-//		
-//		System.out.println("Successful: " + result.wasSuccessful());
+		Result result = JUnitCore.runClasses(AppDatabaseTest.class);
+		
+		for (Failure failure : result.getFailures()) {
+	         System.out.println(failure.toString());
+	    }
+		
+		System.out.println("Successful: " + result.wasSuccessful());
 	}
 	
 	public static void initDB() {
@@ -36,7 +36,7 @@ public class AdbTestRunner {
 		
 		// Add users
 		for(int i = 0; i < 10; i++) {
-			db.registerUser(new User("test" + i, "fname" + i, "lname" + i, "test" + i + "@test.com", ("yeee" + i).getBytes()));
+			db.registerUser(new User("test" + i, "fname" + i, "lname" + i, "test" + i + "@test.com", ("yeee" + i).hashCode()));
 		}
 
 		// Add spots

@@ -30,7 +30,8 @@ public class AppDatabaseTest {
 		User u = db.getUserById(1);
 		
 		// Asserting
-		assertEquals(u.getUsername(), "ChrisLam");
+		assertNotNull(u);
+		assertEquals(u.getUsername(), "test0");
 		assertEquals(u.getEmail(), "test0@test.com");
 	}
 	
@@ -45,10 +46,10 @@ public class AppDatabaseTest {
     @Test
 	public void testLoginuser() {
     	AppDatabase db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		User goodUser = new User(-1, "autoTest", "fname", "lname", "test@test.com", "yeee".getBytes());
+		User goodUser = new User(-1, "autoTest", "fname", "lname", "test@test.com", "yeee".hashCode());
 		// Add a new user and login
-		assertEquals(db.registerUser(goodUser), true);
-		assertEquals(db.loginUser("autoTest", "yeee".getBytes()), true);
+		db.registerUser(goodUser);
+		assertEquals(true, db.loginUser("autoTest", "yeee".hashCode()));
 		// delete the user and make sure it worked
 		db.delete("autoTest");
 		assertEquals(db.exists("autoTest"), false);
@@ -58,10 +59,11 @@ public class AppDatabaseTest {
 	public void testRegisterUser(){
 		// This line may change, because our schemas and credentials are probably different
 		AppDatabase db = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
-		User goodUser = new User(-1, "autoTest", "fname", "lname", "test@test.com", "yeee".getBytes());
-		User badUser = new User(-1, "test1", "fname", "lname", "test@test.com", "yeee".getBytes());
+		User goodUser = new User(-1, "autoTest", "fname", "lname", "test@test.com", "yeee".hashCode());
+		User badUser = new User(-1, "test1", "fname", "lname", "test@test.com", "yeee".hashCode());
 		
 		// Try to register a good and bad user
+		db.delete(goodUser.getUsername());
 		assertEquals(db.registerUser(goodUser), true);
 		assertEquals(db.registerUser(badUser), false);
 		

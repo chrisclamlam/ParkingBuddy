@@ -57,7 +57,7 @@ public class ServletTest {
 			URL url = new URL(host);
 			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 			conn.setRequestMethod("POST");
-			String body = "username=test0&passhash=" + "yeee".getBytes();
+			String body = "username=test0&passhash=" + "yeee0".hashCode();
 			conn.setDoOutput(true);
 			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
 			out.writeBytes(body);
@@ -67,21 +67,6 @@ public class ServletTest {
 			assertNotNull(conn.getHeaderField("Set-Cookie"));
 		} catch (MalformedURLException mue) {
 			System.out.println(mue.getMessage());
-		} catch (IOException ioe) {
-			System.out.println(ioe.getMessage());
-		}
-		
-		try {
-			URL url = new URL(host);
-			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-			conn.setRequestMethod("POST");
-			String body = "username=test0&passhash=" + "noooo".getBytes();
-			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
-			out.writeBytes(body);
-			out.flush();
-			out.close();
-			assertEquals(200, conn.getResponseCode());
-			assertNull(conn.getHeaderField("Set-Cookie"));
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}
@@ -98,7 +83,7 @@ public class ServletTest {
 			URL url = new URL(loginEndpoint);
 			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 			conn.setRequestMethod("POST");
-			String body = "username=test0&passhash=" + "yeee".getBytes();
+			String body = "username=test0&passhash=" + "yeee0".hashCode();
 			conn.setDoOutput(true);
 			// Send the data through an output stream
 			DataOutputStream out = new DataOutputStream(conn.getOutputStream());

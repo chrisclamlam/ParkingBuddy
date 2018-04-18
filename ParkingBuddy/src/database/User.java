@@ -8,10 +8,10 @@ public class User {
 	private String fname;
 	private String lname;
 	private String email;
-	private byte[] passhash;
+	private int    passhash;
 	
 	// Constructors set everything
-	public User(int id, String username, String fname, String lname, String email, byte[] passhash) {
+	public User(int id, String username, String fname, String lname, String email, int passhash) {
 		this.id = id;
 		this.username = username;
 		this.fname = fname;
@@ -20,7 +20,7 @@ public class User {
 		this.passhash = passhash;
 	}
 	
-	public User(String username, String fname, String lname, String email, byte[] passhash) {
+	public User(String username, String fname, String lname, String email, int passhash) {
 		this.id = -1;
 		this.username = username;
 		this.fname = fname;
@@ -53,7 +53,7 @@ public class User {
 	public String getEmail() {
 		return email;
 	}
-	public byte[] getPasshash() {
+	public int getPasshash() {
 		return passhash;
 	}
 }

@@ -31,12 +31,12 @@ public class SignUp extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username, fname, lname, email;
-		byte[] password;
+		int password;
 		System.out.println("Register endpoint hit");
 		try {
 			username = request.getParameter("username");
 			System.out.println(username);
-			password = request.getParameter("password").getBytes();
+			password = request.getParameter("password").hashCode();
 			System.out.println(password);
 			fname = request.getParameter("fname");
 			System.out.println(fname);

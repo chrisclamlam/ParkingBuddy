@@ -53,7 +53,7 @@ public class AddingCustomSpot extends MiddlewareServlet {
 		}
 		ParkingSpot ps = new ParkingSpot("-1", label, spotType, lat, lng);
 		
-		// Add the spot and get the spot id
+		/*// Add the spot and get the spot id
 		int sid = db.addCustomSpot(ps);
 		if (sid == -1) {
 			response.setStatus(400);
@@ -64,7 +64,7 @@ public class AddingCustomSpot extends MiddlewareServlet {
 		if(db.addFavoriteParking(uid, sid)) {
 			response.setStatus(200);
 			return;
-		}
+		}*/
 		response.setStatus(400);
 		return;
 	}
