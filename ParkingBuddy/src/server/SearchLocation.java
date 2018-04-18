@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -56,14 +55,17 @@ public class SearchLocation extends HttpServlet {
 		
 		// Write the response
 		try {
-			Iterator it = spots.iterator();
+			// Iterate through the parking spots, marshall to json
+			Iterator<ParkingSpot> it = spots.iterator();
 			while(it.hasNext()) {
 				ParkingSpot spot = (ParkingSpot)it.next();
 				jsonResponse += gson.toJson(spot);
+				// Add a comma after every element in the list, except the last one
 				if(it.hasNext()) {
 					jsonResponse += ",";
 				}	
 			}
+			// Close the json array
 			jsonResponse += "]";
 			PrintWriter pw = response.getWriter();
 			response.setStatus(200);
