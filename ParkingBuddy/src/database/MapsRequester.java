@@ -33,7 +33,9 @@ public class MapsRequester {
 			// Read the response
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String line;
+			System.out.println("Response from Google API: ");
 			while((line = br.readLine()) != null) {
+				System.out.println(line);
 				response += line;
 			}
 			return response;
@@ -47,10 +49,11 @@ public class MapsRequester {
 	private static ArrayList<ParkingSpot> parseResponse(String response, int spotType){
 		Gson gson = new Gson();
 		MapsSpots spots = null;
+		System.out.println("Parsing response string into Java object");
 		try {
 			spots = gson.fromJson(response, MapsSpots.class);
 		} catch (JsonSyntaxException jse) {
-			System.out.println("Response parsing Google Maps API response: " + jse.getMessage());
+			System.out.println("Exception parsing Google Maps API response: " + jse.getMessage());
 			return null;
 		}
 		if(spots == null || spots.getResults().size() == 0) {

@@ -62,6 +62,9 @@ public class SearchLocation extends HttpServlet {
 		} catch (NumberFormatException nfe) {
 			System.out.println("Exception throw while parsing Location endpoint fields: " + nfe.getMessage());
 		}
+		if (spots == null) {
+			System.out.println("No spots for location query.");
+		}
 		// ArrayList<ParkingSpot> -> JSON
 		Gson gson = new Gson();
 		String jsonResponse = "[";
@@ -80,6 +83,7 @@ public class SearchLocation extends HttpServlet {
 			}
 			// Close the json array
 			jsonResponse += "]";
+			System.out.println("Response to locations query: " + jsonResponse);
 			PrintWriter pw = response.getWriter();
 			response.setStatus(200);
 			pw.write(jsonResponse);

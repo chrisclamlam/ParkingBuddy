@@ -58,6 +58,7 @@ public class SearchSpot extends HttpServlet {
 			}
 		}
 		json += "]";
+		System.out.println("Response to spot query: " + json);
 		response.setStatus(200);
 		response.getWriter().write(json);
 		response.getWriter().flush();
