@@ -2,6 +2,7 @@ package server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,12 +40,24 @@ public class SearchSpot extends HttpServlet {
 		double longitude = Double.parseDouble(request.getParameter("lng"));
 		// Search for the location
 		ArrayList<ParkingSpot> spots = db.searchSpotByLocation(latitude, longitude);
+		System.out.println("lat, lng   ::   " + latitude + ", " + longitude);
 		if(spots == null) {
+			System.out.println("No spots found near location: " + latitude + ", " + longitude);
 			response.setStatus(400);
 			return;
 		}
 		// Turn into JSON and write reponse
-		String json = new Gson().toJson(spots);
+		Gson gson = new Gson();
+		Iterator<ParkingSpot> it = spots.iterator();
+		String json = "[";
+		while(it.hasNext()) {
+			ParkingSpot spot = (ParkingSpot)it.next();
+			json += gson.toJson(spot);
+			if(it.hasNext()) {
+				json += ",";
+			}
+		}
+		json += "]";
 		response.setStatus(200);
 		response.getWriter().write(json);
 		response.getWriter().flush();

@@ -53,7 +53,7 @@ public class MapsRequester {
 			System.out.println("Response parsing Google Maps API response: " + jse.getMessage());
 			return null;
 		}
-		if(spots == null) {
+		if(spots == null || spots.getResults().size() == 0) {
 			System.out.println("No Google Maps results found");
 			return null;
 		}
@@ -66,6 +66,8 @@ public class MapsRequester {
 		
 		// get the data types from the spots oject
 		// add the resulting spot to ourSpots
+		if(spots.getResults().size() == 0)
+		System.out.println("Google was unable to find spots");
 		for(Result result : spots.getResults()) {
 			remoteid = result.getId();
 			label = result.getName();
@@ -83,7 +85,9 @@ public class MapsRequester {
 		requestString += "radius=" + radius + "&";
 		requestString += "type=parking&";
 		requestString += "key=" + key;
+		System.out.println("Requesting Maps locations with: " + requestString);
 		String response = makeRequest(requestString);
+		System.out.println("Response from Google: " + response);
 		return parseResponse(response, 3);
 	}
 	
@@ -94,7 +98,6 @@ public class MapsRequester {
 		requestString += "key=" + key + "&";
 		requestString += "rankby=distance";
 		String response = makeRequest(requestString);
-		System.out.println("Response from google: " + response);
 		return parseResponse(response, -1);
 	}
 }

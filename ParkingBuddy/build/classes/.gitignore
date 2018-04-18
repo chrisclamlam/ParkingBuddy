@@ -1,5 +1,4 @@
 /database/
-/test/
-/server/
 /interpreter/
-/lyft and uber/
+/server/
+/test/

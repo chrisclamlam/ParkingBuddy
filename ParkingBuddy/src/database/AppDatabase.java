@@ -566,8 +566,8 @@ public class AppDatabase {
 				"			ASIN( \r\n" + 
 				"				 SQRT(\r\n" + 
 				"					 POW( SIN( RADIANS( '" + latitude + "' - latitude ) ) , 2 ) / 2 +\r\n" + 
+				"					 COS( RADIANS('" + latitude + "') ) *\r\n" + 
 				"					 COS( RADIANS( latitude ) ) *\r\n" + 
-				"					 COS( RADIANS( '" + latitude + "' ) ) *\r\n" + 
 				"					 POW( SIN( RADIANS( '" + longitude + "' - longitude) ) , 2 ) / 2\r\n" + 
 				"				 )\r\n" + 
 				"			 )\r\n" + 
@@ -578,26 +578,32 @@ public class AppDatabase {
 				"			ASIN( \r\n" + 
 				"				 SQRT(\r\n" + 
 				"					 POW( SIN( RADIANS( '" + latitude + "' - latitude ) ) , 2 ) / 2 +\r\n" + 
+				"					 COS( RADIANS('" + latitude + "') ) *\r\n" + 
 				"					 COS( RADIANS( latitude ) ) *\r\n" + 
-				"					 COS( RADIANS( '" + latitude + "' ) ) *\r\n" + 
-				"					 POW( SIN( RADIANS( '" + longitude + "' - longitude ) ) , 2 ) / 2\r\n" + 
+				"					 POW( SIN( RADIANS( '" + longitude + "' - longitude) ) , 2 ) / 2\r\n" + 
 				"				 )\r\n" + 
 				"			 )\r\n" + 
 				"			) < .25\r\n" + 
 				"		 ORDER BY distance\r\n" + 
 				"         LIMIT 0 , 20;";
+		System.out.println("Query: " + query);
 		// Search out database
 		spots = getParkingSpotsFromQuery(query);
 		// Search GoogleMaps for spots
 		mapsSpots = searchGoogleMaps(latitude, longitude);
-		if(mapsSpots == null) {
+		if(mapsSpots == null || mapsSpots.size() == 0) {
 			System.out.println("Google Maps returned no results");
 			return spots;
 		}
 		// Add the MapsSpot to the database if it doesn't already exist
+		if(spots == null) {
+			spots = new ArrayList<ParkingSpot>();
+		}
 		for(ParkingSpot spot : mapsSpots) {
 			insertSpot(spot);
+			spots.add(spot);
 		}
+		System.out.println("Spots from location search: " + spots);
 		// Run the query again to get the proper id's from the new spots
 		spots = getParkingSpotsFromQuery(query);
 		return spots;
