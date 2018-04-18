@@ -60,8 +60,8 @@ export default class App extends React.Component {
         // console.log("NAV: ", params.markers[0].coordinate);
         // console.log("marker: " + this.props.navigation);
 
-        console.log("Markers 1 longitude: " + params.markers[0].coordinate.longitude);
-        console.log("Markers 1 latitude: " + params.markers[0].coordinate.latitude);
+        // console.log("Markers 1 longitude: " + params.markers[0].coordinate.longitude);
+        // console.log("Markers 1 latitude: " + params.markers[0].coordinate.latitude);
         this.setState({
             markers: params.markers,
         });
@@ -72,9 +72,6 @@ export default class App extends React.Component {
     componentDidMount = () => {
         // We should detect when scrolling has stopped then animate
         // We should just debounce the event listener here
-
-        // Get current location
-        _getLocationAsync();
 
         this.animation.addListener(({ value }) => {
             let index = Math.floor(value / PARK_WIDTH + 0.3); // animate 30% away from landing on the next item

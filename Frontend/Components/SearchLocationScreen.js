@@ -49,6 +49,11 @@ export default class SearchLocationScreen extends React.Component {
         return jsonFormat;
     }
 
+    // Get actual spots to show on the map
+    getSpots = async () => {
+
+    }
+
     verifyInput = async () => {
         // Prepare user input to send to servlet
         const paramInput = '&location=' + this.state.location;
