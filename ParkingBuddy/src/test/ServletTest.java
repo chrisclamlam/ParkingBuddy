@@ -60,7 +60,7 @@ public class ServletTest {
 			URL url = new URL(host);
 			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 			conn.setRequestMethod("POST");
-			String body = "username=test0&passhash=" + "yeee0".hashCode();
+			String body = "username=test0&passhash=yeee0";
 			conn.setDoOutput(true);
 			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
 			out.writeBytes(body);
@@ -86,7 +86,7 @@ public class ServletTest {
 			URL url = new URL(loginEndpoint);
 			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 			conn.setRequestMethod("POST");
-			String body = "username=test0&passhash=" + "yeee0".hashCode();
+			String body = "username=test0&passhash=yeee0";
 			conn.setDoOutput(true);
 			// Send the data through an output stream
 			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
@@ -171,7 +171,7 @@ public class ServletTest {
 	public void testGetUserDetails() {
 		String loginEndpoint = "http://localhost:8080/ParkingBuddy/Login";
 		String detailsEndpoint = "http://localhost:8080/ParkingBuddy/GetUserDetails?username=test0";
-		String body = "username=test0&passhash=" + "yeee0".hashCode();
+		String body = "username=test0&passhash=yeee0";
 		try {
 			// Set up the Login POST request
 			URL url = new URL(loginEndpoint);

@@ -26,7 +26,7 @@ public class Login extends HttpServlet {
 		int password;
 		try {
 			username = request.getParameter("username");
-			password = Integer.parseInt(request.getParameter("passhash"));
+			password = request.getParameter("passhash").hashCode();
 		} catch (NullPointerException npe) {
 			System.out.println("Incorrectly formatted Login Request");
 			response.setStatus(400);
