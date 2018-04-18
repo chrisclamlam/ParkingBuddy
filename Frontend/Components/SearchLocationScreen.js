@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TextInput, Alert } from 'react-native'
 import { MapView } from 'expo';
 import { FormLabel, FormInput, Button } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
+import { StackNavigator } from 'react-navigation'
 
 
 export default class SearchLocationScreen extends React.Component {
@@ -10,6 +11,8 @@ export default class SearchLocationScreen extends React.Component {
         super(props);
         this.state = {
             location: '',
+            json: '',
+            foundLocation: [],
         }
     }
 
@@ -22,51 +25,107 @@ export default class SearchLocationScreen extends React.Component {
     // URL to call google api
     // https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
 
+    toProperJson = (params) => {
+        // console.log("params: " + params);
+        var jsonFormat = [];
+        var json = params;
+        // console.log("JSON array object: " + json);
+        for(var i = 0; i < json.length; i++){
+            // console.log("Array index " + i + " keys: " + Object.keys(json[i]));
+            var spot = {
+                id: json[i].id,
+                remoteId: json[i].remoteId,
+                spotType: json[i].spotType,
+                label: json[i].label,
+                coordinate: {
+                    latitude: json[i].latitude,
+                    longitude: json[i].longitude
+                }
+            };
+            // console.log("Keys for new spot: " + Object.keys(spot));
+            jsonFormat.push(spot);
+        }
+        // console.log("jsonFormat: ");
+
+        return jsonFormat;
+    }
+
+    // Get actual spots to show on the map
+    getSpots = async () => {
+        let params = "lat=" + this.state.foundLocation.coordinate.latitude +
+                     "&lng=" + this.state.foundLocation.coordinate.longitude
+        console.log("params getSpot: " + params);
+        try {
+            let response = await fetch(global.serverIP + 'SearchSpot?' + params, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                timeout: 10,
+                // body: coords
+            });
+            let responseJson = await response.json();
+
+            if (response.status == 200) { // Request is good and there are results
+                var json = this.toProperJson(responseJson);
+                console.log("JSON getSpot: " + json);
+
+                // Pass array from get spots into MapScreen
+                this.props.navigation.navigate('MapScreen', {
+                    markers: json
+                });
+
+            }
+            else { // No results
+                Alert.alert("Unable to find any location");
+
+            }
+        } catch(error){
+            console.error(error);
+        }
+    }
+
     verifyInput = async () => {
         // Prepare user input to send to servlet
         const paramInput = '&location=' + this.state.location;
-        var lat;
-        var lng;
+        var lat ;
+        var lng ;
+        var responseJson = "";
 
         // For testing only
 
-        this.props.navigation.navigate('MapScreen', {
-            markers: [
-                {
-                    coordinate: {
-                        latitude: 11,
-                        longitude: 12,
-                    },
-                    title: "test1",
-                    description: "test1",
-                    distance: 12,
-                    spotType: 2
-                },
-            ],
-        });
-
-        // Check to see if user entered an address or keyword
-        // if(this.state.location == ""){
-        //     Alert.alert("Invalid Location");
-        // }
+        // this.props.navigation.navigate('MapScreen', {
+        //     markers: [
+        //         {
+        //             coordinate: {
+        //                 latitude: 11,
+        //                 longitude: 12,
+        //             },
+        //             title: "test1",
+        //             description: "test1",
+        //             distance: 12,
+        //             spotType: 2
+        //         },
+        //     ],
+        // });
 
         var newLoc = this.state.location;
         for (var i = 0; i < newLoc.length; i++) {
             newLoc = newLoc.replace(" ", "+");
         }
 
+
         // Call google api to get coordinates
         try {
             let response = await fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + newLoc + '&key=' + 'AIzaSyBcRR3ARN-8LLMfbjt5dfMgZ6ERKkKEdxA');
             let responseJson = await response.json();
-            if (responseJson.status == ('OK')) {
+            if (responseJson.status == 'OK') {
                 lat = responseJson.results[0].geometry.location.lat;
                 lng = responseJson.results[0].geometry.location.lng;
-                lat = parseFloat(lat);
-                lng = parseFloat(lng);
             }
             else {
-                Alert.alert("Unable to search. Please try again.");
+                Alert.alert("Unable to search. Please try again. Response status: " + response.status);
 
                 return;
             }
@@ -76,8 +135,8 @@ export default class SearchLocationScreen extends React.Component {
 
         // Servlet request param
         var params = "lat=" + lat + "&lng=" + lng + '&keyword=' + newLoc;
-        // Now that we have long/lat send a request to our servlet
-        console.log("search url=" + global.serverIP + 'SearchLocation?' + params);
+        console.log("Params: " + params);
+        // // Now that we have long/lat send a request to our servlet
         try {
             let response = await fetch(global.serverIP + 'SearchLocation?' + params, {
                 method: 'GET',
@@ -88,41 +147,27 @@ export default class SearchLocationScreen extends React.Component {
                 timeout: 10,
                 // body: coords
             });
-
-
-            // console.log(response.body.)
             let responseJson = await response.json();
-            // let responseJson = await response.text();
-            console.log("response Json = " + responseJson)
-            // let responseJson = await response.body.jsonRes;
+            // console.log(response);
+            if (response.status == 200) { // Request is good and there are results
+                var json = this.toProperJson(responseJson);
 
+                // Set the foundLocation to the location that we got
+                // console.log("foundLocation: " + Object.keys(json[0]));
+                this.setState({
+                    foundLocation: json[0],
+                });
 
-
-            console.log(responseJson);
-
-        if (responseJson.status == 200) { // Request is good and there are results
-            this.props.navigation.push({
-                name: 'MapScreen',
-                passProps: {
-                    markers: response.responseText
-                }
-            });
-
-        }
+                // Call getSpots, which will call getSpots servlet, then push to MapScreen
+                this.getSpots();
+            }
             else { // No results
                 Alert.alert("Unable to find any location");
-                this.props.navigation.push({
-                    name: 'MapScreen',
-                    passProps: {
-                        markers: ""
-                    }
-                });
+
             }
         } catch(error){
             console.error(error);
         }
-        this.props.navigation.push('MapScreen');
-
         return;
     }
 

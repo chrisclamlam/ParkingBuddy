@@ -6,6 +6,9 @@ import java.util.ArrayList;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
+import interpreter.CostEstimate;
+import interpreter.Price;
+
 public class AppDatabase {
 	
 	// The only variables needed are the connection and statement
@@ -30,7 +33,7 @@ public class AppDatabase {
 	
 	private Connection getConnection() {
 		try {
-			return cpds.getConnection();
+			return (Connection) cpds.getConnection();
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return null;
@@ -39,7 +42,7 @@ public class AppDatabase {
 	
 	private Statement getStatement(Connection conn) {
 		try {
-			return conn.createStatement();
+			return (Statement) conn.createStatement();
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
 			return null;
@@ -52,7 +55,6 @@ public class AppDatabase {
 			if(conn != null) {
 				conn.close();
 			}
-			
 		}
 		catch (SQLException se) {
 			System.out.println("Error closing connection: " + se.getMessage());
@@ -85,69 +87,6 @@ public class AppDatabase {
 			System.out.println("Closing insert connection");
 			close(conn, st, null);
 		}
-	}
-	
-	private int insertCustomSpot(ParkingSpot ps) {
-		// Get a connection to the database
-		if(ps == null) return -1;
-		Connection conn = getConnection();
-		if(conn == null) return -1;
-		Statement st = getStatement(conn);
-		if(st == null) {
-			close(conn, null, null);
-			return -1;
-		}
-		
-		// Insert the spot
-		if(insertSpot(ps)) {
-			// Update the id and remoteid field after it is inserted
-			if(updateSpot(ps.getRemoteId())) {
-				System.out.println("Label of custom spot: " + ps.getLabel());
-				return getSpotId(ps.getLabel());
-			}else {
-				deleteSpot(ps.getRemoteId());
-				return -1;
-			}
-		}
-		return -1;
-	}
-
-	private boolean updateSpot(String remoteid) {
-		Connection conn = getConnection();
-		if(conn == null) return false;
-		Statement st = getStatement(conn);
-		if(st == null) {
-			close(conn, null, null);
-			return false;
-		}
-		
-		try {
-			st.executeUpdate("UPDATE ParkingSpots SET remoteid=id WHERE remoteid='" + remoteid + "'");
-		} catch (SQLException sqle) {
-			System.out.println(sqle);
-		} finally {
-			close(conn, st, null);
-		}
-		return true;
-	}
-	
-	private boolean deleteSpot(String remoteid) {
-		Connection conn = getConnection();
-		if(conn == null) return false;
-		Statement st = getStatement(conn);
-		if(st == null) {
-			close(conn, null, null);
-			return false;
-		}
-		try {
-			st.executeUpdate("DELETE FROM ParkingSpots WHERE remoteid = '" + remoteid + "'");
-			return true;
-		} catch (SQLException sqle) {
-			System.out.println(sqle);
-		} finally {
-			close(conn, st, null);
-		}
-		return false;
 	}
 	
 	private boolean insertSpot(ParkingSpot ps) {
@@ -366,10 +305,6 @@ public class AppDatabase {
 	public boolean addSpot(ParkingSpot ps) {
 		return insertSpot(ps);
 	}
-	
-	public int addCustomSpot(ParkingSpot ps) {
-		return insertCustomSpot(ps);
-	}
 
 	public User getUserById(int id) {
 		return getUserFromQuery("SELECT * FROM Users WHERE id = '" + id + "'");
@@ -377,6 +312,17 @@ public class AppDatabase {
 	
 	public User getUserByUsername(String username) {
 		return getUserFromQuery("SELECT * FROM users WHERE username = '" + username + "'");
+	}
+	
+	public ArrayList<User> getUserFriends(String username){	
+		// Query the database for the result set
+		int id = getUserId(username);
+		if(id == -1) return null;
+		return getUsersFromQuery("SELECT * FROM FriendsList WHERE firstid = '" + id + "' OR secondid = '" + id + "'");
+	}
+	
+	public ArrayList<ParkingSpot> getUserSpots(String username){
+		return getParkingSpotsFromQuery("SELECT * FROM FavoritesList WHERE firstid = '" + getUserId(username) + "'");
 	}
 	
 	public void delete(String username) {
@@ -432,7 +378,7 @@ public class AppDatabase {
 		System.out.println("About to login user");
 		ResultSet rs = null;
 		try {
-			rs = st.executeQuery("SELECT passhash FROM Users WHERE username = '" + username  + "'");
+			rs = st.executeQuery("SELECT passhash FROM Users WHERE username = '" + username + "'");
 			if(rs == null || !rs.next()) {
 				return false;
 			}
@@ -461,30 +407,15 @@ public class AppDatabase {
 	
 	
 	
-	public ArrayList<User> getUserFriends(String username){	
-		// Query the database for the result set
-		int id = getUserId(username);
-		if(id == -1) return null;
-		return getUsersFromQuery("SELECT * FROM FriendsList WHERE firstid = '" + id + "' OR secondid = '" + id + "'");
-	}
+	
 	
 	public ArrayList<User> searchUsersByName(String name){
 		// Query the database for the result set
 		return getUsersFromQuery("SELECT * FROM Users WHERE fname LIKE '" + name + "%' OR lname LIKE '" + name + "'");
 	}
 	
-	public ArrayList<User> searchUsersByUsername(String username){
-		return getUsersFromQuery("SELECT * FROM USERS WHERE username = '" + username + "'");
-	}
-	
 	public ArrayList<User> searchUsersByEmail(String email){
 		return getUsersFromQuery("SELECT * FROM USERS WHERE email = '" + email + "'");
-	}
-	
-	
-	
-	public ArrayList<ParkingSpot> getUserSpots(String username){
-		return getParkingSpotsFromQuery("SELECT * FROM FavoritesList WHERE firstid = '" + getUserId(username) + "'");
 	}
 	
 	public ParkingSpot getSpotById(int id) {
@@ -617,15 +548,6 @@ public class AppDatabase {
 		return ps.get(0);
 	}
 	
-	public int getSpotId(String label) {
-		System.out.println("Querying DB for spot with label: " + label);
-		ArrayList<ParkingSpot> spots = getParkingSpotsFromQuery("SELECT * FROM ParkingSpots WHERE label = '" + label + "'");
-		if(spots == null) {
-			return -1;
-		}
-		return spots.get(0).getId();
-	}
-	
 	public ArrayList<ParkingSpot> searchLocations(String name, double latitude, double longitude){
 		ArrayList<ParkingSpot> spots = MapsRequester.getLocations(name, latitude, longitude);
 		System.out.println("Locations:");
@@ -644,9 +566,9 @@ public class AppDatabase {
 				"			ASIN( \r\n" + 
 				"				 SQRT(\r\n" + 
 				"					 POW( SIN( RADIANS( '" + latitude + "' - latitude ) ) , 2 ) / 2 +\r\n" + 
+				"					 COS( RADIANS( latitude ) ) *\r\n" + 
 				"					 COS( RADIANS( '" + latitude + "' ) ) *\r\n" + 
-				"					 COS( RADIANS( '" + latitude + "' ) ) *\r\n" + 
-				"					 POW( SIN( RADIANS( -118.445892 - '" + longitude + "') ) , 2 ) / 2\r\n" + 
+				"					 POW( SIN( RADIANS( '" + longitude + "' - longitude) ) , 2 ) / 2\r\n" + 
 				"				 )\r\n" + 
 				"			 )\r\n" + 
 				"			)\r\n" + 
@@ -656,9 +578,9 @@ public class AppDatabase {
 				"			ASIN( \r\n" + 
 				"				 SQRT(\r\n" + 
 				"					 POW( SIN( RADIANS( '" + latitude + "' - latitude ) ) , 2 ) / 2 +\r\n" + 
-				"					 COS( RADIANS('" + latitude + "') ) *\r\n" + 
+				"					 COS( RADIANS( latitude ) ) *\r\n" + 
 				"					 COS( RADIANS( '" + latitude + "' ) ) *\r\n" + 
-				"					 POW( SIN( RADIANS( -118.445892 - '" + longitude + "') ) , 2 ) / 2\r\n" + 
+				"					 POW( SIN( RADIANS( '" + longitude + "' - longitude ) ) , 2 ) / 2\r\n" + 
 				"				 )\r\n" + 
 				"			 )\r\n" + 
 				"			) < .25\r\n" + 
@@ -666,26 +588,24 @@ public class AppDatabase {
 				"         LIMIT 0 , 20;";
 		// Search out database
 		spots = getParkingSpotsFromQuery(query);
-		if (spots == null) {
-			spots = new ArrayList<ParkingSpot>();
-		}
 		// Search GoogleMaps for spots
 		mapsSpots = searchGoogleMaps(latitude, longitude);
 		if(mapsSpots == null) {
 			System.out.println("Google Maps returned no results");
 			return spots;
 		}
+		// Add the MapsSpot to the database if it doesn't already exist
 		for(ParkingSpot spot : mapsSpots) {
-			// Add the MapsSpot to the database if it doesn't already exist
 			insertSpot(spot);
-			spots.add(spot);
 		}
+		// Run the query again to get the proper id's from the new spots
+		spots = getParkingSpotsFromQuery(query);
 		return spots;
 	}
 	
-	public boolean addFavoriteParking(int uid, int sid)
+	public boolean addFavoriteParking(String username, String parkingname)
 	{
-		if(uid == -1 || sid == -1) return false;
+		if(username == null || parkingname == null) return false;
 		Connection conn = getConnection();
 		if(conn == null) return false;
 		Statement st = getStatement(conn);
@@ -694,9 +614,11 @@ public class AppDatabase {
 			return false;
 		}
 		try {
-			st.executeUpdate("INSERT INTO FavoritesList (userid, spotid) VALUES ("
-					+ "'" + uid + "',"
-					+ "'" + sid + "')" );
+			int firstid =  getUserByUsername(username).getId();
+			ParkingSpot spot = getSpotByName(parkingname); 
+			st.executeUpdate("INSERT INTO FavoritesList (userid, parkingspots) VALUES ("
+					+ "'" + firstid + "',"
+					+ "'" + spot + "')" );
 			return true;
 		} catch (SQLException sqle) {
 			System.out.println(sqle.getMessage());
@@ -704,5 +626,57 @@ public class AppDatabase {
 		} finally {
 			close(conn, st, null);
 		}
+	}
+	public String uberPrice(double start_lat, double start_long, double end_lat, double end_long)
+	{
+		UberLyftRequester request = new UberLyftRequester();
+		ArrayList<Price> uber = request.getUberPrice(start_lat, start_long, end_lat, end_long);
+		for(int i=0; i< uber.size() ;i++)
+		{
+			String estimate = null;
+			if(uber.get(i).getLocalizedDisplayName().equals("uberX"))
+			{
+				//System.out.println("test "+ uber.get(i).getEstimate());
+				double min = (double) uber.get(i).getHighEstimate();
+				double max = (double) uber.get(i).getLowEstimate();
+				if(min == max)
+				{
+					estimate = "$" +Double.toString(min);
+					System.out.println(estimate);
+				}else {
+					estimate = "$" +Double.toString(min) + "-"+ Double.toString(max);
+				}
+				
+				return estimate;
+			}
+		}
+		return null;//can't find value
+	}
+	public String lyftPrice(double start_lat, double start_long, double end_lat, double end_long)
+	{
+		UberLyftRequester request = new UberLyftRequester();
+		ArrayList<CostEstimate> lyft = request.getLyftPrice(start_lat, start_long, end_lat, end_long);
+		String estimate =null;
+		for(int i=0; i< lyft.size() ;i++)
+		{
+//			System.out.println(test.get(i).getLocalizedDisplayName());
+			if(lyft.get(i).getRideType().equals("lyft"))
+			{
+				//System.out.println("test "+ lyft.get(i).getEstimate());
+				double max = lyft.get(i).getEstimatedCostCentsMax()/100;
+				double min = lyft.get(i).getEstimatedCostCentsMin()/100;
+				if(max == min)
+				{
+					estimate = "$"+Double.toString(max);
+				}
+				else
+				{
+					estimate = "$" +Double.toString(min) + " "+ Double.toString(max);
+				}
+				
+				return estimate;
+			}
+		}
+		return null;//can't find value
 	}
 }

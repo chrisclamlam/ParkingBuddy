@@ -92,13 +92,9 @@ public class MapsRequester {
 		requestString += "location=" + latitude + "," + longitude + "&";
 		requestString += "keyword=" + name + "&";
 		requestString += "key=" + key + "&";
-		requestString += "radius=50000";
+		requestString += "rankby=distance";
 		String response = makeRequest(requestString);
 		System.out.println("Response from google: " + response);
 		return parseResponse(response, -1);
-	}
-	
-	public static void main(String[] args) {
-		ArrayList<ParkingSpot> spots = getNearbyParking(34.060677, -118.445892, 400);
 	}
 }

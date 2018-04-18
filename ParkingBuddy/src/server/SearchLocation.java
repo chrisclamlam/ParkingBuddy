@@ -3,8 +3,8 @@ package server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,27 +34,52 @@ public class SearchLocation extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("Hit location endpoint");
+		// Get the db manager
 		AppDatabase db = (AppDatabase) getServletContext().getAttribute("db");
 		// Get the name and coordinates from the request
 		String keyword = request.getParameter("keyword");
 		String latS = request.getParameter("lat");
 		String lngS = request.getParameter("lng");
-		System.out.println("Keyword: " + keyword);
+		System.out.println("k: " + keyword);
 		System.out.println("lat: " + latS);
 		System.out.println("lng: " + lngS);
+		// Check to see all params were sent
 		if(keyword == null || latS == null || lngS == null) {
+			System.out.println("One or more params not sent to Location endpoint");
+			response.setStatus(400);
+			return;
+		}
+		// Check to be sure they were sent properly by the client
+		if(keyword.equals("undefined") || latS.equals("undefined") || lngS.equals("undefined")) {
+			System.out.println("One or more params sent incorrectly by the client to the SearchLocation endpoint");
 			response.setStatus(400);
 			return;
 		}
 		// Query the location on the backend
-		ArrayList<ParkingSpot> spots = db.searchLocations(keyword, Double.parseDouble(latS), Double.parseDouble(lngS));
+		ArrayList<ParkingSpot> spots = null;
+		try {
+			spots = db.searchLocations(keyword, Double.parseDouble(latS), Double.parseDouble(lngS));
+		} catch (NumberFormatException nfe) {
+			System.out.println("Exception throw while parsing Location endpoint fields: " + nfe.getMessage());
+		}
 		// ArrayList<ParkingSpot> -> JSON
 		Gson gson = new Gson();
-		String jsonResponse = gson.toJson(spots);
-		System.out.println("Location endpoint response: " + spots);
+		String jsonResponse = "[";
+		
 		// Write the response
 		try {
+			// Iterate through the parking spots, marshall to json
+			Iterator<ParkingSpot> it = spots.iterator();
+			while(it.hasNext()) {
+				ParkingSpot spot = (ParkingSpot)it.next();
+				jsonResponse += gson.toJson(spot);
+				// Add a comma after every element in the list, except the last one
+				if(it.hasNext()) {
+					jsonResponse += ",";
+				}	
+			}
+			// Close the json array
+			jsonResponse += "]";
 			PrintWriter pw = response.getWriter();
 			response.setStatus(200);
 			pw.write(jsonResponse);

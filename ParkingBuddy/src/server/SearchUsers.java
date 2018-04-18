@@ -30,11 +30,11 @@ public class SearchUsers extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String searchValue = request.getParameter("searchingUser");
+		String username = request.getParameter("username");
 		AppDatabase database = new AppDatabase("jdbc:mysql://localhost/test?user=root&password=OwrzTest");
 		String pageToForward = "nextpage.js";
 		PrintWriter out = response.getWriter();
-		ArrayList<User> myResults = database.searchUsersByUsername(searchValue);
+		User myResults = database.getUserByUsername(username);
 		if(myResults!= null)  
 		{
 			//if there is a user with this username return the list of users
@@ -43,7 +43,6 @@ public class SearchUsers extends HttpServlet {
 			response.setStatus(200);
 		}
 		response.setStatus(400);
-//		response.sendRedirect(pageToForward);
 	}
 
 

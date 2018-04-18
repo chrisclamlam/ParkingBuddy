@@ -18,4 +18,9 @@ public class MakeJson {
 		return gson.toJson(myArray);
 		
 	}
+	
+	public String makeJsonString(User u) {
+		Gson gson = new Gson();
+		return gson.toJson(u);
+	}
 }

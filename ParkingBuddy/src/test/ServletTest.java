@@ -4,18 +4,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import org.junit.Test;
 
 import database.AppDatabase;
 
 public class ServletTest {
-
+	
 	@Test
 	public void testRegisterUser() {
 		
@@ -162,5 +165,38 @@ public class ServletTest {
 	@Test
 	public void testAddCustomSpot() {
 		String customSpotEndpoint = "http://localhost:8080/ParkingBuddy/SearchLocation?keyword=USC&lat=34.060677&lng=-118.445892";
+	}
+	
+	@Test
+	public void testGetUserDetails() {
+		String loginEndpoint = "http://localhost:8080/ParkingBuddy/Login";
+		String detailsEndpoint = "http://localhost:8080/ParkingBuddy/GetUserDetails?username=test0";
+		String body = "username=test0&passhash=" + "yeee0".hashCode();
+		try {
+			// Set up the Login POST request
+			URL url = new URL(loginEndpoint);
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setDoOutput(true);
+			// Send it
+			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+			out.writeBytes(body);
+			out.flush();
+			out.close();
+			assertEquals(200, conn.getResponseCode());
+			// Get the "Set-Cookie" header and use it as a token in the next request
+			String token = conn.getHeaderField("Set-Cookie");
+			// Set up the Details GET Request
+			url = new URL(detailsEndpoint);
+			conn = (HttpURLConnection)url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.addRequestProperty("Token", token);
+			conn.setDoOutput(true);
+			assertEquals(200, conn.getResponseCode());
+		} catch (MalformedURLException mue) {
+			System.out.println(mue.getMessage());
+		} catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
+		}
 	}
 }

@@ -12,14 +12,13 @@ export default class ProfileScreen extends React.Component {
   }
 
   onPressBookmarks() {
-    fetch(serverIP + '/SearchUsers', {
-      method: 'POST',
+    fetch(serverIP + '/GetUserDetails?user=' + global.username, {
+      method: 'GET',
       headers: {
         'Token': global.authKey,
         'Accept': 'application/x-www-form-urlencoded',
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: 'searchingUser:ChrisLam'
     })
       .then(function (response) {
         // Handle HTTP response
@@ -28,7 +27,6 @@ export default class ProfileScreen extends React.Component {
           console.log("responseboyd fdsfds ")
         }
         else {
-          global.username = "Guest";
           return;
         }
       })
