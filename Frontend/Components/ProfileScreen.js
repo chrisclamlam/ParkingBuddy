@@ -12,7 +12,7 @@ export default class ProfileScreen extends React.Component {
   }
 
   onPressBookmarks() {
-    fetch(serverIP + '/GetUserDetails?user=ChrisLam', {
+    fetch(serverIP + '/GetUserDetails?user=' + global.username, {
       method: 'GET',
       headers: {
         'Token': global.authKey,
@@ -27,7 +27,6 @@ export default class ProfileScreen extends React.Component {
           console.log("responseboyd fdsfds ")
         }
         else {
-          global.username = "Guest";
           return;
         }
       })
