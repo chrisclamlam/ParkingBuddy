@@ -55,7 +55,7 @@ export default class App extends React.Component {
     componentWillMount = () => {
         this._getLocationAsync();
 
-        console.log("MapScreen load: if not null, markers will be displayed in console");
+        // console.log("MapScreen load: if not null, markers will be displayed in console");
         // console.lot("Navigation props: " + this.props.navigation.state);
         // if(this.props.navigation.state.params.json != null){
         //     console.log("Markers: " + this.props.navigation.state.params.json);
@@ -120,7 +120,7 @@ export default class App extends React.Component {
 
 
         let location = await Location.getCurrentPositionAsync({});
-        console.log(location);
+        // console.log(location);
         this.setState({
             initregion: {
                 latitude: location.coords.latitude,
