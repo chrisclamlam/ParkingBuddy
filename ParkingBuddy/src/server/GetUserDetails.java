@@ -2,6 +2,8 @@ package server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 import database.AppDatabase;
+import database.ParkingSpot;
 import database.User;
 
 /**
@@ -19,10 +22,39 @@ import database.User;
 public class GetUserDetails extends MiddlewareServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private String makeUserJson(User u) {
+	private String userToJson(User u) {
 		Gson gson = new Gson();
 		String json = gson.toJson(u);
-		System.out.println("User details: " + json);
+		return json;
+	}
+	
+	private String spotsToJson(ArrayList<ParkingSpot> spots) {
+		String json = "[";
+		Gson gson = new Gson();
+		Iterator<ParkingSpot> it = spots.iterator();
+		while(it.hasNext()) {
+			ParkingSpot spot = (ParkingSpot)it.next();
+			json += gson.toJson(spot);
+			if(it.hasNext()) {
+				json += ",";
+			}
+		}
+		json += "]";
+		return json;
+	}
+	
+	private String friendsToJson(ArrayList<String> friends) {
+		String json = "[";
+		Gson gson = new Gson();
+		Iterator<String> it = friends.iterator();
+		while(it.hasNext()) {
+			String username = (String)it.next();
+			json += gson.toJson(username);
+			if(it.hasNext()) {
+				json += ",";
+			}
+		}
+		json += "]";
 		return json;
 	}
     
@@ -44,10 +76,16 @@ public class GetUserDetails extends MiddlewareServlet {
 			System.out.println("Error getting details for user: " + username + ". User doesn't exist.");
 			return;
 		}
-		u.setFavoriteSpots(db.getUserSpots(username));
-		u.setFriends(db.getUserFriends(username));
+
 		// Write the json to the response DataOutputStream
-		String json = makeUserJson(u);
+		String userJson = userToJson(u);
+		String spotsJson = spotsToJson(db.getUserSpots(u.getId()));
+		String friendsJson = friendsToJson(db.getUserFriends(u.getId()));
+		System.out.println("User json: " + userJson);
+		System.out.println("Spots json: " + spotsJson);
+		System.out.println("Friends json: " + friendsJson);
+		String json = "{\"user\":" + userJson + ",\"spots\":" + spotsJson + ",\"friends\":" + friendsJson + "}";
+		System.out.println("Final json: " + json);
 		try {
 			PrintWriter pw = response.getWriter();
 			pw.write(json);

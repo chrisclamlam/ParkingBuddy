@@ -148,21 +148,21 @@ export default class SearchLocationScreen extends React.Component {
                 <View style={{ marginTop:'50%'}}>
                     <Text style={styles.title} > Search </Text>
 
-                <FormLabel>Location</FormLabel>
-                <FormInput onChangeText={(text) => (this.setState({ location: text }))} />
+                    <FormLabel>Location</FormLabel>
+                    <FormInput onChangeText={(text) => (this.setState({ location: text }))} />
 
-                <View style={{ height: 80 }} />
-                <Button
-                    buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', width: '100%' }}
-                    onPress={() => this.verifyInput(this)} title="Search" />
+                    <View style={{ height: 80 }} />
+                    <Button
+                        buttonStyle={{ borderRadius: 10, backgroundColor: '#f8971d', width: '100%' }}
+                        onPress={() => this.verifyInput(this)} title="Search" />
 
-                {/* // <Button */}
-                {/* //     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }} */}
-                {/* //     textStyle={{ color: 'gray' }} */}
-                {/* //     fontSize={15} */}
-                {/* //     color='black' */}
-                {/* //     onPress={() => this.props.navigation.pop()} title="Back to Login" /> */}
-                    </View>
+                    {/* // <Button */}
+                    {/* //     buttonStyle={{ borderRadius: 10, backgroundColor: 'transparent' }} */}
+                    {/* //     textStyle={{ color: 'gray' }} */}
+                    {/* //     fontSize={15} */}
+                    {/* //     color='black' */}
+                    {/* //     onPress={() => this.props.navigation.pop()} title="Back to Login" /> */}
+                </View>
             </View >
         );
     }

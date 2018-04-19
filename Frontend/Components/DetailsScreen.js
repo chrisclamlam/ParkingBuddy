@@ -1,28 +1,36 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Image, Alert, ScrollView, } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, Alert, ScrollView,  FlatList,} from 'react-native';
 import { MapView } from 'expo';
-import { FormLabel, FormInput, Button, List, ListItem,  } from 'react-native-elements'
-import { StackNavigator } from 'react-navigation'
-
-
+import { FormLabel, FormInput, Button, List, ListItem,  } from 'react-native-elements';
 export default class ProfileScreen extends React.Component {
     constructor(props) {
         super(props)
 
         // Variables for current page
         this.state = {
-            currLocation: null,
-            markerLocation: null,
-            lyftUberComp: null,
+            currLocation: {},
+            markerLocation: {},
+            lyftUberComp: {},
+            spots: [],
+            isLoad: false,
         }
     }
+    /*
+    Parking spots json:
+     [{"id":1283,"remoteId":"3df956c8d01360c3aac0359146b8a230a6462076","spotType":3,"label":"Parking Lot M","latitude":-118.284729,"longitude":34.023689},{"id":1256,"remoteId":"3df956c8d01360c3aac0359146b8a230a6462076","spotType":3,"label":"Parking Lot M","latitude":-118.284729,"longitude":34.023689},{"id":1266,"remoteId":"3df956c8d01360c3aac0359146b8a230a6462076","spotType":3,"label":"Parking Lot M","latitude":-118.284729,"longitude":34.023689},{"id":1296,"remoteId":"3df956c8d01360c3aac0359146b8a230a6462076","spotType":3,"label":"Parking Lot M","latitude":-118.284729,"longitude":34.023689},{"id":1306,"remoteId":"3df956c8d01360c3aac0359146b8a230a6462076","spotType":3,"label":"Parking Lot M","latitude":-118.284729,"longitude":34.023689},{"id":1276,"remoteId":"3df956c8d01360c3aac0359146b8a230a6462076","spotType":3,"label":"Parking Lot M","latitude":-118.284729,"longitude":34.023689},{"id":1290,"remoteId":"e97dc0ef6bc39699eb3a6cb5838d74642d03497c","spotType":3,"label":"Parking Lot 23","latitude":-118.284378,"longitude":34.023621},{"id":1300,"remoteId":"e97dc0ef6bc39699eb3a6cb5838d74642d03497c","spotType":3,"label":"Parking Lot 23","latitude":-118.284378,"longitude":34.023621},{"id":1250,"remoteId":"e97dc0ef6bc39699eb3a6cb5838d74642d03497c","spotType":3,"label":"Parking Lot 23","latitude":-118.284378,"longitude":34.023621},{"id":1260,"remoteId":"e97dc0ef6bc39699eb3a6cb5838d74642d03497c","spotType":3,"label":"Parking Lot 23","latitude":-118.284378,"longitude":34.023621},{"id":1282,"remoteId":"e97dc0ef6bc39699eb3a6cb5838d74642d03497c","spotType":3,"label":"Parking Lot 23","latitude":-118.284378,"longitude":34.023621},{"id":1270,"remoteId":"e97dc0ef6bc39699eb3a6cb5838d74642d03497c","spotType":3,"label":"Parking Lot 23","latitude":-118.284378,"longitude":34.023621},{"id":1310,"remoteId":"e97dc0ef6bc39699eb3a6cb5838d74642d03497c","spotType":3,"label":"Parking Lot 23","latitude":-118.284378,"longitude":34.023621},{"id":1247,"remoteId":"d614b85c8b2e4201f17c0313a07a48a38c5253b5","spotType":3,"label":"Parking Lot M","latitude":-118.285065,"longitude":34.023773},{"id":1257,"remoteId":"d614b85c8b2e4201f17c0313a07a48a38c5253b5","spotType":3,"label":"Parking Lot M","latitude":-118.285065,"longitude":34.023773},{"id":1285,"remoteId":"d614b85c8b2e4201f17c0313a07a48a38c5253b5","spotType":3,"label":"Parking Lot M","latitude":-118.285065,"longitude":34.023773},{"id":1307,"remoteId":"d614b85c8b2e4201f17c0313a07a48a38c5253b5","spotType":3,"label":"Parking Lot M","latitude":-118.285065,"longitude":34.023773},{"id":1267,"remoteId":"d614b85c8b2e4201f17c0313a07a48a38c5253b5","spotType":3,"label":"Parking Lot M","latitude":-118.285065,"longitude":34.023773},{"id":1277,"remoteId":"d614b85c8b2e4201f17c0313a07a48a38c5253b5","spotType":3,"label":"Parking Lot M","latitude":-118.285065,"longitude":34.023773}]
+
+     */
+
 
 
     // Get actual spots to show on the map
     getSpots = async () => {
-        let params = "lat=" + this.state.foundLocation.coordinate.latitude +
-            "&lng=" + this.state.foundLocation.coordinate.longitude
-        // console.log("params getSpot: " + params);
+        console.log("GetSpots markerLocation: " + JSON.stringify(this.state.markerLocation));
+
+        let params = "lat=" + this.state.markerLocation.coordinate.latitude +
+            "&lng=" + this.state.markerLocation.coordinate.longitude
+        console.log("params getSpot: " + params);
+        var json = null;
         try {
             let response = await fetch(global.serverIP + 'SearchSpot?' + params, {
                 method: 'GET',
@@ -30,26 +38,26 @@ export default class ProfileScreen extends React.Component {
                     'Accept': 'application/x-www-form-urlencoded',
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                timeout: 10,
                 // body: coords
             });
+            /*.then((respons) => response.json())
+                          .then((responseJson) => {
+                            console.log(responseJson);
+                            console.log("Spots: " + responseJson);
+                            this.setState ({
+                                spots: responseJson,
+                            })
+                          })
+                          .catch((error) => {
+                            throw error;
+                          }); */
             let responseJson = await response.json();
-
-            if (response.status == 200) { // Request is good and there are results
-                var json = this.toProperJson(responseJson);
-                console.log("JSON getSpot: " + json);
-
-                // Pass array from get spots into MapScreen
-                this.props.navigation.navigate('MapScreen', {
-                    markers: json
-                });
-
-            }
-            else { // No results
-                Alert.alert("Unable to find any location");
-
-            }
-        } catch(error){
+            this.setState({
+                spots: responseJson,
+                isLoad: true,
+            })
+            console.log("ResponseJson getSpots: " + JSON.stringify(this.state.spots));
+        } catch (error) {
             console.error(error);
         }
     }
@@ -57,11 +65,11 @@ export default class ProfileScreen extends React.Component {
 
     // Get price comparison between lyft and uber
     getPriceCompare = async () => {
-        let params = "start_lat=" + this.state.currLocation.coords.latitude + "&start_long=" +
-            this.state.currLocation.coords.latitude  + "&end_lat=" +
-        this.state.markerLocation.latitude + "&end_long=" + this.state.markerLocation.longitude;
+        let params = "start_lat=" + this.state.currLocation.latitude + "&start_long=" +
+            this.state.currLocation.latitude  + "&end_lat=" +
+            this.state.markerLocation.latitude + "&end_long=" + this.state.markerLocation.longitude;
 
-        console.log("params getSpot: " + Object.keys(params));
+        console.log("state vars: " + this.state);
         try {
             let response = await fetch(global.serverIP + 'CompareLyftandUber?' + params, {
                 method: 'GET',
@@ -154,13 +162,14 @@ export default class ProfileScreen extends React.Component {
     //     }
     // }
 
-    // To set up props when page loads
-    componentWillMount = () => {
+    componentDidMount = () => {
+        this.getSpots();
+    }
 
+    // To set up props when page loads
+    componentWillMount = (props) => {
         const {params} = this.props.navigation.state;
-        this.getPriceCompare();
-        // See if params are being sent
-        console.log("params: " + JSON.stringify(params.initRegion));
+        // See if params are being sent -> yes
         /* Format of params.markerCoord:
         {"id":-1,
         "remoteId":" ....,
@@ -171,58 +180,48 @@ export default class ProfileScreen extends React.Component {
             "longitude":....}
         }
 
+        Format of params.initRegion
+        {"latitude":37.4219983,
+         "longitude":-122.084,
+         "latitudeDelta":0.092,
+         "longitudeDelta":0.0221}
         */
-        // console.out("MarkerLocation: " + params.markerCoord);
 
         // Set state variables to params that were sent
+        console.log("makerLocation: " + JSON.stringify(params.markerCoord));
         this.setState({
             currLocation: params.initRegion,
             markerLocation: params.markerCoord,
         });
-        console.log("markerLoc: " + params.markerCoord);
+        // this.getPriceCompare();
+        // console.log("makerLocation: " + this.state.markerLocation);
+    }
+    componentDidMount = (props) => {
+        this.getSpots();
     }
 
-
-        render() {
+    render() {
         return (
             <View style={styles.container}>
-                <Text onPress= {() => this.props.navigation.pop()}> back </Text>
+                <Text style={styles.button} onPress= {() => this.props.navigation.pop()}> Back </Text>
 
-                <Text> Details Screen </Text>
+                <Text style={styles.title}
+                > Details Screen </Text>
 
                 { /* Scrollview for details */ }
-                <ScrollView>
-                    <View>
-                        { /* View for General Information
-                             - Average rating of location
-                             - Comments for the location
-                             - Available or historic price for location
-                             - Option to start GPS towards location
-                        */}
-                        <FormLabel>Name:</FormLabel>
-                        <View></View>
-                        <FormLabel>Average Rating</FormLabel>
-                        <View></View>
-                        <FormLabel>Historic Price</FormLabel>
-                        <View></View>
-                        <FormLabel>GPS</FormLabel>
+                <FormLabel style="color: '#f8971d',"
+                >Location Name</FormLabel>
+                {/*<Text>{this.markerLocation.label}</Text>*/}
 
-                    </View>
+                <FormLabel style="color: '#f8971d',">Parking Spots</FormLabel>
+                <List >
+                    <FlatList
+                        data={this.state.spots}
+                        renderItem={({item}) => <Text style="leftMargin: 10," >Name: {item.label}</Text>}
+                    />
+                </List>
 
-                    <View >
-                        { /* Options for logged in users
-                            - Add parking structure to favorites list
-                            - Compare cost of driving to cost of ride sharing services
-                            - Rate or comment on location
-                            - Report current price of the parking structure
-                         */}
-                    </View>
-
-                    <View>
-                        { /* View for Comments on location */}
-                    </View>
-
-                </ScrollView>
+                {/*<Text> {JSON.stringify(this.state.spots)} </Text>*/}
             </View >
         );
     }
@@ -231,8 +230,22 @@ export default class ProfileScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#fff',
         // alignItems: 'center',
         justifyContent: 'center',
     },
+    title: {
+        fontSize: 35,
+        marginLeft: 10,
+        marginBottom: 30,
+        fontWeight: 'bold',
+        color: '#f8971d'
+    },
+    button: {
+        fontSize: 15,
+        marginLeft: 10,
+        marginBottom: 30,
+        fontWeight: 'bold',
+        color: '#f8971d'
+    }
 });
