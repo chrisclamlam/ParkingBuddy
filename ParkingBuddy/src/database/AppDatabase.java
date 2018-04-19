@@ -550,9 +550,9 @@ public class AppDatabase {
 	
 	public ArrayList<ParkingSpot> searchLocations(String name, double latitude, double longitude){
 		ArrayList<ParkingSpot> spots = MapsRequester.getLocations(name, latitude, longitude);
-		System.out.println("Locations:");
-		for(ParkingSpot spot : spots) {
-			System.out.println(spot.getLabel());
+		if(spots == null) {
+			System.out.println("No locations found from " + name);
+			return spots;
 		}
 		return spots;
 	}
@@ -562,7 +562,7 @@ public class AppDatabase {
 		// Check to see if the distance is within a quarter mile
 		// return good results
 		ArrayList<ParkingSpot> spots, mapsSpots;
-		String query = "SELECT * , ( 3959 * 2 * \r\n" + 
+		/*String query = "SELECT * , ( 3959 * 2 * \r\n" + 
 				"			ASIN( \r\n" + 
 				"				 SQRT(\r\n" + 
 				"					 POW( SIN( RADIANS( '" + latitude + "' - latitude ) ) , 2 ) / 2 +\r\n" + 
@@ -585,10 +585,16 @@ public class AppDatabase {
 				"			 )\r\n" + 
 				"			) < .25\r\n" + 
 				"		 ORDER BY distance\r\n" + 
-				"         LIMIT 0 , 20;";
+				"         LIMIT 0 , 20;";*/
+		String query = "SELECT *, (3959 * 2 * ASIN(SQRT( POW( SIN( RADIANS('" + latitude + "' - latitude) ), 2) / 2 + COS( RADIANS('" + latitude + "') ) * COS( RADIANS( latitude ) ) * POW( SIN( RADIANS('" + longitude + "' - longitude) ) , 2 ) / 2) )) AS distance FROM ParkingSpots WHERE (3959 * 2 * ASIN(SQRT( POW( SIN( RADIANS('" + latitude + "' - latitude) ), 2) / 2 + COS( RADIANS('" + latitude + "') ) * COS( RADIANS( '" + latitude + "' ) ) * POW( SIN( RADIANS('" + longitude + "'- longitude) ) , 2 ) / 2) ))  < .25 ORDER BY distance LIMIT 0,20";
 		System.out.println("Query: " + query);
 		// Search out database
 		spots = getParkingSpotsFromQuery(query);
+		if(spots == null) {
+			System.out.println("Database didn't return any spot results");
+			spots = new ArrayList<ParkingSpot>();
+		}
+		System.out.println("Database returned " + spots.size() + " spots");
 		// Search GoogleMaps for spots
 		mapsSpots = searchGoogleMaps(latitude, longitude);
 		if(mapsSpots == null || mapsSpots.size() == 0) {
@@ -596,14 +602,15 @@ public class AppDatabase {
 			return spots;
 		}
 		// Add the MapsSpot to the database if it doesn't already exist
-		if(spots == null) {
-			spots = new ArrayList<ParkingSpot>();
-		}
+		
 		for(ParkingSpot spot : mapsSpots) {
 			insertSpot(spot);
 			spots.add(spot);
 		}
-		System.out.println("Spots from location search: " + spots);
+		System.out.println("Spots from location search: ");
+		for(ParkingSpot spot : spots) {
+			System.out.println(spot.getLabel());
+		}
 		// Run the query again to get the proper id's from the new spots
 		spots = getParkingSpotsFromQuery(query);
 		return spots;

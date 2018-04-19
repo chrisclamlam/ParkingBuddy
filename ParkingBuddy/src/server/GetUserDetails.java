@@ -1,5 +1,8 @@
 package server;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,5 +48,14 @@ public class GetUserDetails extends MiddlewareServlet {
 		u.setFriends(db.getUserFriends(username));
 		// Write the json to the response DataOutputStream
 		String json = makeUserJson(u);
+		try {
+			PrintWriter pw = response.getWriter();
+			pw.write(json);
+			pw.flush();
+			pw.close();
+		} catch (IOException ioe) {
+			System.out.println("Error writing user details response to client: " + ioe.getMessage());
+		}
+		
 	}
 }

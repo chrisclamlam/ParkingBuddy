@@ -46,6 +46,8 @@ public class Login extends HttpServlet {
 			response.setHeader("Set-Cookie", token);
 			response.setStatus(200);
 			return;
+		} else {
+			System.out.println("Unsuccessful login for user: " + username);
 		}
 		response.setStatus(400);
 	}
