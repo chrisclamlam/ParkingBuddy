@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, ScrollView } from 'react-native';
 import { MapView, Font, AppLoading } from 'expo';
 import { FormLabel, FormInput, Button, List, ListItem } from 'react-native-elements'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -14,6 +14,8 @@ export default class ProfileScreen extends React.Component {
       email: "",
       fname: "",
       lname: "",
+      friends: [],
+      spots: []
     }
 
   }
@@ -32,14 +34,17 @@ export default class ProfileScreen extends React.Component {
         // body: coords
       });
 
-
+      // console.log("response=   "+  response);
       let responseJson = await response.json();
 
       if (response.status == 200) { // Request is good and there are results
         console.log(responseJson);
 
-        this.setState({ username: responseJson.username, email: responseJson.email, fname: responseJson.fname, lname: responseJson.lname });
-
+        this.setState({
+          username: responseJson.user.username, email: responseJson.user.email, fname: responseJson.user.fname, lname: responseJson.user.lname,
+          friends: responseJson.friends, spots: responseJson.spots
+        });
+        console.log("username = " + this.state.spots)
 
       }
       else { // No results
@@ -104,7 +109,8 @@ export default class ProfileScreen extends React.Component {
 
         {/* <Text onPress= {() => this.props.navigation.pop()}> back to Search</Text> */}
         <Text style={styles.title}  > Hello  {this.state.username} </Text>
-        {button}
+        {/* {button} */}
+        <ScrollView>
         <FormLabel labelStyle={{ color: '#f8971d' }}>First Name</FormLabel>
         <FormInput value={this.state.fname} />
         <FormLabel labelStyle={{ color: '#f8971d' }}>Last Name</FormLabel>
@@ -112,8 +118,41 @@ export default class ProfileScreen extends React.Component {
         <FormLabel labelStyle={{ color: '#f8971d' }}>Email</FormLabel>
         <FormInput value={this.state.email} />
 
+        <FormLabel labelStyle={{ color: '#f8971d' }}>Friends</FormLabel>
+        {console.disableYellowBox = true}
+        {this.state.friends.map((friend) => {
+          //  var myfriend = this.state.friends;
+          return (
+
+            <FormInput value={friend} />
+          );
+        })}
+
+          <FormLabel labelStyle={{ color: '#f8971d' }}>Spots</FormLabel>
+          {this.state.spots.map((spots) => {
+            //  var myfriend = this.state.friends;
+            var region = {longitude: spots.longitude,
+              latitude:spots.latitude,
+              latitudeDelta: 0.072,
+              longitudeDelta: 0.0221,
+            }
+            return (
+              <View>
+              <FormInput value={spots.label} />
+              <MapView 
+              initialRegion={region}
+              style={{ height:300}}
+              
+
+              />
+              </View>
+            );
+          })}
+
+          <View style={{height: 200}}/>
 
 
+</ScrollView>
 
       </View>
 
