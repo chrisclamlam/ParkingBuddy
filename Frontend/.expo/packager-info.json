@@ -1,8 +1,8 @@
 {
   "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 876,
+  "packagerPort": 19003,
+  "packagerPid": 11355,
   "expoServerNgrokUrl": "https://3w-cxj.chrisclamlam.frontend.exp.direct",
   "packagerNgrokUrl": "https://packager.3w-cxj.chrisclamlam.frontend.exp.direct",
-  "ngrokPid": 906
+  "ngrokPid": 11366
 }
