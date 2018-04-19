@@ -79,7 +79,7 @@ export default class ProfileScreen extends React.Component {
   }
 
 
-  componentWillMount() {
+  componentDidMount() {
     this.onPressBookmarks();
 
   }
@@ -111,48 +111,57 @@ export default class ProfileScreen extends React.Component {
         <Text style={styles.title}  > Hello  {this.state.username} </Text>
         {/* {button} */}
         <ScrollView>
-        <FormLabel labelStyle={{ color: '#f8971d' }}>First Name</FormLabel>
-        <FormInput value={this.state.fname} />
-        <FormLabel labelStyle={{ color: '#f8971d' }}>Last Name</FormLabel>
-        <FormInput value={this.state.lname} />
-        <FormLabel labelStyle={{ color: '#f8971d' }}>Email</FormLabel>
-        <FormInput value={this.state.email} />
+          <FormLabel labelStyle={{ color: '#f8971d' }}>First Name</FormLabel>
+          <FormInput value={this.state.fname} />
+          <FormLabel labelStyle={{ color: '#f8971d' }}>Last Name</FormLabel>
+          <FormInput value={this.state.lname} />
+          <FormLabel labelStyle={{ color: '#f8971d' }}>Email</FormLabel>
+          <FormInput value={this.state.email} />
 
-        <FormLabel labelStyle={{ color: '#f8971d' }}>Friends</FormLabel>
-        {console.disableYellowBox = true}
-        {this.state.friends.map((friend) => {
-          //  var myfriend = this.state.friends;
-          return (
+          <FormLabel labelStyle={{ color: '#f8971d' }}>Friends</FormLabel>
+          {console.disableYellowBox = true}
+          {this.state.friends.map((friend) => {
+            //  var myfriend = this.state.friends;
+            return (
 
-            <FormInput value={friend} />
-          );
-        })}
+              <FormInput value={friend} />
+            );
+          })}
 
           <FormLabel labelStyle={{ color: '#f8971d' }}>Spots</FormLabel>
           {this.state.spots.map((spots) => {
             //  var myfriend = this.state.friends;
-            var region = {longitude: spots.longitude,
-              latitude:spots.latitude,
-              latitudeDelta: 0.072,
-              longitudeDelta: 0.0221,
+            var region = {
+              longitude: spots.longitude,
+              latitude: spots.latitude,
+              latitudeDelta: 0.052,
+              longitudeDelta: 0.0121,
             }
             return (
               <View>
-              <FormInput value={spots.label} />
-              <MapView 
-              initialRegion={region}
-              style={{ height:300}}
-              
-
-              />
+                <FormInput value={spots.label} />
+                {/* <FormInput value={spots.longitude} /> */}
+                <MapView
+                  initialRegion={region}
+                  style={{ height: 300 }}
+                  cacheEnabled
+                />
               </View>
             );
           })}
 
-          <View style={{height: 200}}/>
 
 
-</ScrollView>
+      
+
+
+
+
+
+          <View style={{ height: 200 }} />
+
+
+        </ScrollView>
 
       </View>
 
