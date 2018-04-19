@@ -550,7 +550,10 @@ public class AppDatabase {
 	
 	public ArrayList<ParkingSpot> searchLocations(String name, double latitude, double longitude){
 		ArrayList<ParkingSpot> spots = MapsRequester.getLocations(name, latitude, longitude);
-		System.out.println("Locations:");
+		if(spots == null) {
+			System.out.println("No locations found from " + name);
+			return spots;
+		}
 		for(ParkingSpot spot : spots) {
 			System.out.println(spot.getLabel());
 		}
