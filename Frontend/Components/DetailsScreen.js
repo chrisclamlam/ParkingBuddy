@@ -22,7 +22,7 @@ export default class ProfileScreen extends React.Component {
     getSpots = async () => {
         let params = "lat=" + this.state.foundLocation.coordinate.latitude +
             "&lng=" + this.state.foundLocation.coordinate.longitude
-        console.log("params getSpot: " + params);
+        // console.log("params getSpot: " + params);
         try {
             let response = await fetch(global.serverIP + 'SearchSpot?' + params, {
                 method: 'GET',

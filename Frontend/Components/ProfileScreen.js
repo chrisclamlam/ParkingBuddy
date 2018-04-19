@@ -11,9 +11,9 @@ export default class ProfileScreen extends React.Component {
 
   }
 
-  onPressBookmarks() {
+  onPressBookmarks = async () =>{
     console.log(global.username);
-    fetch(serverIP + '/GetUserDetails?user=' + global.username, {
+    await fetch(serverIP + '/GetUserDetails?username=' + global.username, {
       method: 'GET',
       headers: {
         'Token': global.authKey,
@@ -25,7 +25,7 @@ export default class ProfileScreen extends React.Component {
         // Handle HTTP response
         if (response.status.toString() == 200) {
           // console.log(respons)
-          console.log(response.body);
+          console.log(response.bo());
         }
         else {
           return;
