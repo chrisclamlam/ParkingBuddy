@@ -137,6 +137,17 @@ public class AppDatabase {
 		}
 	}
 	
+	private String createUsername(ResultSet rs) {
+		String username;
+		try {
+			username = rs.getString(1);
+			return username;
+		} catch (SQLException sqle) {
+			System.out.println("Error while getting usernames: " + sqle.getMessage());
+			return null;
+		}
+	}
+	
 	private ParkingSpot createParkingSpot(ResultSet rs) {
 		// Variables needed for ParkingSpot constructor
 		int id, spotType;
@@ -221,6 +232,44 @@ public class AppDatabase {
 		} finally {
 			close(conn, st, rs);
 		}
+	}
+	
+	private ArrayList<String> getUsernamesFromQuery(String query) {
+		Connection conn = getConnection();
+		if(conn == null) return null;
+		Statement st = getStatement(conn);
+		if(st == null) {
+			close(conn, null, null);
+			return null;
+		}
+		ResultSet rs = null;
+		ArrayList<String> usernames = new ArrayList<String>();
+		try {
+			// Execute the Query
+			rs = st.executeQuery(query);
+			if(rs == null || !rs.next()) {
+				return null;
+			}	
+			// Parse and iterate over rs
+			while(rs.next()) {
+				String username = createUsername(rs);
+				// Add User to list
+				if(username != null) {
+					usernames.add(username);
+				}
+				return usernames;
+			}
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		} finally {
+			close(conn, st, rs);
+		}
+		// if the size of the list is 0, return null
+		if(usernames.size() == 0) {
+			System.out.println("No friends found");
+		}
+		return null;
+		
 	}
 	
 	// Query the database for the result set
@@ -314,15 +363,18 @@ public class AppDatabase {
 		return getUserFromQuery("SELECT * FROM users WHERE username = '" + username + "'");
 	}
 	
-	public ArrayList<User> getUserFriends(String username){	
+	public ArrayList<String> getUserFriends(int id){	
 		// Query the database for the result set
-		int id = getUserId(username);
-		if(id == -1) return null;
-		return getUsersFromQuery("SELECT * FROM FriendsList WHERE firstid = '" + id + "' OR secondid = '" + id + "'");
+		return getUsernamesFromQuery("SELECT DISTINCT users.username FROM users INNER JOIN friendslist ON users.id = friendslist.firstid OR users.id = friendslist.secondid WHERE (friendslist.firstid = '" + id + "' OR friendslist.secondid = '" + id + "') AND users.id != '" + id + "'");
 	}
 	
-	public ArrayList<ParkingSpot> getUserSpots(String username){
-		return getParkingSpotsFromQuery("SELECT * FROM FavoritesList WHERE firstid = '" + getUserId(username) + "'");
+	public ArrayList<ParkingSpot> getUserSpots(int id){
+		System.out.println("Getting user " + id + " spots");
+		ArrayList<ParkingSpot> spots = getParkingSpotsFromQuery("SELECT * FROM parkingspots INNER JOIN favoriteslist ON parkingspots.id = favoriteslist.spotid WHERE favoriteslist.userid = '" + id + "'");
+		if(spots == null) {
+			System.out.println("User has no spots");
+		}
+		return spots;
 	}
 	
 	public void delete(String username) {
@@ -586,7 +638,7 @@ public class AppDatabase {
 				"			) < .25\r\n" + 
 				"		 ORDER BY distance\r\n" + 
 				"         LIMIT 0 , 20;";*/
-		String query = "SELECT *, (3959 * 2 * ASIN(SQRT( POW( SIN( RADIANS('" + latitude + "' - latitude) ), 2) / 2 + COS( RADIANS('" + latitude + "') ) * COS( RADIANS( latitude ) ) * POW( SIN( RADIANS('" + longitude + "' - longitude) ) , 2 ) / 2) )) AS distance FROM ParkingSpots WHERE (3959 * 2 * ASIN(SQRT( POW( SIN( RADIANS('" + latitude + "' - latitude) ), 2) / 2 + COS( RADIANS('" + latitude + "') ) * COS( RADIANS( '" + latitude + "' ) ) * POW( SIN( RADIANS('" + longitude + "'- longitude) ) , 2 ) / 2) ))  < .25 ORDER BY distance LIMIT 0,20";
+		String query = "SELECT DISTINCT *, (3959 * 2 * ASIN(SQRT( POW( SIN( RADIANS('" + latitude + "' - latitude) ), 2) / 2 + COS( RADIANS('" + latitude + "') ) * COS( RADIANS( latitude ) ) * POW( SIN( RADIANS('" + longitude + "' - longitude) ) , 2 ) / 2) )) AS distance FROM ParkingSpots WHERE (3959 * 2 * ASIN(SQRT( POW( SIN( RADIANS('" + latitude + "' - latitude) ), 2) / 2 + COS( RADIANS('" + latitude + "') ) * COS( RADIANS( '" + latitude + "' ) ) * POW( SIN( RADIANS('" + longitude + "'- longitude) ) , 2 ) / 2) ))  < .25 ORDER BY distance LIMIT 0,20";
 		System.out.println("Query: " + query);
 		// Search out database
 		spots = getParkingSpotsFromQuery(query);
