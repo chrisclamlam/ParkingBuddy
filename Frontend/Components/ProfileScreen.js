@@ -12,6 +12,7 @@ export default class ProfileScreen extends React.Component {
   }
 
   onPressBookmarks() {
+    console.log(global.username);
     fetch(serverIP + '/GetUserDetails?user=' + global.username, {
       method: 'GET',
       headers: {
@@ -24,7 +25,7 @@ export default class ProfileScreen extends React.Component {
         // Handle HTTP response
         if (response.status.toString() == 200) {
           // console.log(respons)
-          console.log("responseboyd fdsfds ")
+          console.log(response.body);
         }
         else {
           return;
@@ -43,7 +44,7 @@ export default class ProfileScreen extends React.Component {
       <View style={styles.container}>
         <View style={{ height: '3%' }} />
         {/* <Text onPress= {() => this.props.navigation.pop()}> back to Search</Text> */}
-        <Text style={styles.title} > Hello  {global.username} </Text>
+        <Text style={styles.title} onPress={() => this.onPressBookmarks()} > Hello  {global.username} </Text>
 
         {/* General User Info */}
         <Text style={styles.category} onPress={() => this.onPressBookmarks()}>Email</Text>
