@@ -11,15 +11,122 @@ export default class ProfileScreen extends React.Component {
 
         // Variables for current page
         this.state = {
-            currLocation: {},
-            markerLocation: {},
+            currLocation: null,
+            markerLocation: null,
+            lyftUberComp: null,
         }
     }
 
+
+    // Get actual spots to show on the map
+    getSpots = async () => {
+        let params = "lat=" + this.state.foundLocation.coordinate.latitude +
+            "&lng=" + this.state.foundLocation.coordinate.longitude
+        console.log("params getSpot: " + params);
+        try {
+            let response = await fetch(global.serverIP + 'SearchSpot?' + params, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                timeout: 10,
+                // body: coords
+            });
+            let responseJson = await response.json();
+
+            if (response.status == 200) { // Request is good and there are results
+                var json = this.toProperJson(responseJson);
+                console.log("JSON getSpot: " + json);
+
+                // Pass array from get spots into MapScreen
+                this.props.navigation.navigate('MapScreen', {
+                    markers: json
+                });
+
+            }
+            else { // No results
+                Alert.alert("Unable to find any location");
+
+            }
+        } catch(error){
+            console.error(error);
+        }
+    }
+
+
     // Get price comparison between lyft and uber
     getPriceCompare = async () => {
+        let params = "start_lat=" + this.state.currLocation.coords.latitude + "&start_long=" +
+            this.state.currLocation.coords.latitude  + "&end_lat=" +
+        this.state.markerLocation.latitude + "&end_long=" + this.state.markerLocation.longitude;
+
+        console.log("params getSpot: " + Object.keys(params));
+        try {
+            let response = await fetch(global.serverIP + 'CompareLyftandUber?' + params, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+            let responseJson = await response.text();
+
+            if (response.status == 200) { // Request is good and there are results
+                var price = this.toProperJson(responseJson);
+
+                // Pass array from get spots into MapScreen
+                this.setState({
+                    lyftUberComp: price, })
+                Alert.alert(this.state.lyftUberComp);
+            }
+            else { // No results
+                Alert.alert("Unable to find price comparison");
+
+            }
+        } catch(error){
+            console.error(error);
+        }
 
     }
+
+    // Get actual spots to show on the map
+
+    // getSpots = async () => {
+    //     let params = "lat=" + this.state.foundLocation.coordinate.latitude +
+    //         "&lng=" + this.state.foundLocation.coordinate.longitude
+    //     console.log("params getSpot: " + params);
+    //     try {
+    //         let response = await fetch(global.serverIP + 'SearchSpot?' + params, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Accept': 'application/x-www-form-urlencoded',
+    //                 'Content-Type': 'application/x-www-form-urlencoded',
+    //             },
+    //             timeout: 10,
+    //             // body: coords
+    //         });
+    //         let responseJson = await response.json();
+    //
+    //         if (response.status == 200) { // Request is good and there are results
+    //             var json = this.toProperJson(responseJson);
+    //             console.log("JSON getSpot: " + json);
+    //
+    //             // Pass array from get spots into MapScreen
+    //             this.props.navigation.navigate('MapScreen', {
+    //                 markers: json
+    //             });
+    //
+    //         }
+    //         else { // No results
+    //             Alert.alert("Unable to find any location");
+    //
+    //         }
+    //     } catch(error){
+    //         console.error(error);
+    //     }
+    // }
+
 
     // Get directions for marker
     // API key for Google Maps Directions: AIzaSyA4bras52B_hfyipj6aZ0_lwLhB5fp4I5E
@@ -51,9 +158,20 @@ export default class ProfileScreen extends React.Component {
     componentWillMount = () => {
 
         const {params} = this.props.navigation.state;
-
+        this.getPriceCompare();
         // See if params are being sent
-        console.log("params: " + params.markerCoord);
+        console.log("params: " + JSON.stringify(params.initRegion));
+        /* Format of params.markerCoord:
+        {"id":-1,
+        "remoteId":" ....,
+        "spotType": ...,
+        "label":...,
+        "coordinate":{
+            "latitude":...,
+            "longitude":....}
+        }
+
+        */
         // console.out("MarkerLocation: " + params.markerCoord);
 
         // Set state variables to params that were sent
@@ -61,7 +179,7 @@ export default class ProfileScreen extends React.Component {
             currLocation: params.initRegion,
             markerLocation: params.markerCoord,
         });
-        console.log("markerLoc: " + markerLocation);
+        console.log("markerLoc: " + params.markerCoord);
     }
 
 
